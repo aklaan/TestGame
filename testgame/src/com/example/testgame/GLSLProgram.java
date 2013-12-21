@@ -64,7 +64,7 @@ public class GLSLProgram {
 
 		// on fabrique une matrice orthogonale qui va servir de matrice de
 		// projection
-		Matrix.orthoM(mProjection, 0, -100, 100, -100, 100, -10.f, 100000.f);
+		Matrix.orthoM(mProjection, 0, -10, 10, -10, 10, -10.f, 100000.f);
 		// Matrix.setIdentityM(mMvp, 0);
 
 	}
@@ -141,8 +141,8 @@ public class GLSLProgram {
 		}
 
 		if (mScreenSizeLoc != -1) {
-			float width = 480;
-			float height = 800;
+			float width = 1920;
+			float height = 1080;
 			GLES20.glUniform2f(mScreenSizeLoc, width, height);
 		}
 

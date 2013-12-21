@@ -6,6 +6,8 @@ import java.nio.FloatBuffer;
 import java.nio.ShortBuffer;
 import java.util.Vector;
 
+import android.util.Log;
+
 
 
 public class GameObject {
@@ -31,9 +33,10 @@ private ShortBuffer mIndices;
 
 
 // constructeur
-public GameObject(int nbVertex) {
-    mVertices = ByteBuffer.allocateDirect(nbVertex * FLOAT_SIZE).order(ByteOrder.nativeOrder()).asFloatBuffer();
-    mIndices = ByteBuffer.allocateDirect(nbVertex * SHORT_SIZE).order(ByteOrder.nativeOrder()).asShortBuffer();
+public GameObject(int nbVertex, int nbIndex) {
+    mVertices = ByteBuffer.allocateDirect(nbVertex * 3 *FLOAT_SIZE).order(ByteOrder.nativeOrder()).asFloatBuffer();
+    mIndices = ByteBuffer.allocateDirect(nbIndex * SHORT_SIZE).order(ByteOrder.nativeOrder()).asShortBuffer();
+
 }
 
 
@@ -44,10 +47,13 @@ public void putVertice(int index, Vertex vertex) {
 	// c'est la taille d'un vertex en bytes x l'index
 	
 	// ici on se positionne dans le buffer à l'endroit où l'on va ecrire le prochain vertex
-    mVertices.position(Vertex.Vertex_SIZE * index);
+    Log.i("debug",String.valueOf(Vertex.Vertex_SIZE *  index));
+	
+    mVertices.position(Vertex.Vertex_SIZE *  index);
     
     mVertices.put(vertex.x).put(vertex.y).put(vertex.z);
-    
+
+   
     // on se repositionne en 0 , prêt pour la relecture
    
     mVertices.position(0);
