@@ -96,6 +96,7 @@ public class GLSLProgram {
 		link();
 
 		// attributes
+		//mPositionLoc est une adresse mémoire
 		mPositionLoc = GLES20.glGetAttribLocation(mProgramObject, "aPosition");
 		mColorLoc = GLES20.glGetAttribLocation(mProgramObject, "aColor");
 		mTexCoordLoc = GLES20.glGetAttribLocation(mProgramObject, "aTexCoord");
@@ -125,7 +126,7 @@ public class GLSLProgram {
 
 		if (mMvpLoc != -1) {
 			// Log.d(this.getClass().getName(),"setMvp");
-			counter += 1.f;
+			//-----counter += 1.f;
 			// on calcule la matrice "mRotation" a utiliser pour pivoter
 			// d'un angle de x radian
 			// ici l'angle c'est counter
@@ -153,8 +154,7 @@ public class GLSLProgram {
 		}
 
 		if (mTex0Loc != -1) {
-			// GLES20.glEnable(GLES20.GL_TEXTURE_2D);
-
+			 GLES20.glEnable(GLES20.GL_TEXTURE_2D);
 			GLES20.glBindTexture(GLES20.GL_TEXTURE_2D, GLES20Renderer.mTex0);
 			GLES20.glActiveTexture(GLES20.GL_TEXTURE0);
 			// on alimente la donnée UNIFORM mTex0Loc avc un integer 0
@@ -197,24 +197,23 @@ public class GLSLProgram {
 		 * simplifier les coordonées sont en 2D) indice 0 - vertex 0 (-1,1)
 		 * indice 1 - vertex 1 (-1,-1) indice 2 - vertex 2 (1,1) --fin du
 		 * premier triange indice 3 - vertex 2 (1,1) indice 4 - vertex 1 (-1,-1)
-		 * indice 5 - vertex 3 (1,-1) --fin du second triange
+		 * indice 5 - vertex 3 (1,-1) --fin du second triangle
 		 * 
 		 * on appel cette fonction avec : mProgramme1.draw(mVertices,
 		 * GLES20.GL_POINTS, MAX_POINTS);
 		 */
 
-		GLES20.glDrawElements(mode, 3, GLES20.GL_UNSIGNED_SHORT,
-				vertices.getIndices());
+		GLES20.glDrawElements(mode, vertices.getIndices().capacity(), GLES20.GL_UNSIGNED_SHORT,vertices.getIndices());
 		disableVertexAttribArray();
 	}
 
-	private void enableVertexAttribArray(GameObject vertices) {
+	private void enableVertexAttribArray(GameObject mGameObject) {
         //si l'adresse mémoire de l'objet désigné par mPositionLoc n'est pas vide
     	if (mPositionLoc != -1) {
            
     		// on va chercher le FloatBuffer où sont stocké les coordonnées des sommets
            // on se positionne au début du Buffer
-        	vertices.getVertices().position(0);
+    		mGameObject.getVertices().position(0);
             
              
   /**
@@ -239,13 +238,19 @@ public class GLSLProgram {
             // dans l'objet désigné par l'adresse mPositionLoc (càd aPosition), on va écrire le contenu du FloatBuffer contenant les coordonées des sommets
         	// on spécifie comment OPENGL doit interpréter le buffer en spécifiant que chaque index du tableau comporte 3 Float d'une longeur P3FT2FR4FVertex_SIZE_BYTES
         	// autrement dit, a la lecture du Buffer, au bout de 3 Float d'une longeur P3FT2FR4FVertex_SIZE_BYTES, opengl cree un nouvel index.
-            GLES20.glVertexAttribPointer(mPositionLoc, 3, GLES20.GL_FLOAT, false, Vertex.Vertex_SIZE_BYTES, vertices.getVertices());
+            GLES20.glVertexAttribPointer(mPositionLoc, 3, GLES20.GL_FLOAT, false, Vertex.Vertex_COORD_SIZE_BYTES, mGameObject.getVertices());
             
             // on rend l'utilisation de mPositionLoc (càd aPosition) possible par le moteur de rendu
             // dans le cas contraire, OPENGL n'utilisera pas les données passée à aPosition et le fragment
             // se comporte comme si aPosition vaut 0.
             
             GLES20.glEnableVertexAttribArray(mPositionLoc);
+            
+            
+            mGameObject.getVertices().position(0);
+            GLES20.glVertexAttribPointer(mTexCoordLoc, 2, GLES20.GL_FLOAT, false,
+            		Vertex.Vertex_TEXT_SIZE_BYTES, mGameObject.getTextCoord());
+             GLES20.glEnableVertexAttribArray(mTexCoordLoc); 
             
         }
 

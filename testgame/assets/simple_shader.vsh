@@ -11,6 +11,6 @@ void main() {
     vec4 position = uMvp * vec4(aPosition.xyz, 1.);
     vColor = aColor;
 
-    // gl_PointSize = 50.;
+    gl_PointSize = 10.;
 	gl_Position =  position;
 }

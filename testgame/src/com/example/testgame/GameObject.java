@@ -29,35 +29,41 @@ public static final int SHORT_SIZE = 2; //ici on indique qu'un short est codé su
 private FloatBuffer mVertices;			// définition d'un tableau de flotants
 //! indices
 private ShortBuffer mIndices;
-
+//! coordonées de texture
+private FloatBuffer mTextCoord;
 
 
 // constructeur
 public GameObject(int nbVertex, int nbIndex) {
     mVertices = ByteBuffer.allocateDirect(nbVertex * 3 *FLOAT_SIZE).order(ByteOrder.nativeOrder()).asFloatBuffer();
     mIndices = ByteBuffer.allocateDirect(nbIndex * SHORT_SIZE).order(ByteOrder.nativeOrder()).asShortBuffer();
-
+    mTextCoord = ByteBuffer.allocateDirect(nbVertex * 2 *FLOAT_SIZE).order(ByteOrder.nativeOrder()).asFloatBuffer();
 }
 
 
 
 //setter vertices
-public void putVertice(int index, Vertex vertex) {
+public void putVertex(int index, Vertex vertex) {
 	// la position physique en mémoire des bytes qui représentent le vertex 
 	// c'est la taille d'un vertex en bytes x l'index
 	
 	// ici on se positionne dans le buffer à l'endroit où l'on va ecrire le prochain vertex
-    Log.i("debug",String.valueOf(Vertex.Vertex_SIZE *  index));
-	
-    mVertices.position(Vertex.Vertex_SIZE *  index);
-    
+    mVertices.position(Vertex.Vertex_COORD_SIZE *  index);
     mVertices.put(vertex.x).put(vertex.y).put(vertex.z);
-
-   
     // on se repositionne en 0 , prêt pour la relecture
-   
     mVertices.position(0);
+
+    
+    mTextCoord.position(Vertex.Vertex_TEXT_SIZE *  index);
+    mTextCoord.put(vertex.u).put(vertex.v);
+    // on se repositionne en 0 , prêt pour la relecture
+    mTextCoord.position(0);
+
+
+
 }
+
+
 
 //setter indices
 public void putIndice(int index, int indice) {
@@ -72,8 +78,15 @@ public void putIndice(int index, int indice) {
 
 //getter vertices
 public FloatBuffer getVertices() {
-    return mVertices;
+	return mVertices;
 }
+
+
+//getter TextCoord
+public FloatBuffer getTextCoord() {
+	return mTextCoord;
+}
+
 
 //getter indices
 public ShortBuffer getIndices() {

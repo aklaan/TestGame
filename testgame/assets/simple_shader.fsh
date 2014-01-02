@@ -15,6 +15,7 @@ void main()
     
     // ce fragment shader ne fait rien de particulier.
     // il retourne la couleur de la texture 
-    gl_FragColor = texture2D(tex0, gl_PointCoord) * vColor;
+   // gl_FragColor = texture2D(tex0, gl_PointCoord) * vColor;
+    gl_FragColor = texture2D(tex0, gl_PointCoord);
 }
 

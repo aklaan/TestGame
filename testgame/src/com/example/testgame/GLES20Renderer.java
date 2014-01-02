@@ -151,7 +151,8 @@ public class GLES20Renderer implements GLSurfaceView.Renderer {
 		// en mode points GL_POINTS ,GL_LINES, GL_TRIANGLES
 		
 		Square mSquare = new Square();
-		mProgramme1.draw(mSquare, GLES20.GL_TRIANGLES, MAX_POINTS);
+	  	mProgramme1.draw(mSquare, GLES20.GL_TRIANGLES, MAX_POINTS);
+	//	mProgramme1.draw(mSquare, GLES20.GL_POINTS, MAX_POINTS);
 	}
 
 	private void checkGlError(String op) {
