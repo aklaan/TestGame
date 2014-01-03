@@ -126,7 +126,7 @@ public class GLSLProgram {
 
 		if (mMvpLoc != -1) {
 			// Log.d(this.getClass().getName(),"setMvp");
-			//-----counter += 1.f;
+			counter += 1.f;
 			// on calcule la matrice "mRotation" a utiliser pour pivoter
 			// d'un angle de x radian
 			// ici l'angle c'est counter

@@ -15,6 +15,7 @@ import javax.microedition.khronos.opengles.GL10;
 import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
+import java.util.ArrayList;
 
 /**
  * GLES20Renderer: the OGLES 2.0 Thread.
@@ -31,13 +32,13 @@ public class GLES20Renderer implements GLSurfaceView.Renderer {
 
 	private GLSLProgram mProgramme1;
 
-	private GameObject mVertices;
+	private ArrayList<GameObject> mGameObjectList;
 
 	
-
+	
 	GLES20Renderer(Activity activity) {
 		mActivity = activity;
-	
+		
 	}
 
 	// @Override
@@ -48,7 +49,7 @@ public class GLES20Renderer implements GLSurfaceView.Renderer {
 
 		// on construit et compile le programme
 		mProgramme1.make();
-
+		mGameObjectList = new ArrayList<GameObject>();
 		
 
 				// on active le texturing 2D
@@ -78,33 +79,26 @@ public class GLES20Renderer implements GLSurfaceView.Renderer {
 		GLES20.glTexParameteri(GLES20.GL_TEXTURE_2D, GLES20.GL_TEXTURE_WRAP_T,
 				GLES20.GL_CLAMP_TO_EDGE);
 
-		// load a texture
-		Bitmap bitmap = null;
-		try {
-			bitmap = BitmapFactory.decodeStream(mActivity.getAssets().open(
-					"spaceship.png"));
-		} catch (IOException e) {
-			Log.e(this.getClass().getName(), "texture not found");
-			return;
-		}
+	
 
 		// on défini un buffer contenant tous les points de l'image
 		// il en a (longeur x hauteur)
 		// pour chaque point on a 4 bytes . 3 pour la couleur RVB et 1 pour
 		// l'alpha
-		ByteBuffer imageBuffer = ByteBuffer.allocateDirect(bitmap.getHeight()
+		/**ByteBuffer imageBuffer = ByteBuffer.allocateDirect(bitmap.getHeight()
 				* bitmap.getWidth() * 4);
-
+        */
 		// on indique que les bytes dans le buffer doivent
 		// être enregistré selon le sens de lecture natif de l'architecture CPU
 		// (de gaucha a droite ou vice et versa)
-		imageBuffer.order(ByteOrder.nativeOrder());
+		/**imageBuffer.order(ByteOrder.nativeOrder());
 
 		byte buffer[] = new byte[4];
+		*/
 		// pour chaque pixel composant l'image, on mémorise sa couleur et
 		// l'alpha
 		// dans le buffer
-		for (int i = 0; i < bitmap.getHeight(); i++) {
+		/**for (int i = 0; i < bitmap.getHeight(); i++) {
 			for (int j = 0; j < bitmap.getWidth(); j++) {
 				int color = bitmap.getPixel(j, i);
 				buffer[0] = (byte) Color.red(color);
@@ -114,21 +108,34 @@ public class GLES20Renderer implements GLSurfaceView.Renderer {
 				imageBuffer.put(buffer);
 			}
 		}
+		*/
 		// on se place a la position 0 du buffer - près à être lu plus tard
-		imageBuffer.position(0);
-		
+		/**imageBuffer.position(0);
+		*/
 		// on indique au moteur de rendu que les lignes doivent avoir une épaisseur
 		// de 5 pixels
 		GLES20.glLineWidth(5f);
 		
 		// charger la texture mémorisé dans le buffer dans le moteur de rendu comme 
 		//étant la texture 0
-		GLES20.glTexImage2D(GL10.GL_TEXTURE_2D, 0, GL10.GL_RGBA,
+		/**GLES20.glTexImage2D(GL10.GL_TEXTURE_2D, 0, GL10.GL_RGBA,
 				bitmap.getWidth(), bitmap.getHeight(), 0, GL10.GL_RGBA,
 				GL10.GL_UNSIGNED_BYTE, imageBuffer);
-
+*/
 		
+		Square mSquare = new Square();
+		Bitmap bitmap = null;
+		try {
+			bitmap = BitmapFactory.decodeStream(mActivity.getAssets().open(
+					"spaceship.png"));
+		} catch (IOException e) {
+			Log.e(this.getClass().getName(), "texture not found");
+			return;
+		}
 		
+		mSquare.setTexture(bitmap);
+		mSquare.putTextureToGLUnit(0);
+		mGameObjectList.add(mSquare);
 	}
 
 	// @Override
@@ -144,7 +151,7 @@ public class GLES20Renderer implements GLSurfaceView.Renderer {
 		//mTimer.addMark();
 		//mTimer.logFPS(); // on veut mesurer les fps
 
-		GLES20.glClearColor(0.9f, 0.2f, 0.2f, 1.0f);
+		GLES20.glClearColor(0.2f, 0.2f, 0.2f, 1.0f);
 		GLES20.glClear(GLES20.GL_COLOR_BUFFER_BIT);
 
 		mProgramme1.use();
@@ -152,8 +159,12 @@ public class GLES20Renderer implements GLSurfaceView.Renderer {
 		// ici on peu demander à dessiner
 		// en mode points GL_POINTS ,GL_LINES, GL_TRIANGLES
 		
-		Square mSquare = new Square();
-	  	mProgramme1.draw(mSquare, GLES20.GL_TRIANGLES, MAX_POINTS);
+	
+		
+		for (GameObject go : mGameObjectList){
+			mProgramme1.draw(go, GLES20.GL_TRIANGLES, MAX_POINTS);	
+		}
+	  	
 	//	mProgramme1.draw(mSquare, GLES20.GL_POINTS, MAX_POINTS);
 	}
 
