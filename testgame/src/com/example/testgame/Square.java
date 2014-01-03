@@ -12,9 +12,9 @@ public class Square extends GameObject {
 
 		// on ajoute les 4 vertex qui compose le carré
 		this.putVertex(0, new Vertex(-1, 1, 0, 0, 0));
-		this.putVertex(1, new Vertex(-1, -1, 0, 0, 0));
-		this.putVertex(2, new Vertex(1, -1, 0, 0, 0));
-		this.putVertex(3, new Vertex(1, 1, 0, 0, 0));
+		this.putVertex(1, new Vertex(-1, -1, 0, 0, 1));
+		this.putVertex(2, new Vertex(1, -1, 0, 1, 1));
+		this.putVertex(3, new Vertex(1, 1, 0, 1, 0));
 
 		// on indique l'ordre dans lequel on doit affichier les vertex
 		// pour dessiner les 2 triangles qui vont former le carré.

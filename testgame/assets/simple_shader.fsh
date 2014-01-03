@@ -2,7 +2,7 @@
 precision highp float;
 #endif 
 uniform sampler2D tex0;
-
+varying vec2 vTexCoord; 
 varying vec4 vColor;
 
 void main() 
@@ -16,6 +16,7 @@ void main()
     // ce fragment shader ne fait rien de particulier.
     // il retourne la couleur de la texture 
    // gl_FragColor = texture2D(tex0, gl_PointCoord) * vColor;
-    gl_FragColor = texture2D(tex0, gl_PointCoord);
+    //gl_FragColor = texture2D(tex0, gl_PointCoord);
+    gl_FragColor = texture2D(tex0, vTexCoord);
 }
 

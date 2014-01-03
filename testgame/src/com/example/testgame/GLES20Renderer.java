@@ -82,7 +82,7 @@ public class GLES20Renderer implements GLSurfaceView.Renderer {
 		Bitmap bitmap = null;
 		try {
 			bitmap = BitmapFactory.decodeStream(mActivity.getAssets().open(
-					"pointsprite.png"));
+					"spaceship.png"));
 		} catch (IOException e) {
 			Log.e(this.getClass().getName(), "texture not found");
 			return;
@@ -127,6 +127,8 @@ public class GLES20Renderer implements GLSurfaceView.Renderer {
 				bitmap.getWidth(), bitmap.getHeight(), 0, GL10.GL_RGBA,
 				GL10.GL_UNSIGNED_BYTE, imageBuffer);
 
+		
+		
 	}
 
 	// @Override
