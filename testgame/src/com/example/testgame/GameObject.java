@@ -13,6 +13,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.opengl.GLES20;
+import android.opengl.Matrix;
 import android.util.Log;
 
 
@@ -42,11 +43,17 @@ private FloatBuffer mTextCoord;
 private ByteBuffer mTexture;
 private int mTextureWidth;
 private int mTextureHeight;
+
+//! matrice du modele
+	public float[] mModelMatrix = new float[16];
+	
 // constructeur
 public GameObject(int nbVertex, int nbIndex) {
     mVertices = ByteBuffer.allocateDirect(nbVertex * 3 *FLOAT_SIZE).order(ByteOrder.nativeOrder()).asFloatBuffer();
     mIndices = ByteBuffer.allocateDirect(nbIndex * SHORT_SIZE).order(ByteOrder.nativeOrder()).asShortBuffer();
     mTextCoord = ByteBuffer.allocateDirect(nbVertex * 2 *FLOAT_SIZE).order(ByteOrder.nativeOrder()).asFloatBuffer();
+
+    
 }
 
 
@@ -73,6 +80,11 @@ public void putVertex(int index, Vertex vertex) {
 }
 
 
+
+public void translate(float x,float y){
+	Matrix.setIdentityM(mModelMatrix, 0);
+	Matrix.translateM(mModelMatrix, 0, x, y, 0f);
+}
 
 //setter indices
 public void putIndice(int index, int indice) {
@@ -148,6 +160,10 @@ public void putTextureToGLUnit(int unit){
 	GLES20.glTexImage2D(GL10.GL_TEXTURE_2D, unit, GL10.GL_RGBA,
 			mTextureWidth, mTextureHeight, 0, GL10.GL_RGBA,
 			GL10.GL_UNSIGNED_BYTE, mTexture);
+	
+}
+
+public void onUpdate(){
 	
 }
 

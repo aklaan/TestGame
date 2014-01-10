@@ -63,7 +63,7 @@ public class MainActivity extends Activity {
     /* show an error message */
     private void showOGLES20ErrorDialogBox() {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setMessage("No OpenGL ES 2.0 GPU Found! Please buy a real device!!!").setCancelable(false)
+        builder.setMessage("No OpenGL ES 2.0 GPU Found!").setCancelable(false)
                 .setPositiveButton("OK", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
                         dialog.cancel();

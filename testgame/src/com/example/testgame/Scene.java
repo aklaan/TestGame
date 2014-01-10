@@ -7,4 +7,4 @@ public class Scene extends GameObject {
 		// TODO Auto-generated constructor stub
 	}
 
-}
+} 

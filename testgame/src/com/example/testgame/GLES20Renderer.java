@@ -19,7 +19,7 @@ import java.util.ArrayList;
 
 /**
  * GLES20Renderer: the OGLES 2.0 Thread.
- */
+  */
 public class GLES20Renderer implements GLSurfaceView.Renderer {
 
 	public final static String TAG_ERROR = "CRITICAL ERROR";

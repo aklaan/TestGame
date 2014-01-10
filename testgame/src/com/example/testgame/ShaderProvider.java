@@ -1,5 +1,5 @@
 package com.example.testgame;
-
-public class Personnage {
  
+public class ShaderProvider {
+
 }

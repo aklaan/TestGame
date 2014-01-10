@@ -1,11 +1,17 @@
 package com.example.testgame;
 
 import android.app.Activity;
+import android.opengl.GLES10;
 import android.opengl.GLES20;
 import android.opengl.Matrix;
+import android.os.SystemClock;
 import android.util.Log;
 
+
+
 import java.nio.FloatBuffer;
+
+import javax.microedition.khronos.opengles.GL10;
 
 public class GLSLProgram {
 
@@ -26,6 +32,10 @@ public class GLSLProgram {
 	// ! Matrix Model View Projection
 	private float[] mMvp = new float[16];
 
+	// ! Matrix Model View Projection utiliée pour dessiner
+		private float[] mMvp4Draw = new float[16];
+
+	
 	// ! matrice de Rotation
 	private float[] mRotation = new float[16];
 
@@ -41,14 +51,12 @@ public class GLSLProgram {
 	private int mMvpLoc;
 	private int mScreenSizeLoc;
 	private int mTimeLoc;
-	private int mMousePos;
-
 	// sampler
 	private int mTex0Loc;
-	private int mTex1Loc;
+	/**private int mTex1Loc;
 	private int mTex2Loc;
 	private int mTex3Loc;
-
+*/
 	public GLSLProgram(Activity activity, String programName) {
 		mActivity = activity;
 		mProgramObject = 0;
@@ -62,11 +70,23 @@ public class GLSLProgram {
 		// set MVP to Identity
 		// float mProjMatrix[] = new float[16];
 
-		// on fabrique une matrice orthogonale qui va servir de matrice de
+		// on fabrique une matrice orthogonale "mProjection" qui va servir de matrice de
 		// projection
+		
+		/**Parameters:
+			m returns the result
+			mOffset 
+			left 
+			right 
+			bottom 
+			top 
+			near 
+			far
+			*/ 
 		Matrix.orthoM(mProjection, 0, -10, 10, -10, 10, -10.f, 100000.f);
 		// Matrix.setIdentityM(mMvp, 0);
-
+		use();
+		
 	}
 
 	public void delete() {
@@ -103,16 +123,17 @@ public class GLSLProgram {
 
 		// uniforms
 		mMvpLoc = GLES20.glGetUniformLocation(mProgramObject, "uMvp");
-		mScreenSizeLoc = GLES20.glGetUniformLocation(mProgramObject,
-				"uScreenSize");
+	/**
+		mScreenSizeLoc = GLES20.glGetUniformLocation(mProgramObject,"uScreenSize");
 		mTimeLoc = GLES20.glGetUniformLocation(mProgramObject, "uTime");
-
+*/
 		// samplers
 		mTex0Loc = GLES20.glGetUniformLocation(mProgramObject, "tex0");
+	/**
 		mTex1Loc = GLES20.glGetUniformLocation(mProgramObject, "tex1");
 		mTex2Loc = GLES20.glGetUniformLocation(mProgramObject, "tex2");
 		mTex3Loc = GLES20.glGetUniformLocation(mProgramObject, "tex3");
-
+*/
 		Log.i(this.getClass().getName(), "program compiled & linked: "
 				+ mProgramName);
 		return true;
@@ -120,6 +141,23 @@ public class GLSLProgram {
 
 	static float counter = 0;
 
+	
+	void testuse(){
+		GLES20.glUseProgram(mProgramObject);
+		Log.i("mMvp use",String.valueOf(mMvp[0])
+				+"/"+String.valueOf(mMvp[1])
+				+"/"+String.valueOf(mMvp[2])
+				+"/"+String.valueOf(mMvp[3]));
+		//GLES20.glUniformMatrix4fv(mMvpLoc, 1, false, mProjection, 0);
+	
+	//    GLES20.glEnable(GLES20.GL_TEXTURE_2D);
+	//			GLES20.glBindTexture(GLES20.GL_TEXTURE_2D, GLES20Renderer.mTex0);
+	//			GLES20.glActiveTexture(GLES20.GL_TEXTURE0);
+	//			// on alimente la donnée UNIFORM mTex0Loc avc un integer 0
+		//		GLES20.glUniform1i(mTex0Loc, 0);
+	
+	}
+	
 	void use() {
 		// use program
 		GLES20.glUseProgram(mProgramObject);
@@ -132,16 +170,16 @@ public class GLSLProgram {
 			// ici l'angle c'est counter
 			// le pivot est au centre à 0,0,0
 			Matrix.setRotateEulerM(mRotation, 0, 0.f, 0.f, counter);
-
+ 
 			// on calcule la nouvelle matrice de projection mMvp
 			Matrix.multiplyMM(mMvp, 0, mProjection, 0, mRotation, 0);
-
+			Log.i("mMvp use",String.valueOf(mMvp[0]));
 			// on alimente la donnée UNIFORM mMvpLoc du programme OpenGL avec
 			// une matrice de 4 flotant
 			GLES20.glUniformMatrix4fv(mMvpLoc, 1, false, mMvp, 0);
 		}
 
-		if (mScreenSizeLoc != -1) {
+	/**	if (mScreenSizeLoc != -1) {
 			float width = 1920;
 			float height = 1080;
 			GLES20.glUniform2f(mScreenSizeLoc, width, height);
@@ -152,9 +190,9 @@ public class GLSLProgram {
 			// on alimente la donnée UNIFORM mTimeLoc avec un flotant time
 			GLES20.glUniform1f(mTimeLoc, time);
 		}
-
+*/
 		if (mTex0Loc != -1) {
-			 GLES20.glEnable(GLES20.GL_TEXTURE_2D);
+		    GLES20.glEnable(GLES20.GL_TEXTURE_2D);
 			GLES20.glBindTexture(GLES20.GL_TEXTURE_2D, GLES20Renderer.mTex0);
 			GLES20.glActiveTexture(GLES20.GL_TEXTURE0);
 			// on alimente la donnée UNIFORM mTex0Loc avc un integer 0
@@ -162,15 +200,32 @@ public class GLSLProgram {
 		}
 	}
 
-	public void draw(GameObject vertices, int mode, int count) {
-
-		// appel la fonction qui passe à enable toutes les variables
+	public void draw(GameObject gameobject, int drawingMode) {
+		// appel la fonction qui passe à enable toutes les variables des shaders
 		// pour rappel, si les variables ne sont pas "enable" elle ne sont
 		// pas prise en compte dans les shaders
-		enableVertexAttribArray(vertices);
+		
+		//théoriquement pas la peine de le faire à chaque frame...
+		enableVertexAttribArray(gameobject);
 
-		// on se positionne au debut du Buffer
-		vertices.getIndices().position(0);
+		
+		if (mMvpLoc != -1) {
+            
+			mMvp4Draw = mMvp.clone();
+			
+			// on calcule la nouvelle matrice de projection mMvp
+			Matrix.multiplyMM(mMvp4Draw, 0, mMvp, 0, gameobject.mModelMatrix, 0);
+			Log.i("mMvp use",String.valueOf(mMvp[0]));
+			// on alimente la donnée UNIFORM mMvpLoc du programme OpenGL avec
+			// une matrice de 4 flotant
+			GLES20.glUniformMatrix4fv(mMvpLoc, 1, false, mMvp4Draw, 0);
+		}
+
+		
+		
+		// on se positionne au debut du Buffer des indices 
+		// qui indiquent dans quel ordre les vertex doivent être dessinés
+		gameobject.getIndices().position(0);
 
 		/**
 		 * void glDrawElements( GLenum mode, Specifies what kind of primitives
@@ -203,8 +258,16 @@ public class GLSLProgram {
 		 * GLES20.GL_POINTS, MAX_POINTS);
 		 */
 
-		GLES20.glDrawElements(mode, vertices.getIndices().capacity(), GLES20.GL_UNSIGNED_SHORT,vertices.getIndices());
+		
+		GLES20.glDrawElements(drawingMode, gameobject.getIndices().capacity(), GLES20.GL_UNSIGNED_SHORT,gameobject.getIndices());
+	
+		
+		
+		
+		
 		disableVertexAttribArray();
+	
+	
 	}
 
 	private void enableVertexAttribArray(GameObject mGameObject) {
@@ -215,7 +278,7 @@ public class GLSLProgram {
            // on se positionne au début du Buffer
     		mGameObject.getVertices().position(0);
             
-             
+    		
   /**
    * define an array of generic vertex attribute data
    * void glVertexAttribPointer(	GLuint index,		-Specifies the index of the generic vertex attribute to be modified.

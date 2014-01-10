@@ -27,4 +27,9 @@ public class Square extends GameObject {
 		this.putIndice(5, 3);
 	}
 
+	@Override
+	public void onUpdate(){
+		
+	}
+	
 }
