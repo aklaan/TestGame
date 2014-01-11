@@ -52,7 +52,7 @@ public class GLES20Renderer implements GLSurfaceView.Renderer {
 		mGameObjectList = new ArrayList<GameObject>();
 		
 
-				// on active le texturing 2D
+		// on active le texturing 2D
 		GLES20.glEnable(GLES20.GL_TEXTURE_2D);
 
 		// create texture handle
@@ -123,7 +123,8 @@ public class GLES20Renderer implements GLSurfaceView.Renderer {
 				GL10.GL_UNSIGNED_BYTE, imageBuffer);
 */
 		
-		Square mSquare = new Square();
+		mProgramme1.use();
+		
 		Bitmap bitmap = null;
 		try {
 			bitmap = BitmapFactory.decodeStream(mActivity.getAssets().open(
@@ -132,10 +133,15 @@ public class GLES20Renderer implements GLSurfaceView.Renderer {
 			Log.e(this.getClass().getName(), "texture not found");
 			return;
 		}
-		
+		Square mSquare = new Square();
 		mSquare.setTexture(bitmap);
 		mSquare.putTextureToGLUnit(0);
 		mGameObjectList.add(mSquare);
+		
+		Square mSquare2 = new Square();
+		mSquare2.setTexture(bitmap);
+		mSquare2.translate(-2.0f, 2.0f);
+		mGameObjectList.add(mSquare2);
 	}
 
 	// @Override
@@ -154,7 +160,7 @@ public class GLES20Renderer implements GLSurfaceView.Renderer {
 		GLES20.glClearColor(0.2f, 0.2f, 0.2f, 1.0f);
 		GLES20.glClear(GLES20.GL_COLOR_BUFFER_BIT);
 
-		mProgramme1.use();
+	
 		
 		// ici on peu demander à dessiner
 		// en mode points GL_POINTS ,GL_LINES, GL_TRIANGLES
@@ -162,7 +168,7 @@ public class GLES20Renderer implements GLSurfaceView.Renderer {
 	
 		
 		for (GameObject go : mGameObjectList){
-			mProgramme1.draw(go, GLES20.GL_TRIANGLES, MAX_POINTS);	
+			mProgramme1.draw(go, GLES20.GL_TRIANGLES);	
 		}
 	  	
 	//	mProgramme1.draw(mSquare, GLES20.GL_POINTS, MAX_POINTS);

@@ -13,7 +13,9 @@ void main() {
     //vec4 position = vec4(aPosition.xyz, 1.);
     vColor = aColor;
     vTexCoord = aTexCoord;
-    gl_PointSize = 10.;
+   // gl_PointSize = 10.;
+	
+	// cette commande doit toujours être la dernière du vertex shader.
 	gl_Position =  position;
 	
 }

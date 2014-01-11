@@ -1,17 +1,9 @@
 package com.example.testgame;
 
 import android.app.Activity;
-import android.opengl.GLES10;
 import android.opengl.GLES20;
 import android.opengl.Matrix;
-import android.os.SystemClock;
 import android.util.Log;
-
-
-
-import java.nio.FloatBuffer;
-
-import javax.microedition.khronos.opengles.GL10;
 
 public class GLSLProgram {
 
@@ -49,8 +41,6 @@ public class GLSLProgram {
 
 	// uniform
 	private int mMvpLoc;
-	private int mScreenSizeLoc;
-	private int mTimeLoc;
 	// sampler
 	private int mTex0Loc;
 	/**private int mTex1Loc;
@@ -174,6 +164,7 @@ public class GLSLProgram {
 			// on calcule la nouvelle matrice de projection mMvp
 			Matrix.multiplyMM(mMvp, 0, mProjection, 0, mRotation, 0);
 			Log.i("mMvp use",String.valueOf(mMvp[0]));
+			
 			// on alimente la donnée UNIFORM mMvpLoc du programme OpenGL avec
 			// une matrice de 4 flotant
 			GLES20.glUniformMatrix4fv(mMvpLoc, 1, false, mMvp, 0);
@@ -213,9 +204,10 @@ public class GLSLProgram {
             
 			mMvp4Draw = mMvp.clone();
 			
+			gameobject.rotate(0.2f);
 			// on calcule la nouvelle matrice de projection mMvp
 			Matrix.multiplyMM(mMvp4Draw, 0, mMvp, 0, gameobject.mModelMatrix, 0);
-			Log.i("mMvp use",String.valueOf(mMvp[0]));
+		//	Log.i("mMvp draw",String.valueOf(mMvp[0]));
 			// on alimente la donnée UNIFORM mMvpLoc du programme OpenGL avec
 			// une matrice de 4 flotant
 			GLES20.glUniformMatrix4fv(mMvpLoc, 1, false, mMvp4Draw, 0);
