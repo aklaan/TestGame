@@ -1,4 +1,7 @@
-package com.example.testgame;
+package com.example.testgame.gameobjects;
+
+import com.example.testgame.GameObject;
+import com.example.testgame.Vertex;
 
 import android.util.Log;
 
@@ -29,7 +32,7 @@ public class Square extends GameObject {
 
 	@Override
 	public void onUpdate(){
-		
+		this.rotate(0.1f);
 	}
 	
 }

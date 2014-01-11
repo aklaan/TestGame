@@ -1,4 +1,6 @@
-package com.example.testgame ;
+package com.example.testgame.gameobjects ;
+
+import com.example.testgame.GameObject;
 
 public class Scene extends GameObject {
 

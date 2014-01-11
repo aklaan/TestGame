@@ -18,6 +18,8 @@ import android.util.Log;
 
 public class GameObject {
 
+	private String TagName = "";
+	
 	public static final int FLOAT_SIZE = 4; // on indique que le nombre de byte
 											// pour un float est de 4
 	// un byte n'est pas obligatoirement égal à 8 bit
@@ -165,6 +167,14 @@ public class GameObject {
 
 	public void onUpdate() {
 
+	}
+
+	public String getTagName() {
+		return TagName;
+	}
+
+	public void setTagName(String tagName) {
+		TagName = tagName;
 	}
 
 }

@@ -204,7 +204,7 @@ public class GLSLProgram {
             
 			mMvp4Draw = mMvp.clone();
 			
-			gameobject.rotate(0.2f);
+			
 			// on calcule la nouvelle matrice de projection mMvp
 			Matrix.multiplyMM(mMvp4Draw, 0, mMvp, 0, gameobject.mModelMatrix, 0);
 		//	Log.i("mMvp draw",String.valueOf(mMvp[0]));

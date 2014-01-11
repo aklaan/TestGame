@@ -12,6 +12,10 @@ import android.util.Log;
 
 import javax.microedition.khronos.egl.EGLConfig;
 import javax.microedition.khronos.opengles.GL10;
+
+import com.example.testgame.gameobjects.Square;
+import com.example.testgame.gameobjects.Square2;
+
 import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
@@ -138,7 +142,7 @@ public class GLES20Renderer implements GLSurfaceView.Renderer {
 		mSquare.putTextureToGLUnit(0);
 		mGameObjectList.add(mSquare);
 		
-		Square mSquare2 = new Square();
+		Square2 mSquare2 = new Square2();
 		mSquare2.setTexture(bitmap);
 		mSquare2.translate(-2.0f, 2.0f);
 		mGameObjectList.add(mSquare2);
@@ -168,6 +172,7 @@ public class GLES20Renderer implements GLSurfaceView.Renderer {
 	
 		
 		for (GameObject go : mGameObjectList){
+			go.onUpdate();
 			mProgramme1.draw(go, GLES20.GL_TRIANGLES);	
 		}
 	  	
