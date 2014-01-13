@@ -15,6 +15,7 @@ public class MainActivity extends Activity {
 
     //! OpenGL SurfaceView
     public GLSurfaceView mGLSurfaceView;
+    public BitmapProvider mBitmapProvider;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -34,6 +35,7 @@ public class MainActivity extends Activity {
         mGLSurfaceView.setEGLContextClientVersion(2);
         mGLSurfaceView.setRenderer(new GLES20Renderer(this));
         setContentView(mGLSurfaceView);
+        init();
     }
 
     @Override
@@ -75,4 +77,12 @@ public class MainActivity extends Activity {
     }
 
 
+    private void init(){
+    	
+    	mBitmapProvider = new BitmapProvider(this);
+    	mBitmapProvider.add("spaceship.png");
+    	mBitmapProvider.add("texture.png");
+    }
+    
+    
 }

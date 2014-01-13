@@ -19,6 +19,7 @@ import android.util.Log;
 public class GameObject {
 
 	private String TagName = "";
+	public Texture mTexture;
 	
 	public static final int FLOAT_SIZE = 4; // on indique que le nombre de byte
 											// pour un float est de 4
@@ -40,9 +41,9 @@ public class GameObject {
 	// ! coordonées de texture
 	private FloatBuffer mTextCoord;
 
-	private ByteBuffer mTexture;
-	private int mTextureWidth;
-	private int mTextureHeight;
+	//private ByteBuffer mTexture;
+	public int mTextureWidth;
+	public int mTextureHeight;
 
 	// ! matrice du modele
 	public float[] mModelMatrix = new float[16];
@@ -59,6 +60,9 @@ public class GameObject {
 
 	}
 
+		
+	
+	
 	// setter vertices
 	public void putVertex(int index, Vertex vertex) {
 		// la position physique en mémoire des bytes qui représentent le vertex
@@ -120,51 +124,11 @@ public class GameObject {
 		return mIndices;
 	}
 
-	// load a texture
-	public void setTexture(Bitmap texture) {
-
-		mTextureWidth = texture.getWidth();
-		mTextureHeight = texture.getHeight();
-		// on défini un buffer contenant tous les points de l'image
-		// il en a (longeur x hauteur)
-		// pour chaque point on a 4 bytes . 3 pour la couleur RVB et 1 pour
-		// l'alpha
-		mTexture = ByteBuffer.allocateDirect(texture.getHeight()
-				* texture.getWidth() * 4);
-
-		// on indique que les bytes dans le buffer doivent
-		// être enregistré selon le sens de lecture natif de l'architecture CPU
-		// (de gaucha a droite ou vice et versa)
-		mTexture.order(ByteOrder.nativeOrder());
-
-		byte buffer[] = new byte[4];
-		// pour chaque pixel composant l'image, on mémorise sa couleur et
-		// l'alpha
-		// dans le buffer
-		for (int i = 0; i < mTextureHeight; i++) {
-			for (int j = 0; j < mTextureWidth; j++) {
-				int color = texture.getPixel(j, i);
-				buffer[0] = (byte) Color.red(color);
-				buffer[1] = (byte) Color.green(color);
-				buffer[2] = (byte) Color.blue(color);
-				buffer[3] = (byte) Color.alpha(color);
-				mTexture.put(buffer);
-			}
-		}
-		// on se place a la position 0 du buffer - près à être lu plus tard
-		mTexture.position(0);
-
+	public void setTexture(Texture texture){
+		mTexture = texture;
 	}
-
-	// charger la texture mémorisé dans le buffer dans le moteur de rendu comme
-	// étant la texture 0,1,2,...
-	public void putTextureToGLUnit(int unit) {
-		GLES20.glTexImage2D(GL10.GL_TEXTURE_2D, unit, GL10.GL_RGBA,
-				mTextureWidth, mTextureHeight, 0, GL10.GL_RGBA,
-				GL10.GL_UNSIGNED_BYTE, mTexture);
-
-	}
-
+	
+	
 	public void onUpdate() {
 
 	}

@@ -32,7 +32,7 @@ public class GLES20Renderer implements GLSurfaceView.Renderer {
 
 	public static int mTex0;
 
-	private Activity mActivity;
+	private MainActivity mActivity;
 
 	private GLSLProgram mProgramme1;
 
@@ -41,7 +41,7 @@ public class GLES20Renderer implements GLSurfaceView.Renderer {
 	
 	
 	GLES20Renderer(Activity activity) {
-		mActivity = activity;
+		mActivity = (MainActivity) activity;
 		
 	}
 
@@ -53,6 +53,8 @@ public class GLES20Renderer implements GLSurfaceView.Renderer {
 
 		// on construit et compile le programme
 		mProgramme1.make();
+		
+		// on définit une liste des composants de jeu
 		mGameObjectList = new ArrayList<GameObject>();
 		
 
@@ -62,7 +64,7 @@ public class GLES20Renderer implements GLSurfaceView.Renderer {
 		// create texture handle
 		int[] textures = new int[1];
 
-		// on génère un buffer texture
+		// on génère un buffer texture utilisable par OPENGL
 		GLES20.glGenTextures(1, textures, 0);
 
 		mTex0 = textures[0];
@@ -83,51 +85,10 @@ public class GLES20Renderer implements GLSurfaceView.Renderer {
 		GLES20.glTexParameteri(GLES20.GL_TEXTURE_2D, GLES20.GL_TEXTURE_WRAP_T,
 				GLES20.GL_CLAMP_TO_EDGE);
 
-	
-
-		// on défini un buffer contenant tous les points de l'image
-		// il en a (longeur x hauteur)
-		// pour chaque point on a 4 bytes . 3 pour la couleur RVB et 1 pour
-		// l'alpha
-		/**ByteBuffer imageBuffer = ByteBuffer.allocateDirect(bitmap.getHeight()
-				* bitmap.getWidth() * 4);
-        */
-		// on indique que les bytes dans le buffer doivent
-		// être enregistré selon le sens de lecture natif de l'architecture CPU
-		// (de gaucha a droite ou vice et versa)
-		/**imageBuffer.order(ByteOrder.nativeOrder());
-
-		byte buffer[] = new byte[4];
-		*/
-		// pour chaque pixel composant l'image, on mémorise sa couleur et
-		// l'alpha
-		// dans le buffer
-		/**for (int i = 0; i < bitmap.getHeight(); i++) {
-			for (int j = 0; j < bitmap.getWidth(); j++) {
-				int color = bitmap.getPixel(j, i);
-				buffer[0] = (byte) Color.red(color);
-				buffer[1] = (byte) Color.green(color);
-				buffer[2] = (byte) Color.blue(color);
-				buffer[3] = (byte) Color.alpha(color);
-				imageBuffer.put(buffer);
-			}
-		}
-		*/
-		// on se place a la position 0 du buffer - près à être lu plus tard
-		/**imageBuffer.position(0);
-		*/
-		// on indique au moteur de rendu que les lignes doivent avoir une épaisseur
-		// de 5 pixels
-		GLES20.glLineWidth(5f);
-		
-		// charger la texture mémorisé dans le buffer dans le moteur de rendu comme 
-		//étant la texture 0
-		/**GLES20.glTexImage2D(GL10.GL_TEXTURE_2D, 0, GL10.GL_RGBA,
-				bitmap.getWidth(), bitmap.getHeight(), 0, GL10.GL_RGBA,
-				GL10.GL_UNSIGNED_BYTE, imageBuffer);
-*/
-		
+			
 		mProgramme1.use();
+	
+		
 		
 		Bitmap bitmap = null;
 		try {
@@ -137,14 +98,19 @@ public class GLES20Renderer implements GLSurfaceView.Renderer {
 			Log.e(this.getClass().getName(), "texture not found");
 			return;
 		}
+		
+		
 		Square mSquare = new Square();
-		mSquare.setTexture(bitmap);
-		mSquare.putTextureToGLUnit(0);
+		mActivity.mBitmapProvider.assignTexture("spaceship.png", mSquare);
+		//mSquare.setTexture(bitmap);
+		
+		//mActivity.mBitmapProvider.putTextureToGLUnit(mSquare.mTexture, 0);
 		mGameObjectList.add(mSquare);
 		
 		Square2 mSquare2 = new Square2();
-		mSquare2.setTexture(bitmap);
-		mSquare2.translate(-2.0f, 2.0f);
+		mActivity.mBitmapProvider.assignTexture("texture.png", mSquare2);
+		//mSquare2.setTexture(bitmap);
+		//mSquare2.translate(-2.0f, 2.0f);
 		mGameObjectList.add(mSquare2);
 	}
 
@@ -173,6 +139,7 @@ public class GLES20Renderer implements GLSurfaceView.Renderer {
 		
 		for (GameObject go : mGameObjectList){
 			go.onUpdate();
+			mActivity.mBitmapProvider.putTextureToGLUnit(go.mTexture, 0);
 			mProgramme1.draw(go, GLES20.GL_TRIANGLES);	
 		}
 	  	
