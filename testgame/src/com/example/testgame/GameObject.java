@@ -1,26 +1,17 @@
 package com.example.testgame;
 
-import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.nio.FloatBuffer;
 import java.nio.ShortBuffer;
-import java.util.Vector;
-
-import javax.microedition.khronos.opengles.GL10;
-
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.graphics.Color;
-import android.opengl.GLES20;
 import android.opengl.Matrix;
-import android.util.Log;
 
 public class GameObject {
 
-	private String TagName = "";
+	private String mTagName = "";
 	public Texture mTexture;
-	
+	public Boolean hasTexture;
+	public Boolean isVisible;
 	public static final int FLOAT_SIZE = 4; // on indique que le nombre de byte
 											// pour un float est de 4
 	// un byte n'est pas obligatoirement égal à 8 bit
@@ -57,7 +48,9 @@ public class GameObject {
 		mTextCoord = ByteBuffer.allocateDirect(nbVertex * 2 * FLOAT_SIZE)
 				.order(ByteOrder.nativeOrder()).asFloatBuffer();
 		Matrix.setIdentityM(mModelMatrix, 0);
-
+		hasTexture = false;
+		mTagName = "";
+		isVisible=true;
 	}
 
 		
@@ -134,11 +127,11 @@ public class GameObject {
 	}
 
 	public String getTagName() {
-		return TagName;
+		return mTagName;
 	}
 
 	public void setTagName(String tagName) {
-		TagName = tagName;
+		mTagName = tagName;
 	}
 
 }

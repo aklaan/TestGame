@@ -105,7 +105,7 @@ public class BitmapProvider {
 			wrkTextureBuffer.position(0);
 			texture.texture = wrkTextureBuffer;
 			gameobject.setTexture(texture);
-
+			gameobject.hasTexture=true;
 		}
 	
 		// charger la texture mémorisé dans le buffer dans le moteur de rendu comme

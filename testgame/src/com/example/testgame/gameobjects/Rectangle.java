@@ -5,14 +5,13 @@ import com.example.testgame.Vertex;
 
 import android.util.Log;
 
-public class Square2 extends GameObject {
+public class Rectangle extends GameObject {
 
-	static final int NB_SQUARE_VERTEX = 4;
-    private float i = 0;
-    private int sens = 1;
-	public Square2() {
+	static final int NB_RECTANGLE_VERTEX = 4;
 
-		super(NB_SQUARE_VERTEX, 6);
+	public Rectangle() {
+
+		super(NB_RECTANGLE_VERTEX, 6);
 
 		// on ajoute les 4 vertex qui compose le carré
 		this.putVertex(0, new Vertex(-1, 1, 0, 0, 0));
@@ -31,15 +30,6 @@ public class Square2 extends GameObject {
 		this.putIndice(5, 3);
 	}
 
-	@Override
-	public void onUpdate(){
-		this.rotate(0.5f);
-		
-		if (i>5 || i<-5){
-			sens = sens*-1;
-		}  
-		i=i+(0.2f * sens);
-		this.translate(i,0.f);
-	}
+	
 	
 }

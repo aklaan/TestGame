@@ -9,7 +9,6 @@ public class GLSLProgram {
 
 	// ! activity
 	private Activity mActivity;
-
 	// ! GLES20 Program
 	private int mProgramObject;
 	// ! Vertex shader
@@ -32,12 +31,12 @@ public class GLSLProgram {
 	private float[] mRotation = new float[16];
 
 	// ! matrice de Projection
-	private float[] mProjection = new float[16];
+	public float[] mProjection = new float[16];
 
 	// attibutes
-	private int mPositionLoc;
-	private int mColorLoc;
-	private int mTexCoordLoc;
+	private int MemoryAdressOfVertexPosition;
+	private int MemoryAdressOfVertexColor;
+	private int MemoryAdressOfTextCoord;
 
 	// uniform
 	private int mMvpLoc;
@@ -73,6 +72,7 @@ public class GLSLProgram {
 			near 
 			far
 			*/ 
+		
 		Matrix.orthoM(mProjection, 0, -10, 10, -10, 10, -10.f, 100000.f);
 		// Matrix.setIdentityM(mMvp, 0);
 		use();
@@ -106,10 +106,10 @@ public class GLSLProgram {
 		link();
 
 		// attributes
-		//mPositionLoc est une adresse mémoire
-		mPositionLoc = GLES20.glGetAttribLocation(mProgramObject, "aPosition");
-		mColorLoc = GLES20.glGetAttribLocation(mProgramObject, "aColor");
-		mTexCoordLoc = GLES20.glGetAttribLocation(mProgramObject, "aTexCoord");
+		//MemoryAdressOfVertexPosition est une adresse mémoire
+		MemoryAdressOfVertexPosition = GLES20.glGetAttribLocation(mProgramObject, "aPosition");
+		MemoryAdressOfVertexColor = GLES20.glGetAttribLocation(mProgramObject, "aColor");
+		MemoryAdressOfTextCoord = GLES20.glGetAttribLocation(mProgramObject, "aTexCoord");
 
 		// uniforms
 		mMvpLoc = GLES20.glGetUniformLocation(mProgramObject, "uMvp");
@@ -132,22 +132,9 @@ public class GLSLProgram {
 	static float counter = 0;
 
 	
-	void testuse(){
-		GLES20.glUseProgram(mProgramObject);
-		Log.i("mMvp use",String.valueOf(mMvp[0])
-				+"/"+String.valueOf(mMvp[1])
-				+"/"+String.valueOf(mMvp[2])
-				+"/"+String.valueOf(mMvp[3]));
-		//GLES20.glUniformMatrix4fv(mMvpLoc, 1, false, mProjection, 0);
-	
-	//    GLES20.glEnable(GLES20.GL_TEXTURE_2D);
-	//			GLES20.glBindTexture(GLES20.GL_TEXTURE_2D, GLES20Renderer.mTex0);
-	//			GLES20.glActiveTexture(GLES20.GL_TEXTURE0);
-	//			// on alimente la donnée UNIFORM mTex0Loc avc un integer 0
-		//		GLES20.glUniform1i(mTex0Loc, 0);
-	
-	}
-	
+	/**
+	 * 	
+	 */
 	void use() {
 		// use program
 		GLES20.glUseProgram(mProgramObject);
@@ -191,6 +178,11 @@ public class GLSLProgram {
 		}
 	}
 
+/**
+ * 
+ * @param gameobject
+ * @param drawingMode
+ */
 	public void draw(GameObject gameobject, int drawingMode) {
 		// appel la fonction qui passe à enable toutes les variables des shaders
 		// pour rappel, si les variables ne sont pas "enable" elle ne sont
@@ -203,8 +195,7 @@ public class GLSLProgram {
 		if (mMvpLoc != -1) {
             
 			mMvp4Draw = mMvp.clone();
-			
-			
+	
 			// on calcule la nouvelle matrice de projection mMvp
 			Matrix.multiplyMM(mMvp4Draw, 0, mMvp, 0, gameobject.mModelMatrix, 0);
 		//	Log.i("mMvp draw",String.valueOf(mMvp[0]));
@@ -252,19 +243,14 @@ public class GLSLProgram {
 
 		
 		GLES20.glDrawElements(drawingMode, gameobject.getIndices().capacity(), GLES20.GL_UNSIGNED_SHORT,gameobject.getIndices());
-	
-		
-		
-		
 		
 		disableVertexAttribArray();
-	
 	
 	}
 
 	private void enableVertexAttribArray(GameObject mGameObject) {
-        //si l'adresse mémoire de l'objet désigné par mPositionLoc n'est pas vide
-    	if (mPositionLoc != -1) {
+        //si l'adresse mémoire de l'objet désigné par MemoryAdressOfVertexPosition n'est pas vide
+    	if (MemoryAdressOfVertexPosition != -1) {
            
     		// on va chercher le FloatBuffer où sont stocké les coordonnées des sommets
            // on se positionne au début du Buffer
@@ -290,53 +276,58 @@ public class GLSLProgram {
              * 
              */
             // on souhaite passer à opengl un tableaux de coordonnées pour alimenter la aPosition des vertex.
-            // dans l'objet désigné par l'adresse mPositionLoc (càd aPosition), on va écrire le contenu du FloatBuffer contenant les coordonées des sommets
+            // dans l'objet désigné par l'adresse MemoryAdressOfVertexPosition (càd aPosition), on va écrire le contenu du FloatBuffer contenant les coordonées des sommets
         	// on spécifie comment OPENGL doit interpréter le buffer en spécifiant que chaque index du tableau comporte 3 Float d'une longeur P3FT2FR4FVertex_SIZE_BYTES
         	// autrement dit, a la lecture du Buffer, au bout de 3 Float d'une longeur P3FT2FR4FVertex_SIZE_BYTES, opengl cree un nouvel index.
-            GLES20.glVertexAttribPointer(mPositionLoc, 3, GLES20.GL_FLOAT, false, Vertex.Vertex_COORD_SIZE_BYTES, mGameObject.getVertices());
+            GLES20.glVertexAttribPointer(MemoryAdressOfVertexPosition, 3, GLES20.GL_FLOAT, false, Vertex.Vertex_COORD_SIZE_BYTES, mGameObject.getVertices());
             
-            // on rend l'utilisation de mPositionLoc (càd aPosition) possible par le moteur de rendu
+            // on rend l'utilisation de MemoryAdressOfVertexPosition (càd aPosition) possible par le moteur de rendu
             // dans le cas contraire, OPENGL n'utilisera pas les données passée à aPosition et le fragment
             // se comporte comme si aPosition vaut 0.
             
-            GLES20.glEnableVertexAttribArray(mPositionLoc);
+            GLES20.glEnableVertexAttribArray(MemoryAdressOfVertexPosition);
             
             
             mGameObject.getVertices().position(0);
-            GLES20.glVertexAttribPointer(mTexCoordLoc, 2, GLES20.GL_FLOAT, false,
+            GLES20.glVertexAttribPointer(MemoryAdressOfTextCoord, 2, GLES20.GL_FLOAT, false,
             		Vertex.Vertex_TEXT_SIZE_BYTES, mGameObject.getTextCoord());
-             GLES20.glEnableVertexAttribArray(mTexCoordLoc); 
+             GLES20.glEnableVertexAttribArray(MemoryAdressOfTextCoord); 
             
         }
 
 	/**
-	 * if (mColorLoc != -1) { vertices.getVertices().position(0);
-	 * GLES20.glVertexAttribPointer(mColorLoc, 4, GLES20.GL_FLOAT, false,
+	 * if (MemoryAdressOfVertexColor != -1) { vertices.getVertices().position(0);
+	 * GLES20.glVertexAttribPointer(MemoryAdressOfVertexColor, 4, GLES20.GL_FLOAT, false,
 	 * P3FT2FR4FVertex.P3FT2FR4FVertex_SIZE_BYTES, vertices.getVertices());
 	 * 
 	 * // ici, si on n'active pas le lien entre le programme java et le
 	 * programme OPENGL, dans le programme OpenGL, aColor serra à zéro // et les
 	 * formes seront noires / sans couleur.
-	 * GLES20.glEnableVertexAttribArray(mColorLoc); } if (mTexCoordLoc != -1) {
+	 * GLES20.glEnableVertexAttribArray(MemoryAdressOfVertexColor); } if (MemoryAdressOfTextCoord != -1) {
 	 * vertices.getVertices().position(3);
-	 * GLES20.glVertexAttribPointer(mTexCoordLoc, 2, GLES20.GL_FLOAT, false,
+	 * GLES20.glVertexAttribPointer(MemoryAdressOfTextCoord, 2, GLES20.GL_FLOAT, false,
 	 * P3FT2FR4FVertex.P3FT2FR4FVertex_SIZE_BYTES, vertices.getVertices());
-	 * GLES20.glEnableVertexAttribArray(mTexCoordLoc); }
+	 * GLES20.glEnableVertexAttribArray(MemoryAdressOfTextCoord); }
 	 */  }
 	 
 	private void disableVertexAttribArray() {
-		if (mPositionLoc != -1) {
+		if (MemoryAdressOfVertexPosition != -1) {
 			// on a plus besoin des variables, on les retire du moteur de rendu
-			GLES20.glDisableVertexAttribArray(mPositionLoc);
+			GLES20.glDisableVertexAttribArray(MemoryAdressOfVertexPosition);
 		}
-		if (mColorLoc != -1) {
-			GLES20.glDisableVertexAttribArray(mColorLoc);
+		if (MemoryAdressOfVertexColor != -1) {
+			GLES20.glDisableVertexAttribArray(MemoryAdressOfVertexColor);
 		}
-		if (mTexCoordLoc != -1) {
-			GLES20.glDisableVertexAttribArray(mTexCoordLoc);
+		if (MemoryAdressOfTextCoord != -1) {
+			GLES20.glDisableVertexAttribArray(MemoryAdressOfTextCoord);
 		}
 	}
 
+	
+	/**
+	 * 
+	 * @return
+	 */
 	private boolean link() {
 		if (mProgramObject == 0) {
 			Log.e(this.getClass().getName(),
@@ -358,6 +349,12 @@ public class GLSLProgram {
 		return true;
 	}
 
+	/**
+	 * 
+	 * @param vertexFilename
+	 * @param fragmentFilename
+	 * @return
+	 */
 	private boolean loadShaders(String vertexFilename, String fragmentFilename) {
 		if (mProgramObject == 0) {
 			Log.e(this.getClass().getName(), "No GLSL Program created!");
@@ -380,7 +377,9 @@ public class GLSLProgram {
 		return true;
 	}
 
-	/* load a Vertex or Fragment shader */
+	/**
+	 * 
+	 * /* load a Vertex or Fragment shader */
 	private int loadShader(String filename, int shaderType) {
 		String source = Util.readStringAsset(mActivity, filename);
 		int shader = GLES20.glCreateShader(shaderType);

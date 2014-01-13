@@ -1,13 +1,14 @@
 package com.example.testgame;
 
 
+
+
 import android.app.Activity;
 import android.app.ActivityManager;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.pm.ConfigurationInfo;
-import android.opengl.GLES20;
 import android.opengl.GLSurfaceView;
 import android.os.Bundle;
 
@@ -80,8 +81,9 @@ public class MainActivity extends Activity {
     private void init(){
     	
     	mBitmapProvider = new BitmapProvider(this);
-    	mBitmapProvider.add("spaceship.png");
-    	mBitmapProvider.add("texture.png");
+    	mBitmapProvider.add(getString(R.string.starship));
+    	mBitmapProvider.add(getString(R.string.texture));
+    	
     }
     
     

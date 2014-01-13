@@ -5,4 +5,6 @@
     <string name="action_settings">Settings</string>
     <string name="hello_world">Hello world!</string>
 
+    <string name="starship">spaceship.png</string>
+    <string name="texture">texture.png</string>
 </resources>
