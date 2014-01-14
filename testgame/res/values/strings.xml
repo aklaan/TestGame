@@ -7,4 +7,8 @@
 
     <string name="starship">spaceship.png</string>
     <string name="texture">texture.png</string>
+    <string name="shaderfolder">shaders</string>
+    <string name="imagesfolder">images</string>
+    <string name="defaultshader_filename">simple_shader</string>
+
 </resources>

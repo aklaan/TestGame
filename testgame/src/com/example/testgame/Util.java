@@ -9,12 +9,14 @@ import java.io.InputStream;
 public class Util {
 
     /** read an asset file as Text File and return a string */
-    public static String readStringAsset(Context context, String filename) {
+    public static String readShaderFile(Context context, String filename) {
         try {
-            InputStream iStream = context.getAssets().open(filename);
+            InputStream iStream = context.getAssets().open(
+            		   		context.getString(R.string.shaderfolder) +"/" +            		
+            		filename);
             return readStringInput(iStream);
         } catch (IOException e) {
-            Log.e("EllisMarkov", "Shader " + filename + " cannot be read");
+            Log.e("Testgame", "Shader " + filename + " cannot be read");
             return "";
         }
     }

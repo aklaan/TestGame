@@ -24,12 +24,15 @@ public class GLES20Renderer implements GLSurfaceView.Renderer {
 	public final static int MAX_POINTS = 6;
 
 	public static int mTex0;
-
 	private MainActivity mActivity;
-
-	private GLSLProgram mProgramme1;
-
+	private DefaultProgramShader mProgramme1;
 	private ArrayList<GameObject> mGameObjectList;
+
+	// ! Matrix Model View Projection
+	private float[] mMvp = new float[16];
+
+	// ! Matrix Model View Projection utiliée pour dessiner
+	private float[] mMvp4Draw = new float[16];
 
 	GLES20Renderer(Activity activity) {
 		mActivity = (MainActivity) activity;
@@ -40,7 +43,7 @@ public class GLES20Renderer implements GLSurfaceView.Renderer {
 	public void onSurfaceCreated(GL10 gl2, EGLConfig eglConfig) {
 
 		// on déclare un nouveau programme GLSL
-		mProgramme1 = new GLSLProgram(mActivity, "simple_shader");
+		mProgramme1 = new DefaultProgramShader(mActivity);
 
 		// on construit et compile le programme
 		mProgramme1.make();
@@ -75,8 +78,7 @@ public class GLES20Renderer implements GLSurfaceView.Renderer {
 		GLES20.glTexParameteri(GLES20.GL_TEXTURE_2D, GLES20.GL_TEXTURE_WRAP_T,
 				GLES20.GL_CLAMP_TO_EDGE);
 
-
-		mProgramme1.use();
+		use();
 
 		Square mSquare = new Square();
 		mActivity.mBitmapProvider.assignTexture(
@@ -100,11 +102,11 @@ public class GLES20Renderer implements GLSurfaceView.Renderer {
 		// taille de la vue (par exemple quand on incline le téléphone et
 		// que l'on passe de la vue portait à la vue paysage
 		GLES20.glViewport(0, 0, width, height);
+         int factor = 10; 
+		// float ratio = (float) width / height;
+		Matrix.orthoM(mMvp, 0, -(width / factor), (width / factor),
+				-(height / factor), (height / factor), -10.f, 100.f);
 
-		//float ratio = (float) width / height;
-		Matrix.orthoM(mProgramme1.mProjection, 0, -(width/2), (width/2), -(height/2), (height/2), -10.f, 100.f);
-		
-		
 	}
 
 	// @Override
@@ -128,7 +130,7 @@ public class GLES20Renderer implements GLSurfaceView.Renderer {
 							gameObject.mTexture, 0);
 				}
 
-				mProgramme1.draw(gameObject, GLES20.GL_TRIANGLES);
+				draw(gameObject, GLES20.GL_TRIANGLES);
 			}
 		}
 	}
@@ -145,4 +147,71 @@ public class GLES20Renderer implements GLSurfaceView.Renderer {
 		float value = (float) (Math.random() * 2. - 1.);
 		return value;
 	}
+
+	void use() {
+		// use program
+		GLES20.glUseProgram(mProgramme1.mAdressOf_GLSLProgram);
+
+		if (mProgramme1.mAdressOf_Mvp != -1) {
+			// Log.d(this.getClass().getName(),"setMvp");
+			// counter += 1.f;
+			// on calcule la matrice "mRotation" a utiliser pour pivoter
+			// d'un angle de x radian
+			// ici l'angle c'est counter
+			// le pivot est au centre à 0,0,0
+			// Matrix.setRotateEulerM(mRotation, 0, 0.f, 0.f, counter);
+
+			// on calcule la nouvelle matrice de projection mMvp
+			// Matrix.multiplyMM(mMvp, 0, mProjection, 0, mRotation, 0);
+			// Log.i("mMvp use",String.valueOf(mMvp[0]));
+
+			// on alimente la donnée UNIFORM mAdressOf_Mvp du programme OpenGL
+			// avec
+			// une matrice de 4 flotant
+			GLES20.glUniformMatrix4fv(mProgramme1.mAdressOf_Mvp, 1, false,
+					mMvp, 0);
+		}
+
+		if (mProgramme1.mAdressOf_Texture0 != -1) {
+			GLES20.glEnable(GLES20.GL_TEXTURE_2D);
+			GLES20.glBindTexture(GLES20.GL_TEXTURE_2D, GLES20Renderer.mTex0);
+			GLES20.glActiveTexture(GLES20.GL_TEXTURE0);
+			// on alimente la donnée UNIFORM mAdressOf_Texture0 avc un integer 0
+			GLES20.glUniform1i(mProgramme1.mAdressOf_Texture0, 0);
+		}
+	}
+
+	public void draw(GameObject gameobject, int drawingMode) {
+		// appel la fonction qui passe à enable toutes les variables des shaders
+		// pour rappel, si les variables ne sont pas "enable" elle ne sont
+		// pas prise en compte dans les shaders
+
+		// théoriquement pas la peine de le faire à chaque frame...
+		mProgramme1.enableVertexAttribArray(gameobject);
+
+		if (mProgramme1.mAdressOf_Mvp != -1) {
+
+			mMvp4Draw = mMvp.clone();
+
+			// on calcule la nouvelle matrice de projection qui serra utilisé
+			// par le shader.
+			Matrix.multiplyMM(mMvp4Draw, 0, mMvp, 0, gameobject.mModelMatrix, 0);
+			// on alimente la donnée UNIFORM mAdressOf_Mvp du programme OpenGL
+			// avec
+			// une matrice de 4 flotant.
+			GLES20.glUniformMatrix4fv(mProgramme1.mAdressOf_Mvp, 1, false,
+					mMvp4Draw, 0);
+		}
+
+		// on se positionne au debut du Buffer des indices
+		// qui indiquent dans quel ordre les vertex doivent être dessinés
+		gameobject.getIndices().position(0);
+
+		GLES20.glDrawElements(drawingMode, gameobject.getIndices().capacity(),
+				GLES20.GL_UNSIGNED_SHORT, gameobject.getIndices());
+
+		mProgramme1.disableVertexAttribArray();
+
+	}
+
 }

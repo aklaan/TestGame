@@ -3,6 +3,7 @@ package com.example.testgame.gameobjects;
 import com.example.testgame.GameObject;
 import com.example.testgame.Vertex;
 
+import android.opengl.Matrix;
 import android.util.Log;
 
 public class Square2 extends GameObject {
@@ -33,6 +34,8 @@ public class Square2 extends GameObject {
 
 	@Override
 	public void onUpdate(){
+		Matrix.setIdentityM(mModelMatrix, 0);
+		this.scale(10f, 10f);
 		this.rotate(0.5f);
 		
 		if (i>5 || i<-5){

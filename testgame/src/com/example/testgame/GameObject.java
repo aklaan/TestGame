@@ -76,10 +76,14 @@ public class GameObject {
 	}
 
 	public void translate(float x, float y) {
-		Matrix.setIdentityM(mModelMatrix, 0);
+		
 		Matrix.translateM(mModelMatrix, 0, x, y, 0f);
 	}
 
+	public void scale(float scaleX, float scaleY) {
+		
+		Matrix.scaleM(mModelMatrix, 0, scaleX, scaleY, 0f);
+	}
 	public void rotate(float anglRAD) {
 		float[] wrkRotationMatrix = new float[16];
 		float[] wrkModelMatrix = new float[16];

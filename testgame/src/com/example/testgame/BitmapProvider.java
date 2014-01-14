@@ -32,10 +32,13 @@ public class BitmapProvider {
 	 * @param bitmapName
 	 */
 	public void add(String bitmapName) {
-
+		
 		Bitmap bitmap = null;
 		try {
 			bitmap = BitmapFactory.decodeStream(mActivity.getAssets().open(
+					
+					mActivity.getString(R.string.imagesfolder) +"/" +
+					
 					bitmapName));
 		} catch (IOException e) {
 			Log.e(this.getClass().getName(), "bitmap not found");
