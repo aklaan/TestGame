@@ -1,6 +1,7 @@
 package com.example.testgame.gameobjects;
 
 import com.example.testgame.GameObject;
+import com.example.testgame.OpenGLActivity;
 import com.example.testgame.Vertex;
 
 import android.util.Log;
@@ -28,6 +29,11 @@ public class Rectangle extends GameObject {
 		this.putIndice(3, 0);
 		this.putIndice(4, 2);
 		this.putIndice(5, 3);
+	}
+
+	public void onUpdate(OpenGLActivity openGLActivity) {
+		// TODO Auto-generated method stub
+		
 	}
 
 	

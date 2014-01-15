@@ -4,7 +4,10 @@ import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.nio.FloatBuffer;
 import java.nio.ShortBuffer;
+
+import android.content.Context;
 import android.opengl.Matrix;
+import android.util.Log;
 
 public class GameObject {
 
@@ -12,6 +15,12 @@ public class GameObject {
 	public Texture mTexture;
 	public Boolean hasTexture;
 	public Boolean isVisible;
+	private float width = 1.f;
+	private float height = 1.f;
+    private int X=0;
+    private int Y=0;
+	
+	
 	public static final int FLOAT_SIZE = 4; // on indique que le nombre de byte
 											// pour un float est de 4
 	// un byte n'est pas obligatoirement égal à 8 bit
@@ -32,7 +41,7 @@ public class GameObject {
 	// ! coordonées de texture
 	private FloatBuffer mTextCoord;
 
-	//private ByteBuffer mTexture;
+	// private ByteBuffer mTexture;
 	public int mTextureWidth;
 	public int mTextureHeight;
 
@@ -50,12 +59,9 @@ public class GameObject {
 		Matrix.setIdentityM(mModelMatrix, 0);
 		hasTexture = false;
 		mTagName = "";
-		isVisible=true;
+		isVisible = true;
 	}
 
-		
-	
-	
 	// setter vertices
 	public void putVertex(int index, Vertex vertex) {
 		// la position physique en mémoire des bytes qui représentent le vertex
@@ -76,22 +82,24 @@ public class GameObject {
 	}
 
 	public void translate(float x, float y) {
-		
+
 		Matrix.translateM(mModelMatrix, 0, x, y, 0f);
 	}
 
 	public void scale(float scaleX, float scaleY) {
-		
+
 		Matrix.scaleM(mModelMatrix, 0, scaleX, scaleY, 0f);
 	}
+
 	public void rotate(float anglRAD) {
 		float[] wrkRotationMatrix = new float[16];
 		float[] wrkModelMatrix = new float[16];
 
 		Matrix.setRotateEulerM(wrkRotationMatrix, 0, 0.f, 0.f, anglRAD);
 		wrkModelMatrix = mModelMatrix.clone();
-		Matrix.multiplyMM(mModelMatrix, 0, wrkModelMatrix, 0,wrkRotationMatrix, 0);
-				
+		Matrix.multiplyMM(mModelMatrix, 0, wrkModelMatrix, 0,
+				wrkRotationMatrix, 0);
+
 	}
 
 	// setter indices
@@ -121,12 +129,12 @@ public class GameObject {
 		return mIndices;
 	}
 
-	public void setTexture(Texture texture){
+	public void setTexture(Texture texture) {
 		mTexture = texture;
+	    
 	}
-	
-	
-	public void onUpdate() {
+
+	public void onUpdate(Context context) {
 
 	}
 
@@ -137,5 +145,43 @@ public class GameObject {
 	public void setTagName(String tagName) {
 		mTagName = tagName;
 	}
+
+	public float getWidth() {
+		return width;
+	}
+
+	public void setWidth(float width) {
+		this.width = width;
+		updateModelMatrix();
+	}
+
+	public float getHeight() {
+		return height;
+	}
+
+	public void setHeight(float height) {
+		this.height = height;
+		updateModelMatrix();
+	}
+
+	public void setCoord(int x, int y) {
+		this.X=x;
+		this.Y=y;
+		updateModelMatrix();
+		
+	}
+
+private void updateModelMatrix(){
+	Matrix.setIdentityM(mModelMatrix, 0);
+	
+	//Log.i("debug","width = "+ String.valueOf(width)+" / height="+String.valueOf(height));
+	this.translate(X,Y);
+	this.scale(width, height);
+}
+
+public void onUpdate(OpenGLActivity openGLActivity) {
+	// TODO Auto-generated method stub
+	
+}
 
 }

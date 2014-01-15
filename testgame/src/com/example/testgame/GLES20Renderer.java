@@ -42,6 +42,8 @@ public class GLES20Renderer implements GLSurfaceView.Renderer {
 	// @Override
 	public void onSurfaceCreated(GL10 gl2, EGLConfig eglConfig) {
 
+		
+		
 		// on déclare un nouveau programme GLSL
 		mProgramme1 = new DefaultProgramShader(mActivity);
 
@@ -81,6 +83,9 @@ public class GLES20Renderer implements GLSurfaceView.Renderer {
 		use();
 
 		Square mSquare = new Square();
+		mSquare.setCoord(10, -500);
+		mSquare.setHeight(100.f);
+		mSquare.setWidth(100.f);
 		mActivity.mBitmapProvider.assignTexture(
 				mActivity.getString(R.string.starship), mSquare);
 		// mSquare.setTexture(bitmap);
@@ -89,6 +94,11 @@ public class GLES20Renderer implements GLSurfaceView.Renderer {
 		mGameObjectList.add(mSquare);
 
 		Square2 mSquare2 = new Square2();
+		
+		mSquare2.setCoord(10, 30);
+		mSquare2.setHeight(100.f);
+		mSquare2.setWidth(100.f);
+		
 		mActivity.mBitmapProvider.assignTexture(
 				mActivity.getString(R.string.texture), mSquare2);
 		// mSquare2.setTexture(bitmap);
@@ -102,10 +112,10 @@ public class GLES20Renderer implements GLSurfaceView.Renderer {
 		// taille de la vue (par exemple quand on incline le téléphone et
 		// que l'on passe de la vue portait à la vue paysage
 		GLES20.glViewport(0, 0, width, height);
-         int factor = 10; 
+         int factor = 1; 
 		// float ratio = (float) width / height;
 		Matrix.orthoM(mMvp, 0, -(width / factor), (width / factor),
-				-(height / factor), (height / factor), -10.f, 100.f);
+				-(height / factor), (height / factor), -10.f, 10.f);
 
 	}
 
@@ -121,7 +131,7 @@ public class GLES20Renderer implements GLSurfaceView.Renderer {
 		// en mode points GL_POINTS ,GL_LINES, GL_TRIANGLES
 
 		for (GameObject gameObject : mGameObjectList) {
-			gameObject.onUpdate();
+			gameObject.onUpdate(mActivity);
 
 			if (gameObject.isVisible) {
 

@@ -1,8 +1,12 @@
 package com.example.testgame.gameobjects;
 
 import com.example.testgame.GameObject;
+import com.example.testgame.MainActivity;
+import com.example.testgame.OpenGLActivity;
 import com.example.testgame.Vertex;
 
+import android.app.Activity;
+import android.content.Context;
 import android.opengl.Matrix;
 import android.util.Log;
 
@@ -33,16 +37,16 @@ public class Square2 extends GameObject {
 	}
 
 	@Override
-	public void onUpdate(){
-		Matrix.setIdentityM(mModelMatrix, 0);
-		this.scale(10f, 10f);
-		this.rotate(0.5f);
+	public void onUpdate(OpenGLActivity activity){
+		float limit_y = activity.mGLSurfaceView.getHeight()/2;
+		Log.i("debug",String.valueOf(activity.mGLSurfaceView.getHeight()));
 		
-		if (i>5 || i<-5){
+		
+		if (i>limit_y || i<-limit_y){
 			sens = sens*-1;
 		}  
 		i=i+(0.2f * sens);
-		this.translate(i,0.f);
+		this.translate(0,i);
 	}
 	
 }
