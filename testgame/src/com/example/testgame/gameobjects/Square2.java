@@ -38,15 +38,19 @@ public class Square2 extends GameObject {
 
 	@Override
 	public void onUpdate(OpenGLActivity activity){
-		float limit_y = activity.mGLSurfaceView.getHeight()/2;
-		Log.i("debug",String.valueOf(activity.mGLSurfaceView.getHeight()));
+		float limit_y = activity.mGLSurfaceView.getHeight();
+		//Log.i("debug",String.valueOf(activity.mGLSurfaceView.getHeight()));
+		//Log.i("debug",String.valueOf(i));
 		
+		float inc = 5.f;
 		
-		if (i>limit_y || i<-limit_y){
+		if (this.getCoordY()>limit_y || this.getCoordY()<-limit_y){
 			sens = sens*-1;
 		}  
-		i=i+(0.2f * sens);
-		this.translate(0,i);
+		
+		inc=inc * sens;
+		
+		this.translate(0,inc);
 	}
 	
 }

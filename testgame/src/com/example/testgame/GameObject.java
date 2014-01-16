@@ -82,8 +82,11 @@ public class GameObject {
 	}
 
 	public void translate(float x, float y) {
-
-		Matrix.translateM(mModelMatrix, 0, x, y, 0f);
+		// il faut tenir compte du facteur SCALE pour se déplacer à la bonne unitée
+		float wrkX = (width==0)? 0: (x/width); 
+		float wrkY = (height==0)? 0: (y/height);
+		
+		Matrix.translateM(mModelMatrix, 0, wrkX, wrkY, 0f);
 	}
 
 	public void scale(float scaleX, float scaleY) {
@@ -171,12 +174,23 @@ public class GameObject {
 		
 	}
 
+	public float getCoordX() {
+		return mModelMatrix[12];
+			
+	}
+	
+	public float getCoordY() {
+		return mModelMatrix[13];
+			
+	}
+	
 private void updateModelMatrix(){
 	Matrix.setIdentityM(mModelMatrix, 0);
 	
 	//Log.i("debug","width = "+ String.valueOf(width)+" / height="+String.valueOf(height));
-	this.translate(X,Y);
+	
 	this.scale(width, height);
+	this.translate(X,Y);
 }
 
 public void onUpdate(OpenGLActivity openGLActivity) {
