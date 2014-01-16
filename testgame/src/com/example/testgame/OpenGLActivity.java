@@ -15,13 +15,18 @@ import android.os.Bundle;
 public class OpenGLActivity extends Activity {
 
     //! OpenGL SurfaceView
-    public GLSurfaceView mGLSurfaceView;
+    public MySurfaceView mGLSurfaceView;
     public BitmapProvider mBitmapProvider;
+
+	private float mXScreenLimit;
+	private float mYScreenLimit;
+	private float mZoomFactor;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+    	mZoomFactor = 1.0f;
         
         
         if (!isOGLES20Compatible()) {
@@ -33,7 +38,7 @@ public class OpenGLActivity extends Activity {
 
         // We don't use Layout. But you can.
         // create an OpenGLView
-        mGLSurfaceView = new GLSurfaceView(this);
+        mGLSurfaceView = new MySurfaceView(this);
         mGLSurfaceView.setDebugFlags(GLSurfaceView.DEBUG_CHECK_GL_ERROR);
         mGLSurfaceView.setEGLContextClientVersion(2);
         mGLSurfaceView.setRenderer(new GLES20Renderer(this));
@@ -88,5 +93,32 @@ public class OpenGLActivity extends Activity {
     	
     }
     
+    public float getXScreenLimit() {
+		return mXScreenLimit;
+	}
+
+	public void setXScreenLimit(float mXScreenLimit) {
+		this.mXScreenLimit = mXScreenLimit;
+	}
+
+	public float getYScreenLimit() {
+		return mYScreenLimit;
+	}
+
+	public void setYScreenLimit(float mYScreenLimit) {
+		this.mYScreenLimit = mYScreenLimit;
+	}
+
+	public float getZoomFactor() {
+		return mZoomFactor;
+	}
+
+	public void setZoomFactor(float newFactor) {
+		
+		if (newFactor !=0) {
+			this.mZoomFactor = mZoomFactor;	
+		}
+		
+	}
     
 }

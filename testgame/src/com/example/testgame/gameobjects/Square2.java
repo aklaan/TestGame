@@ -38,7 +38,7 @@ public class Square2 extends GameObject {
 
 	@Override
 	public void onUpdate(OpenGLActivity activity){
-		float limit_y = activity.mGLSurfaceView.getHeight();
+		float limit_y = activity.getYScreenLimit();
 		//Log.i("debug",String.valueOf(activity.mGLSurfaceView.getHeight()));
 		//Log.i("debug",String.valueOf(i));
 		

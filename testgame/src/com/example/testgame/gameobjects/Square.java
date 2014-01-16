@@ -10,10 +10,12 @@ public class Square extends Rectangle {
 		
 	}
 	@Override
-	public void onUpdate(OpenGLActivity openGLActivity){
-			
+	public void onUpdate(OpenGLActivity activity){
+			if (activity.mGLSurfaceView.touched){
+				this.rotate(0.5f);		
+			}
 		
-		this.rotate(0.5f);
+		
 	}
 	
 }

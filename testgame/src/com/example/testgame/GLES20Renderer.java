@@ -22,12 +22,15 @@ public class GLES20Renderer implements GLSurfaceView.Renderer {
 	public final static String TAG_ERROR = "CRITICAL ERROR";
 
 	public final static int MAX_POINTS = 6;
-
+	
+	
 	public static int mTex0;
 	private MainActivity mActivity;
 	private DefaultProgramShader mProgramme1;
 	private ArrayList<GameObject> mGameObjectList;
 
+	
+	
 	// ! Matrix Model View Projection
 	private float[] mMvp = new float[16];
 
@@ -36,7 +39,8 @@ public class GLES20Renderer implements GLSurfaceView.Renderer {
 
 	GLES20Renderer(Activity activity) {
 		mActivity = (MainActivity) activity;
-
+	
+		
 	}
 
 	// @Override
@@ -83,7 +87,7 @@ public class GLES20Renderer implements GLSurfaceView.Renderer {
 		use();
 
 		Square mSquare = new Square();
-		mSquare.setCoord(10, -500);
+		mSquare.setCoord(10, -100);
 		mSquare.setHeight(100.f);
 		mSquare.setWidth(100.f);
 		mActivity.mBitmapProvider.assignTexture(
@@ -112,10 +116,14 @@ public class GLES20Renderer implements GLSurfaceView.Renderer {
 		// taille de la vue (par exemple quand on incline le téléphone et
 		// que l'on passe de la vue portait à la vue paysage
 		GLES20.glViewport(0, 0, width, height);
-         int factor = 1; 
-		// float ratio = (float) width / height;
-		Matrix.orthoM(mMvp, 0, -(width / factor), (width / factor),
-				-(height / factor), (height / factor), -10.f, 10.f);
+        mActivity.setXScreenLimit(width /2);
+        mActivity.setYScreenLimit(height /2);
+        
+		Matrix.orthoM(mMvp, 0
+				,-(mActivity.getXScreenLimit() / mActivity.getZoomFactor())
+				, (mActivity.getXScreenLimit() / mActivity.getZoomFactor())
+				,-(mActivity.getYScreenLimit() / mActivity.getZoomFactor())
+				, (mActivity.getYScreenLimit() / mActivity.getZoomFactor()), -10.f, 10.f);
 
 	}
 
@@ -224,4 +232,5 @@ public class GLES20Renderer implements GLSurfaceView.Renderer {
 
 	}
 
+	
 }
