@@ -1,10 +1,14 @@
-package com.example.testgame;
+package com.example.testgame.gamecomponents;
 
 import android.content.Context;
+import android.opengl.GLES20;
 import android.util.Log;
 
 import java.io.IOException;
 import java.io.InputStream;
+
+import com.example.testgame.R;
+import com.example.testgame.R.string;
 
 public class Util {
 
@@ -32,5 +36,13 @@ public class Util {
         return sb.toString();
     }
 
+	// retourne un float aléatoire entre 0 et 1
+	public static float getRamdom() {
+		float value = (float) (Math.random() * 2. - 1.);
+		return value;
+	}
+
+	
+	
 
 }

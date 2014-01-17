@@ -1,19 +1,16 @@
-package com.example.testgame.gameobjects;
+package com.example.testgame.gamecomponents;
 
-import com.example.testgame.GameObject;
-import com.example.testgame.OpenGLActivity;
-import com.example.testgame.Vertex;
 
 import android.util.Log;
 
-public class Rectangle extends GameObject {
+public class Rectangle2D extends GameObject {
 
 	static final int NB_RECTANGLE_VERTEX = 4;
 
-	public Rectangle() {
+	public Rectangle2D() {
 
 		super(NB_RECTANGLE_VERTEX, 6);
-
+        // par défaut un rectangle a la forme d'un carré
 		// on ajoute les 4 vertex qui compose le carré
 		this.putVertex(0, new Vertex(-1, 1, 0, 0, 0));
 		this.putVertex(1, new Vertex(-1, -1, 0, 0, 1));

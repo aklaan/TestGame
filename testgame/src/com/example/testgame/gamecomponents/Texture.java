@@ -1,4 +1,4 @@
-package com.example.testgame;
+package com.example.testgame.gamecomponents;
 
 import java.nio.ByteBuffer;
 

@@ -1,4 +1,4 @@
-package com.example.testgame;
+package com.example.testgame.gamecomponents;
 
 import java.io.IOException;
 import java.nio.ByteBuffer;
@@ -7,6 +7,9 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 import javax.microedition.khronos.opengles.GL10;
+
+import com.example.testgame.R;
+import com.example.testgame.R.string;
 
 import android.app.Activity;
 import android.graphics.Bitmap;

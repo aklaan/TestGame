@@ -1,7 +1,10 @@
-package com.example.testgame;
+package com.example.testgame.gamecomponents;
 
 import java.io.IOException;
 import java.io.InputStream;
+
+import com.example.testgame.R;
+import com.example.testgame.R.string;
 
 import android.app.Activity;
 import android.opengl.GLES20;

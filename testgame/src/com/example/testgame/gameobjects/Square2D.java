@@ -1,21 +1,15 @@
 package com.example.testgame.gameobjects;
 
-import com.example.testgame.GameObject;
-import com.example.testgame.MainActivity;
-import com.example.testgame.OpenGLActivity;
-import com.example.testgame.Vertex;
+import com.example.testgame.gamecomponents.GameObject;
+import com.example.testgame.gamecomponents.OpenGLActivity;
+import com.example.testgame.gamecomponents.Vertex;
 
-import android.app.Activity;
-import android.content.Context;
-import android.opengl.Matrix;
-import android.util.Log;
-
-public class Square2 extends GameObject {
+public class Square2D extends GameObject {
 
 	static final int NB_SQUARE_VERTEX = 4;
     private float i = 0;
     private int sens = 1;
-	public Square2() {
+	public Square2D() {
 
 		super(NB_SQUARE_VERTEX, 6);
 

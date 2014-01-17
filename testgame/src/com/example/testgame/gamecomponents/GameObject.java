@@ -1,9 +1,11 @@
-package com.example.testgame;
+package com.example.testgame.gamecomponents;
 
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.nio.FloatBuffer;
 import java.nio.ShortBuffer;
+import java.util.ArrayList;
+
 
 import android.content.Context;
 import android.opengl.Matrix;
@@ -11,16 +13,22 @@ import android.util.Log;
 
 public class GameObject {
 
+	
 	private String mTagName = "";
 	public Texture mTexture;
 	public Boolean hasTexture;
 	public Boolean isVisible;
+	//top permettant de savoir si l'objet est statique ou qu'il 
+	//a la possibilité d'être en mouvement. ceci va servir
+	//pour le calcul des collisions
+	public Boolean isStatic = true;
 	private float width = 1.f;
 	private float height = 1.f;
     private int X=0;
     private int Y=0;
+    private int[] mCollideWithObjectsIdList;
 	
-	
+    
 	public static final int FLOAT_SIZE = 4; // on indique que le nombre de byte
 											// pour un float est de 4
 	// un byte n'est pas obligatoirement égal à 8 bit
@@ -48,6 +56,7 @@ public class GameObject {
 	// ! matrice du modele
 	public float[] mModelMatrix = new float[16];
 
+
 	// constructeur
 	public GameObject(int nbVertex, int nbIndex) {
 		mVertices = ByteBuffer.allocateDirect(nbVertex * 3 * FLOAT_SIZE)
@@ -60,6 +69,9 @@ public class GameObject {
 		hasTexture = false;
 		mTagName = "";
 		isVisible = true;
+	
+		
+	
 	}
 
 	// setter vertices

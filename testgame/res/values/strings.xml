@@ -5,8 +5,8 @@
     <string name="action_settings">Settings</string>
     <string name="hello_world">Hello world!</string>
 
-    <string name="starship">spaceship.png</string>
-    <string name="texture">texture.png</string>
+    <string name="textureStarship">spaceship.png</string>
+    <string name="textureRobot">texture.png</string>
     <string name="shaderfolder">shaders</string>
     <string name="imagesfolder">images</string>
     <string name="defaultshader_filename">simple_shader</string>

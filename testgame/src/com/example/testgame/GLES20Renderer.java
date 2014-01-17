@@ -9,8 +9,10 @@ import android.util.Log;
 import javax.microedition.khronos.egl.EGLConfig;
 import javax.microedition.khronos.opengles.GL10;
 
-import com.example.testgame.gameobjects.Square;
-import com.example.testgame.gameobjects.Square2;
+import com.example.testgame.gamecomponents.DefaultProgramShader;
+import com.example.testgame.gamecomponents.GameObject;
+import com.example.testgame.gameobjects.Starship;
+import com.example.testgame.gameobjects.PetitRobot;
 
 import java.util.ArrayList;
 
@@ -37,7 +39,7 @@ public class GLES20Renderer implements GLSurfaceView.Renderer {
 	// ! Matrix Model View Projection utiliée pour dessiner
 	private float[] mMvp4Draw = new float[16];
 
-	GLES20Renderer(Activity activity) {
+	public GLES20Renderer(Activity activity) {
 		mActivity = (MainActivity) activity;
 	
 		
@@ -86,28 +88,24 @@ public class GLES20Renderer implements GLSurfaceView.Renderer {
 
 		use();
 
-		Square mSquare = new Square();
-		mSquare.setCoord(10, -100);
-		mSquare.setHeight(100.f);
-		mSquare.setWidth(100.f);
+		Starship mStarship = new Starship();
+		mStarship.setCoord(10, -100);
+		mStarship.setHeight(100.f);
+		mStarship.setWidth(100.f);
 		mActivity.mBitmapProvider.assignTexture(
-				mActivity.getString(R.string.starship), mSquare);
-		// mSquare.setTexture(bitmap);
+				mActivity.getString(R.string.textureStarship), mStarship);
+		        
+		mGameObjectList.add(mStarship);
 
-		// mActivity.mBitmapProvider.putTextureToGLUnit(mSquare.mTexture, 0);
-		mGameObjectList.add(mSquare);
-
-		Square2 mSquare2 = new Square2();
-		
-		mSquare2.setCoord(10, 30);
-		mSquare2.setHeight(100.f);
-		mSquare2.setWidth(100.f);
+		PetitRobot mPetitRobot = new PetitRobot();
+		mPetitRobot.setCoord(10, 30);
+		mPetitRobot.setHeight(100.f);
+		mPetitRobot.setWidth(100.f);
 		
 		mActivity.mBitmapProvider.assignTexture(
-				mActivity.getString(R.string.texture), mSquare2);
-		// mSquare2.setTexture(bitmap);
-		// mSquare2.translate(-2.0f, 2.0f);
-		mGameObjectList.add(mSquare2);
+				mActivity.getString(R.string.textureRobot), mPetitRobot);
+		
+		mGameObjectList.add(mPetitRobot);
 	}
 
 	// @Override
@@ -153,18 +151,7 @@ public class GLES20Renderer implements GLSurfaceView.Renderer {
 		}
 	}
 
-	private void checkGlError(String op) {
-		int error;
-		while ((error = GLES20.glGetError()) != GLES20.GL_NO_ERROR) {
-			Log.e(this.getClass().getSimpleName(), op + ": glError " + error);
-		}
-	}
 
-	// retourne un float aléatoire entre 0 et 1
-	private float getRamdom() {
-		float value = (float) (Math.random() * 2. - 1.);
-		return value;
-	}
 
 	void use() {
 		// use program
