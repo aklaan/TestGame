@@ -26,7 +26,7 @@ public class GameObject {
 	private float height = 1.f;
     private int X=0;
     private int Y=0;
-    private int[] mCollideWithObjectsIdList;
+    public ArrayList<GameObject> mCollideWithList;
 	
     
 	public static final int FLOAT_SIZE = 4; // on indique que le nombre de byte
@@ -69,7 +69,7 @@ public class GameObject {
 		hasTexture = false;
 		mTagName = "";
 		isVisible = true;
-	
+	this.mCollideWithList = new ArrayList<GameObject>();
 		
 	
 	}
@@ -111,6 +111,7 @@ public class GameObject {
 		float[] wrkModelMatrix = new float[16];
 
 		Matrix.setRotateEulerM(wrkRotationMatrix, 0, 0.f, 0.f, anglRAD);
+		
 		wrkModelMatrix = mModelMatrix.clone();
 		Matrix.multiplyMM(mModelMatrix, 0, wrkModelMatrix, 0,
 				wrkRotationMatrix, 0);

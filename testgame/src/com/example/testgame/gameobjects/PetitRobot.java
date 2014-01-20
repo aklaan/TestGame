@@ -9,8 +9,9 @@ public class PetitRobot extends Rectangle2D {
 	public PetitRobot() {
 
 		super();
-
-			}
+this.setTagName("rotobt");
+	this.isStatic=false;		
+	}
 
 	@Override
 	public void onUpdate(OpenGLActivity activity){
@@ -20,7 +21,7 @@ public class PetitRobot extends Rectangle2D {
 		
 		float inc = 5.f;
 		
-		if (this.getCoordY()>limit_y || this.getCoordY()<-limit_y){
+		if (this.getCoordY()>limit_y || this.getCoordY()<0){
 			sens = sens*-1;
 		}  
 		

@@ -9,6 +9,7 @@ import android.util.Log;
 import javax.microedition.khronos.egl.EGLConfig;
 import javax.microedition.khronos.opengles.GL10;
 
+import com.example.testgame.gamecomponents.CollisionControler;
 import com.example.testgame.gamecomponents.DefaultProgramShader;
 import com.example.testgame.gamecomponents.GameObject;
 import com.example.testgame.gameobjects.Starship;
@@ -89,18 +90,41 @@ public class GLES20Renderer implements GLSurfaceView.Renderer {
 		use();
 
 		Starship mStarship = new Starship();
-		mStarship.setCoord(10, -100);
-		mStarship.setHeight(100.f);
-		mStarship.setWidth(100.f);
+		mStarship.setCoord(0, 0);
+		mStarship.setHeight(150.f);
+		mStarship.setWidth(150.f);
 		mActivity.mBitmapProvider.assignTexture(
 				mActivity.getString(R.string.textureStarship), mStarship);
 		        
 		mGameObjectList.add(mStarship);
 
+		
+		Starship mStarship2 = new Starship();
+		mStarship2.setCoord(150, 150);
+		mStarship2.setHeight(50.f);
+		mStarship2.setWidth(50.f);
+		mActivity.mBitmapProvider.assignTexture(
+				mActivity.getString(R.string.textureStarship), mStarship2);
+		        
+		mGameObjectList.add(mStarship2);
+
+	
+		Starship mStarship3 = new Starship();
+		mStarship3.setCoord(150, 250);
+		mStarship3.setHeight(50.f);
+		mStarship3.setWidth(50.f);
+		mActivity.mBitmapProvider.assignTexture(
+				mActivity.getString(R.string.textureStarship), mStarship3);
+		        
+		mGameObjectList.add(mStarship3);
+
+		
+		
+		
 		PetitRobot mPetitRobot = new PetitRobot();
-		mPetitRobot.setCoord(10, 30);
-		mPetitRobot.setHeight(100.f);
-		mPetitRobot.setWidth(100.f);
+		mPetitRobot.setCoord(150, 30);
+		mPetitRobot.setHeight(10.f);
+		mPetitRobot.setWidth(10.f);
 		
 		mActivity.mBitmapProvider.assignTexture(
 				mActivity.getString(R.string.textureRobot), mPetitRobot);
@@ -114,15 +138,24 @@ public class GLES20Renderer implements GLSurfaceView.Renderer {
 		// taille de la vue (par exemple quand on incline le téléphone et
 		// que l'on passe de la vue portait à la vue paysage
 		GLES20.glViewport(0, 0, width, height);
-        mActivity.setXScreenLimit(width /2);
-        mActivity.setYScreenLimit(height /2);
-        
+        mActivity.setXScreenLimit(width );
+        mActivity.setYScreenLimit(height );
+    /**    
 		Matrix.orthoM(mMvp, 0
 				,-(mActivity.getXScreenLimit() / mActivity.getZoomFactor())
 				, (mActivity.getXScreenLimit() / mActivity.getZoomFactor())
 				,-(mActivity.getYScreenLimit() / mActivity.getZoomFactor())
 				, (mActivity.getYScreenLimit() / mActivity.getZoomFactor()), -10.f, 10.f);
+*/
+		
+        // le (0,0) est en bas à gauche.
+        Matrix.orthoM(mMvp, 0
+				,-0
+				, (width / mActivity.getZoomFactor())
+				,-0
+				, (height / mActivity.getZoomFactor()), -10.f, 10.f);
 
+	
 	}
 
 	// @Override
@@ -136,6 +169,7 @@ public class GLES20Renderer implements GLSurfaceView.Renderer {
 		// ici on peu demander à dessiner
 		// en mode points GL_POINTS ,GL_LINES, GL_TRIANGLES
 
+		CollisionControler.checkAllCollisions(mGameObjectList);
 		for (GameObject gameObject : mGameObjectList) {
 			gameObject.onUpdate(mActivity);
 

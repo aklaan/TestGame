@@ -12,6 +12,8 @@ public class Rectangle2D extends GameObject {
 		super(NB_RECTANGLE_VERTEX, 6);
         // par défaut un rectangle a la forme d'un carré
 		// on ajoute les 4 vertex qui compose le carré
+		// les 3 premiers chiffre sont les coordonées X,Y,Z
+		// les 2 derniers U et W 
 		this.putVertex(0, new Vertex(-1, 1, 0, 0, 0));
 		this.putVertex(1, new Vertex(-1, -1, 0, 0, 1));
 		this.putVertex(2, new Vertex(1, -1, 0, 1, 1));
