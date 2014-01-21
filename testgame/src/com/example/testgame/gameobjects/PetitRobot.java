@@ -27,7 +27,7 @@ this.setTagName("rotobt");
 		
 		inc=inc * sens;
 		
-		this.translate(0,inc);
+		this.Y = Y+inc;
 	}
 	
 }

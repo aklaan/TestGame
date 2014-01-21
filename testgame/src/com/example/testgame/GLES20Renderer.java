@@ -24,34 +24,31 @@ public class GLES20Renderer implements GLSurfaceView.Renderer {
 
 	public final static String TAG_ERROR = "CRITICAL ERROR";
 
-	public final static int MAX_POINTS = 6;
-	// ! matrice du modele
-	public float[] mModelView = new float[16];
-	
 	public static int mTex0;
 	private MainActivity mActivity;
-	private DefaultProgramShader mProgramme1;
+	public DefaultProgramShader mProgramme1;
 	private ArrayList<GameObject> mGameObjectList;
 
-	
-	
 	// ! Matrix Model View Projection
-	private float[] mMvp = new float[16];
+	public float[] mMvp = new float[16];
 
 	// ! Matrix Model View Projection utiliée pour dessiner
-	private float[] mMvp4Draw = new float[16];
+	private float[] mSavedModelView = new float[16];
+
+	// ! matrice de transformation des objets
+	public float[] mModelView = new float[16];
+
+	// ! matrice de transformation des objets
+	public float[] mProjectionView = new float[16];
 
 	public GLES20Renderer(Activity activity) {
 		mActivity = (MainActivity) activity;
-	
-		
+
 	}
 
 	// @Override
 	public void onSurfaceCreated(GL10 gl2, EGLConfig eglConfig) {
 
-		
-		
 		// on déclare un nouveau programme GLSL
 		mProgramme1 = new DefaultProgramShader(mActivity);
 
@@ -91,41 +88,32 @@ public class GLES20Renderer implements GLSurfaceView.Renderer {
 		use();
 
 		Starship mStarship = new Starship();
-	//	mStarship.setCoord(0, 0);
-		//mStarship.setHeight(10.f);
-		//mStarship.setWidth(10.f);
-		mStarship.setHeight(250);
-		mStarship.setWidth(250);
+		mStarship.setCoord(300, 300);
+		mStarship.setHeight(100);
+		mStarship.setWidth(100);
 
 		mActivity.mBitmapProvider.assignTexture(
 				mActivity.getString(R.string.textureStarship), mStarship);
-		        
+
 		mGameObjectList.add(mStarship);
 
-		
 		Starship mStarship2 = new Starship();
-	//	mStarship2.setCoord(10, 15);
-		mStarship2.setHeight(150);
-		mStarship2.setWidth(150);
+		mStarship2.setCoord(100, 15);
+		mStarship2.setHeight(100);
+		mStarship2.setWidth(100);
 		mActivity.mBitmapProvider.assignTexture(
 				mActivity.getString(R.string.textureStarship), mStarship2);
-		        
+
 		mGameObjectList.add(mStarship2);
 
-	
-	
-
-		
-		
-		
 		PetitRobot mPetitRobot = new PetitRobot();
-		//mPetitRobot.setCoord(150, 30);
+		mPetitRobot.setCoord(150, 30);
 		mPetitRobot.setHeight(50);
 		mPetitRobot.setWidth(50);
-		
+
 		mActivity.mBitmapProvider.assignTexture(
 				mActivity.getString(R.string.textureRobot), mPetitRobot);
-		
+
 		mGameObjectList.add(mPetitRobot);
 	}
 
@@ -135,25 +123,20 @@ public class GLES20Renderer implements GLSurfaceView.Renderer {
 		// taille de la vue (par exemple quand on incline le téléphone et
 		// que l'on passe de la vue portait à la vue paysage
 		GLES20.glViewport(0, 0, width, height);
-        mActivity.setXScreenLimit(width );
-        mActivity.setYScreenLimit(height );
-        
-		Matrix.orthoM(mMvp, 0
-				,-(mActivity.getXScreenLimit() / mActivity.getZoomFactor())
-				, (mActivity.getXScreenLimit() / mActivity.getZoomFactor())
-				,-(mActivity.getYScreenLimit() / mActivity.getZoomFactor())
-				, (mActivity.getYScreenLimit() / mActivity.getZoomFactor()), -10.f, 10.f);
+		mActivity.setXScreenLimit(width);
+		mActivity.setYScreenLimit(height);
+		Matrix.orthoM(mProjectionView, 0,
+				-(mActivity.getXScreenLimit() / mActivity.getZoomFactor()),
+				(mActivity.getXScreenLimit() / mActivity.getZoomFactor()),
+				-(mActivity.getYScreenLimit() / mActivity.getZoomFactor()),
+				(mActivity.getYScreenLimit() / mActivity.getZoomFactor()),
+				-10.f, 10.f);
 
-		
-        // le (0,0) est en bas à gauche.
-		/**
-        Matrix.orthoM(mMvp, 0
-				,-0
-				, (width / mActivity.getZoomFactor())
-				,-0
-				, (height / mActivity.getZoomFactor()), -10.f, 10.f);
-
-	*/
+		// le (0,0) est en bas à gauche.
+	/**
+		  Matrix.orthoM(mProjectionView , 0 ,-0 , (width / mActivity.getZoomFactor()) ,-0 ,
+		  (height / mActivity.getZoomFactor()), -10.f, 10.f);
+		*/ 
 	}
 
 	// @Override
@@ -167,10 +150,8 @@ public class GLES20Renderer implements GLSurfaceView.Renderer {
 		// ici on peu demander à dessiner
 		// en mode points GL_POINTS ,GL_LINES, GL_TRIANGLES
 
-		//CollisionControler.checkAllCollisions(mGameObjectList);
-		
-		//on réinitialise la matrice modèle
-		Matrix.setIdentityM(this.mModelView,0);
+		// CollisionControler.checkAllCollisions(mGameObjectList);
+
 		for (GameObject gameObject : mGameObjectList) {
 			gameObject.onUpdate(mActivity);
 
@@ -181,12 +162,10 @@ public class GLES20Renderer implements GLSurfaceView.Renderer {
 							gameObject.mTexture, 0);
 				}
 
-				draw(gameObject, GLES20.GL_TRIANGLES);
+				gameObject.draw(this);
 			}
 		}
 	}
-
-
 
 	void use() {
 		// use program
@@ -221,29 +200,40 @@ public class GLES20Renderer implements GLSurfaceView.Renderer {
 		}
 	}
 
-	public void draw(GameObject gameobject, int drawingMode) {
+	public void drawaaaaa(GameObject gameobject, int drawingMode) {
 		// appel la fonction qui passe à enable toutes les variables des shaders
 		// pour rappel, si les variables ne sont pas "enable" elle ne sont
 		// pas prise en compte dans les shaders
 
+		Matrix.setIdentityM(mModelView, 0);
+		
 		// théoriquement pas la peine de le faire à chaque frame...
 		mProgramme1.enableVertexAttribArray(gameobject);
 
 		if (mProgramme1.mAdressOf_Mvp != -1) {
 
-			mMvp4Draw = mMvp.clone();
+			mSavedModelView = mModelView.clone();
 
+	
 			// on calcule la nouvelle matrice de projection qui serra utilisé
 			// par le shader.
+
 			
+			float [] wrkmodelView = new float[16];
+			wrkmodelView = mModelView.clone();
+				Matrix.multiplyMM(mModelView, 0, wrkmodelView, 0, gameobject.mRotationMatrix,0);
+				gameobject.rotation=false;
 			
-			//Matrix.multiplyMM(mMvp4Draw, 0, mMvp, 0, gameobject.mModelMatrix, 0);
-		//	Matrix.multiplyMM(mMvp4Draw, 0, mMvp, 0, mModelView, 0);
+				Matrix.translateM(mModelView, 0, gameobject.getCoordX(),
+						gameobject.getCoordY(), 0);
+			// Matrix.multiplyMM(mSavedModelView, 0, mMvp, 0,
+			// gameobject.mModelMatrix, 0);
+			Matrix.multiplyMM(mMvp, 0, mProjectionView, 0, mModelView, 0);
 			// on alimente la donnée UNIFORM mAdressOf_Mvp du programme OpenGL
 			// avec
 			// une matrice de 4 flotant.
 			GLES20.glUniformMatrix4fv(mProgramme1.mAdressOf_Mvp, 1, false,
-					mMvp4Draw, 0);
+					mMvp, 0);
 		}
 
 		// on se positionne au debut du Buffer des indices
@@ -257,5 +247,4 @@ public class GLES20Renderer implements GLSurfaceView.Renderer {
 
 	}
 
-	
 }

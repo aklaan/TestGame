@@ -6,6 +6,7 @@ import java.nio.FloatBuffer;
 import java.nio.ShortBuffer;
 import java.util.ArrayList;
 
+import com.example.testgame.GLES20Renderer;
 
 import android.content.Context;
 import android.opengl.Matrix;
@@ -13,49 +14,54 @@ import android.util.Log;
 
 public class GameObject {
 
-	
 	private String mTagName = "";
 	public Texture mTexture;
 	public Boolean hasTexture;
 	public Boolean isVisible;
-	//top permettant de savoir si l'objet est statique ou qu'il 
-	//a la possibilité d'être en mouvement. ceci va servir
-	//pour le calcul des collisions
+
+	// top permettant de savoir si l'objet est statique ou qu'il
+	// a la possibilité d'être en mouvement. ceci va servir
+	// pour le calcul des collisions
 	public Boolean isStatic = true;
-	//private float width = 1.f;
-	//private float height = 1.f;
-    private int X=0;
-    private int Y=0;
-    public ArrayList<GameObject> mCollideWithList;
+
+	// coordonnées du centre de l'objet
+	public float X = 0;
+	public float Y = 0;
+	public boolean rotation = false;
+	public float rotationAxisX = 0.f;
+	public float rotationAxisY = 0.f;
+	public float rotationAngl = 0.f; // en radian
+	public ArrayList<GameObject> mCollideWithList;
 	
-    
-	public static final int FLOAT_SIZE = 4; // on indique que le nombre de byte
-											// pour un float est de 4
+	public float[] mRotationMatrix = new float[16];
+	public float[] mModelView = new float[16];
+	public static final int FLOAT_SIZE = 4;
+	// on indique qu'il faut 4 byte pour repésenter un float
+	// 00000000 00000000 00000000 00000000
+
 	// un byte n'est pas obligatoirement égal à 8 bit
 	// cela dépend du matériel. en général il est très souvant egal à
 	// 8 bit ce qui fait qu'un byte est très souvent égal à un Octet
 	// mais comme ce n'est pas toujours le cas, on parle en byte et non en octet
-	// pour être précis.
+	// pour être plus précis.
 
-	public static final int SHORT_SIZE = 2; // ici on indique qu'un short est
-											// codé sur 2 byte
+	public static final int SHORT_SIZE = 2;
+	// ici on indique qu'un short est codé sur 2 byte
 	// soit généralement 2 octets
 	// soit : 00000000 00000000
 
 	// ! Vertices
 	public FloatBuffer mVertices; // définition d'un tableau de flotants
+
 	// ! indices
 	private ShortBuffer mIndices;
+
 	// ! coordonées de texture
 	private FloatBuffer mTextCoord;
 
 	// private ByteBuffer mTexture;
 	public int mTextureWidth;
 	public int mTextureHeight;
-
-	// ! matrice du modele
-	public float[] mModelMatrix = new float[16];
-
 
 	// constructeur
 	public GameObject(int nbVertex, int nbIndex) {
@@ -65,13 +71,14 @@ public class GameObject {
 				.order(ByteOrder.nativeOrder()).asShortBuffer();
 		mTextCoord = ByteBuffer.allocateDirect(nbVertex * 2 * FLOAT_SIZE)
 				.order(ByteOrder.nativeOrder()).asFloatBuffer();
-		Matrix.setIdentityM(mModelMatrix, 0);
+
 		hasTexture = false;
 		mTagName = "";
 		isVisible = true;
-	this.mCollideWithList = new ArrayList<GameObject>();
-		
-	
+		Matrix.setIdentityM(mRotationMatrix, 0);
+		Matrix.setIdentityM(mModelView, 0);
+		this.mCollideWithList = new ArrayList<GameObject>();
+
 	}
 
 	// setter vertices
@@ -93,30 +100,17 @@ public class GameObject {
 
 	}
 
-	public void translate(float x, float y) {
-		// il faut tenir compte du facteur SCALE pour se déplacer à la bonne unitée
-	//	float wrkX = (width==0)? 0: (x/width); 
-	//	float wrkY = (height==0)? 0: (y/height);
+	public void rotate(float x, float y, float anglRAD) {
+				
 		
-		//Matrix.translateM(mModelMatrix, 0, wrkX, wrkY, 0f);
-		Matrix.translateM(mModelMatrix, 0, x, y, 0f);
-	}
-
-	public void scale(float scaleX, float scaleY) {
-
-		Matrix.scaleM(mModelMatrix, 0, scaleX, scaleY, 0f);
-	}
-
-	public void rotate(float anglRAD) {
-		float[] wrkRotationMatrix = new float[16];
-		float[] wrkModelMatrix = new float[16];
-
-		Matrix.setRotateEulerM(wrkRotationMatrix, 0, 0.f, 0.f, anglRAD);
+		X = X+ (float) (Math.cos(anglRAD));
+		Y = Y+ (float) (Math.sin(anglRAD));
+		//Matrix.translateM(wrkresult, 0, x, y, 0);
+		Log.i("deug",String.valueOf(X) +" / " +String.valueOf(Y));
 		
-		wrkModelMatrix = mModelMatrix.clone();
-		Matrix.multiplyMM(mModelMatrix, 0, wrkModelMatrix, 0,
-				wrkRotationMatrix, 0);
-
+	Log.i("",String.valueOf(Math.cos(anglRAD)) )
+;
+	
 	}
 
 	// setter indices
@@ -148,7 +142,7 @@ public class GameObject {
 
 	public void setTexture(Texture texture) {
 		mTexture = texture;
-	    
+
 	}
 
 	public void onUpdate(Context context) {
@@ -162,54 +156,51 @@ public class GameObject {
 	public void setTagName(String tagName) {
 		mTagName = tagName;
 	}
-/**
-	public float getWidth() {
-		return width;
-	}
 
-	public void setWidth(float width) {
-	//	this.width = width;
-	//	updateModelMatrix();
-	}
-
-	public float getHeight() {
-		return height;
-	}
-
-	public void setHeight(float height) {
-		this.height = height;
-		updateModelMatrix();
-	}
-*/
+	/**
+	 * public float getWidth() { return width; }
+	 * 
+	 * public void setWidth(float width) { // this.width = width; //
+	 * updateModelMatrix(); }
+	 * 
+	 * public float getHeight() { return height; }
+	 * 
+	 * public void setHeight(float height) { this.height = height;
+	 * updateModelMatrix(); }
+	 */
 	public void setCoord(int x, int y) {
-		this.X=x;
-		this.Y=y;
-	//	updateModelMatrix();
-		
+		this.X = x;
+		this.Y = y;
+		// updateModelMatrix();
+
 	}
 
 	public float getCoordX() {
-		return mModelMatrix[12];
-			
+		return X;
+
 	}
-	
+
 	public float getCoordY() {
-		return mModelMatrix[13];
-			
+		return Y;
+
 	}
-	
-private void updateModelMatrix(){
-//	Matrix.setIdentityM(mModelMatrix, 0);
-	
-	//Log.i("debug","width = "+ String.valueOf(width)+" / height="+String.valueOf(height));
-	
-	//this.scale(width, height);
-	//this.translate(X,Y);
-}
 
-public void onUpdate(OpenGLActivity openGLActivity) {
-	// TODO Auto-generated method stub
-	
-}
+	private void updateModelMatrix() {
+		// Matrix.setIdentityM(mModelMatrix, 0);
 
+		// Log.i("debug","width = "+
+		// String.valueOf(width)+" / height="+String.valueOf(height));
+
+		// this.scale(width, height);
+		// this.translate(X,Y);
+	}
+
+	public void onUpdate(OpenGLActivity openGLActivity) {
+		// TODO Auto-generated method stub
+
+	}
+
+	public void draw(GLES20Renderer GLES20Renderer) {
+
+	}
 }

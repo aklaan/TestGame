@@ -44,7 +44,7 @@ public class Square2D extends GameObject {
 		
 		inc=inc * sens;
 		
-		this.translate(0,inc);
+		this.Y = this.Y+inc;
 	}
 	
 }

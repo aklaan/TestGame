@@ -57,4 +57,6 @@ public class Rectangle2D extends GameObject {
 		this.putVertex(2, new Vertex(w, -h, 0, 1, 1));
 		this.putVertex(3, new Vertex(w, h, 0, 1, 0));
 	}
+
+
 }
