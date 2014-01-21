@@ -27,7 +27,7 @@ public class CollisionControler {
 	}
 
 	static boolean checkCollision(GameObject a, GameObject b) {
-
+/**
 		if (a == b 
 				|| (a.getCoordX() >= b.getCoordX() + b.getWidth()) // trop à
 																		// droite
@@ -39,7 +39,7 @@ public class CollisionControler {
 		) // haut
 			return false;
 		else
-			return true;
+*/			return true;
 	}
 
 }

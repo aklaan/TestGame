@@ -22,8 +22,8 @@ public class GameObject {
 	//a la possibilité d'être en mouvement. ceci va servir
 	//pour le calcul des collisions
 	public Boolean isStatic = true;
-	private float width = 1.f;
-	private float height = 1.f;
+	//private float width = 1.f;
+	//private float height = 1.f;
     private int X=0;
     private int Y=0;
     public ArrayList<GameObject> mCollideWithList;
@@ -43,7 +43,7 @@ public class GameObject {
 	// soit : 00000000 00000000
 
 	// ! Vertices
-	private FloatBuffer mVertices; // définition d'un tableau de flotants
+	public FloatBuffer mVertices; // définition d'un tableau de flotants
 	// ! indices
 	private ShortBuffer mIndices;
 	// ! coordonées de texture
@@ -78,7 +78,7 @@ public class GameObject {
 	public void putVertex(int index, Vertex vertex) {
 		// la position physique en mémoire des bytes qui représentent le vertex
 		// c'est la taille d'un vertex en bytes x l'index
-
+		mVertices.position(0);
 		// ici on se positionne dans le buffer à l'endroit où l'on va ecrire le
 		// prochain vertex
 		mVertices.position(Vertex.Vertex_COORD_SIZE * index);
@@ -95,10 +95,11 @@ public class GameObject {
 
 	public void translate(float x, float y) {
 		// il faut tenir compte du facteur SCALE pour se déplacer à la bonne unitée
-		float wrkX = (width==0)? 0: (x/width); 
-		float wrkY = (height==0)? 0: (y/height);
+	//	float wrkX = (width==0)? 0: (x/width); 
+	//	float wrkY = (height==0)? 0: (y/height);
 		
-		Matrix.translateM(mModelMatrix, 0, wrkX, wrkY, 0f);
+		//Matrix.translateM(mModelMatrix, 0, wrkX, wrkY, 0f);
+		Matrix.translateM(mModelMatrix, 0, x, y, 0f);
 	}
 
 	public void scale(float scaleX, float scaleY) {
@@ -161,14 +162,14 @@ public class GameObject {
 	public void setTagName(String tagName) {
 		mTagName = tagName;
 	}
-
+/**
 	public float getWidth() {
 		return width;
 	}
 
 	public void setWidth(float width) {
-		this.width = width;
-		updateModelMatrix();
+	//	this.width = width;
+	//	updateModelMatrix();
 	}
 
 	public float getHeight() {
@@ -179,11 +180,11 @@ public class GameObject {
 		this.height = height;
 		updateModelMatrix();
 	}
-
+*/
 	public void setCoord(int x, int y) {
 		this.X=x;
 		this.Y=y;
-		updateModelMatrix();
+	//	updateModelMatrix();
 		
 	}
 
@@ -198,12 +199,12 @@ public class GameObject {
 	}
 	
 private void updateModelMatrix(){
-	Matrix.setIdentityM(mModelMatrix, 0);
+//	Matrix.setIdentityM(mModelMatrix, 0);
 	
 	//Log.i("debug","width = "+ String.valueOf(width)+" / height="+String.valueOf(height));
 	
-	this.scale(width, height);
-	this.translate(X,Y);
+	//this.scale(width, height);
+	//this.translate(X,Y);
 }
 
 public void onUpdate(OpenGLActivity openGLActivity) {

@@ -16,7 +16,7 @@ this.isStatic=false;
 
 	@Override
 	public void onUpdate(OpenGLActivity activity) {
-		if (activity.mGLSurfaceView.touched) {
+/**		if (activity.mGLSurfaceView.touched) {
 			this.rotate(0.5f);
 		}
 		
@@ -24,7 +24,7 @@ this.isStatic=false;
 			Log.i("starship", "i'm collide with : " + go.getTagName());
 			this.rotate(0.5f);
 		}
-
+*/
 	}
 
 }

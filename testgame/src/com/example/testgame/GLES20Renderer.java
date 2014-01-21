@@ -25,7 +25,8 @@ public class GLES20Renderer implements GLSurfaceView.Renderer {
 	public final static String TAG_ERROR = "CRITICAL ERROR";
 
 	public final static int MAX_POINTS = 6;
-	
+	// ! matrice du modele
+	public float[] mModelView = new float[16];
 	
 	public static int mTex0;
 	private MainActivity mActivity;
@@ -90,9 +91,12 @@ public class GLES20Renderer implements GLSurfaceView.Renderer {
 		use();
 
 		Starship mStarship = new Starship();
-		mStarship.setCoord(0, 0);
-		mStarship.setHeight(150.f);
-		mStarship.setWidth(150.f);
+	//	mStarship.setCoord(0, 0);
+		//mStarship.setHeight(10.f);
+		//mStarship.setWidth(10.f);
+		mStarship.setHeight(250);
+		mStarship.setWidth(250);
+
 		mActivity.mBitmapProvider.assignTexture(
 				mActivity.getString(R.string.textureStarship), mStarship);
 		        
@@ -100,31 +104,24 @@ public class GLES20Renderer implements GLSurfaceView.Renderer {
 
 		
 		Starship mStarship2 = new Starship();
-		mStarship2.setCoord(150, 150);
-		mStarship2.setHeight(50.f);
-		mStarship2.setWidth(50.f);
+	//	mStarship2.setCoord(10, 15);
+		mStarship2.setHeight(150);
+		mStarship2.setWidth(150);
 		mActivity.mBitmapProvider.assignTexture(
 				mActivity.getString(R.string.textureStarship), mStarship2);
 		        
 		mGameObjectList.add(mStarship2);
 
 	
-		Starship mStarship3 = new Starship();
-		mStarship3.setCoord(150, 250);
-		mStarship3.setHeight(50.f);
-		mStarship3.setWidth(50.f);
-		mActivity.mBitmapProvider.assignTexture(
-				mActivity.getString(R.string.textureStarship), mStarship3);
-		        
-		mGameObjectList.add(mStarship3);
+	
 
 		
 		
 		
 		PetitRobot mPetitRobot = new PetitRobot();
-		mPetitRobot.setCoord(150, 30);
-		mPetitRobot.setHeight(10.f);
-		mPetitRobot.setWidth(10.f);
+		//mPetitRobot.setCoord(150, 30);
+		mPetitRobot.setHeight(50);
+		mPetitRobot.setWidth(50);
 		
 		mActivity.mBitmapProvider.assignTexture(
 				mActivity.getString(R.string.textureRobot), mPetitRobot);
@@ -140,22 +137,23 @@ public class GLES20Renderer implements GLSurfaceView.Renderer {
 		GLES20.glViewport(0, 0, width, height);
         mActivity.setXScreenLimit(width );
         mActivity.setYScreenLimit(height );
-    /**    
+        
 		Matrix.orthoM(mMvp, 0
 				,-(mActivity.getXScreenLimit() / mActivity.getZoomFactor())
 				, (mActivity.getXScreenLimit() / mActivity.getZoomFactor())
 				,-(mActivity.getYScreenLimit() / mActivity.getZoomFactor())
 				, (mActivity.getYScreenLimit() / mActivity.getZoomFactor()), -10.f, 10.f);
-*/
+
 		
         // le (0,0) est en bas à gauche.
+		/**
         Matrix.orthoM(mMvp, 0
 				,-0
 				, (width / mActivity.getZoomFactor())
 				,-0
 				, (height / mActivity.getZoomFactor()), -10.f, 10.f);
 
-	
+	*/
 	}
 
 	// @Override
@@ -169,7 +167,10 @@ public class GLES20Renderer implements GLSurfaceView.Renderer {
 		// ici on peu demander à dessiner
 		// en mode points GL_POINTS ,GL_LINES, GL_TRIANGLES
 
-		CollisionControler.checkAllCollisions(mGameObjectList);
+		//CollisionControler.checkAllCollisions(mGameObjectList);
+		
+		//on réinitialise la matrice modèle
+		Matrix.setIdentityM(this.mModelView,0);
 		for (GameObject gameObject : mGameObjectList) {
 			gameObject.onUpdate(mActivity);
 
@@ -234,7 +235,10 @@ public class GLES20Renderer implements GLSurfaceView.Renderer {
 
 			// on calcule la nouvelle matrice de projection qui serra utilisé
 			// par le shader.
-			Matrix.multiplyMM(mMvp4Draw, 0, mMvp, 0, gameobject.mModelMatrix, 0);
+			
+			
+			//Matrix.multiplyMM(mMvp4Draw, 0, mMvp, 0, gameobject.mModelMatrix, 0);
+		//	Matrix.multiplyMM(mMvp4Draw, 0, mMvp, 0, mModelView, 0);
 			// on alimente la donnée UNIFORM mAdressOf_Mvp du programme OpenGL
 			// avec
 			// une matrice de 4 flotant.
