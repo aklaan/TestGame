@@ -1,5 +1,7 @@
 package com.example.testgame.gamecomponents;
 
+import java.util.ArrayList;
+
 import com.example.testgame.GLES20Renderer;
 import com.example.testgame.MySurfaceView;
 
@@ -14,11 +16,11 @@ import android.os.Bundle;
 
 public class OpenGLActivity extends Activity {
 
-	public static float DEFAULT_ZOOM_FACTOR = 1.f;
+	public static float DEFAULT_ZOOM_FACTOR = 2.f;
 	// ! OpenGL SurfaceView
 	public MySurfaceView mGLSurfaceView;
 	public BitmapProvider mBitmapProvider;
-
+	public ArrayList<GameObject> mGameObjectList;
 	private float mXScreenLimit;
 	private float mYScreenLimit;
 	private float mZoomFactor;
@@ -43,6 +45,7 @@ public class OpenGLActivity extends Activity {
 		mGLSurfaceView.setEGLContextClientVersion(2);
 		mGLSurfaceView.setRenderer(new GLES20Renderer(this));
 		setContentView(mGLSurfaceView);
+		mGameObjectList = new ArrayList<GameObject>();
 		init();
 	}
 

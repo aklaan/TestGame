@@ -12,6 +12,7 @@ import javax.microedition.khronos.opengles.GL10;
 import com.example.testgame.gamecomponents.CollisionControler;
 import com.example.testgame.gamecomponents.DefaultProgramShader;
 import com.example.testgame.gamecomponents.GameObject;
+import com.example.testgame.gamecomponents.Rectangle2D;
 import com.example.testgame.gameobjects.Starship;
 import com.example.testgame.gameobjects.PetitRobot;
 
@@ -25,10 +26,9 @@ public class GLES20Renderer implements GLSurfaceView.Renderer {
 	public final static String TAG_ERROR = "CRITICAL ERROR";
 
 	public static int mTex0;
-	private MainActivity mActivity;
+	public MainActivity mActivity;
 	public DefaultProgramShader mProgramme1;
-	private ArrayList<GameObject> mGameObjectList;
-
+	
 	// ! Matrix Model View Projection
 	public float[] mMvp = new float[16];
 
@@ -55,8 +55,7 @@ public class GLES20Renderer implements GLSurfaceView.Renderer {
 		// on construit et compile le programme
 		mProgramme1.make();
 
-		// on définit une liste des composants de jeu
-		mGameObjectList = new ArrayList<GameObject>();
+		
 
 		// on active le texturing 2D
 		GLES20.glEnable(GLES20.GL_TEXTURE_2D);
@@ -87,34 +86,8 @@ public class GLES20Renderer implements GLSurfaceView.Renderer {
 
 		use();
 
-		Starship mStarship = new Starship();
-		mStarship.setCoord(300, 300);
-		mStarship.setHeight(100);
-		mStarship.setWidth(100);
-
-		mActivity.mBitmapProvider.assignTexture(
-				mActivity.getString(R.string.textureStarship), mStarship);
-
-		mGameObjectList.add(mStarship);
-
-		Starship mStarship2 = new Starship();
-		mStarship2.setCoord(100, 15);
-		mStarship2.setHeight(100);
-		mStarship2.setWidth(100);
-		mActivity.mBitmapProvider.assignTexture(
-				mActivity.getString(R.string.textureStarship), mStarship2);
-
-		mGameObjectList.add(mStarship2);
-
-		PetitRobot mPetitRobot = new PetitRobot();
-		mPetitRobot.setCoord(150, 30);
-		mPetitRobot.setHeight(50);
-		mPetitRobot.setWidth(50);
-
-		mActivity.mBitmapProvider.assignTexture(
-				mActivity.getString(R.string.textureRobot), mPetitRobot);
-
-		mGameObjectList.add(mPetitRobot);
+		
+	
 	}
 
 	// @Override
@@ -152,7 +125,7 @@ public class GLES20Renderer implements GLSurfaceView.Renderer {
 
 		// CollisionControler.checkAllCollisions(mGameObjectList);
 
-		for (GameObject gameObject : mGameObjectList) {
+		for (GameObject gameObject : mActivity.mGameObjectList) {
 			gameObject.onUpdate(mActivity);
 
 			if (gameObject.isVisible) {

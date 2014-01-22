@@ -1,5 +1,10 @@
 package com.example.testgame.gamecomponents;
 
+import android.opengl.GLES20;
+import android.opengl.Matrix;
+
+import com.example.testgame.GLES20Renderer;
+
 public class Rectangle2D extends GameObject {
 
 	static final int NB_RECTANGLE_VERTEX = 4;
@@ -58,5 +63,38 @@ public class Rectangle2D extends GameObject {
 		this.putVertex(3, new Vertex(w, h, 0, 1, 0));
 	}
 
+	
+	@Override
+	public void draw(GLES20Renderer GLES20Renderer){
+	
+		// A FAIRE....
+		// - activer le bon shader si cet objet n'utilise pas celui en cours
+		GLES20Renderer.mProgramme1.enableVertexAttribArray(this);
+		
+		float [] mMvp = new float[16];
+		
+		Matrix.setIdentityM(mModelView, 0);
+		
+		Matrix.translateM(mModelView, 0, X, Y, 0);	
+        	
+		Matrix.multiplyMM(mMvp, 0, GLES20Renderer.mProjectionView, 0, mModelView, 0);
+		// on alimente la donnée UNIFORM mAdressOf_Mvp du programme OpenGL
+		// avec
+		// une matrice de 4 flotant.
+		GLES20.glUniformMatrix4fv(GLES20Renderer.mProgramme1.mAdressOf_Mvp, 1, false,
+				mMvp, 0);
+	
+	
+	
+		// on se positionne au debut du Buffer des indices
+				// qui indiquent dans quel ordre les vertex doivent être dessinés
+				this.getIndices().position(0);
+
+				GLES20.glDrawElements(drawMode, this.getIndices().capacity(),
+						GLES20.GL_UNSIGNED_SHORT, this.getIndices());
+
+				GLES20Renderer.mProgramme1.disableVertexAttribArray();
+	
+	}
 
 }

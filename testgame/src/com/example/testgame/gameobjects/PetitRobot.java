@@ -19,7 +19,7 @@ this.setTagName("rotobt");
 		//Log.i("debug",String.valueOf(activity.mGLSurfaceView.getHeight()));
 		//Log.i("debug",String.valueOf(i));
 		
-		float inc = 5.f;
+		float inc = 0.f;
 		
 		if (this.getCoordY()>limit_y || this.getCoordY()<0){
 			sens = sens*-1;

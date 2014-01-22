@@ -9,6 +9,7 @@ import java.util.ArrayList;
 import com.example.testgame.GLES20Renderer;
 
 import android.content.Context;
+import android.opengl.GLES20;
 import android.opengl.Matrix;
 import android.util.Log;
 
@@ -35,7 +36,11 @@ public class GameObject {
 	
 	public float[] mRotationMatrix = new float[16];
 	public float[] mModelView = new float[16];
+	public float[] mTransformUpdateView = new float[16];
+	
 	public static final int FLOAT_SIZE = 4;
+	public int drawMode ;
+	public float angleRAD = 0.0f;
 	// on indique qu'il faut 4 byte pour repésenter un float
 	// 00000000 00000000 00000000 00000000
 
@@ -75,8 +80,10 @@ public class GameObject {
 		hasTexture = false;
 		mTagName = "";
 		isVisible = true;
-		Matrix.setIdentityM(mRotationMatrix, 0);
-		Matrix.setIdentityM(mModelView, 0);
+		Matrix.setIdentityM(this.mRotationMatrix, 0);
+		Matrix.setIdentityM(this.mModelView, 0);
+		Matrix.setIdentityM(this.mTransformUpdateView, 0);
+		this.drawMode =GLES20.GL_TRIANGLES;
 		this.mCollideWithList = new ArrayList<GameObject>();
 
 	}
@@ -203,4 +210,22 @@ public class GameObject {
 	public void draw(GLES20Renderer GLES20Renderer) {
 
 	}
+
+public void turnArround(GameObject cible, float angle, float rayon){
+
+	Matrix.setIdentityM(this.mTransformUpdateView,0);
+	angleRAD+=angle;
+	float[] wrkmodelView = new float[16];
+	float[] wrkRotation = new float[16];
+	Matrix.translateM(mTransformUpdateView, 0, cible.X-this.X, cible.Y-this.Y, 0);
+	Matrix.translateM(mTransformUpdateView, 0, rayon, 0, 0);
+	Matrix.setRotateEulerM(wrkRotation, 0, 0, 0, angleRAD);
+
+	wrkmodelView = mTransformUpdateView.clone();
+	Matrix.multiplyMM(mTransformUpdateView, 0, wrkmodelView, 0, wrkRotation,	0);
+	
+
+
+}
+
 }
