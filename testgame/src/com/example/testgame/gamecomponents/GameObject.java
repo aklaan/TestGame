@@ -35,7 +35,7 @@ public class GameObject {
 	public ArrayList<GameObject> mCollideWithList;
 	
 	public float[] mRotationMatrix = new float[16];
-	public float[] mModelView = new float[16];
+	public float[] mBackupModelView = new float[16];
 	public float[] mTransformUpdateView = new float[16];
 	
 	public static final int FLOAT_SIZE = 4;
@@ -81,7 +81,7 @@ public class GameObject {
 		mTagName = "";
 		isVisible = true;
 		Matrix.setIdentityM(this.mRotationMatrix, 0);
-		Matrix.setIdentityM(this.mModelView, 0);
+		
 		Matrix.setIdentityM(this.mTransformUpdateView, 0);
 		this.drawMode =GLES20.GL_TRIANGLES;
 		this.mCollideWithList = new ArrayList<GameObject>();
@@ -207,7 +207,7 @@ public class GameObject {
 
 	}
 
-	public void draw(GLES20Renderer GLES20Renderer) {
+	public void draw(float[] ModelMatrix) {
 
 	}
 
@@ -217,7 +217,7 @@ public void turnArround(GameObject cible, float angle, float rayon){
 	angleRAD+=angle;
 	float[] wrkmodelView = new float[16];
 	float[] wrkRotation = new float[16];
-	Matrix.translateM(mTransformUpdateView, 0, cible.X-this.X, cible.Y-this.Y, 0);
+	Matrix.translateM(mTransformUpdateView, 0, cible.X, cible.Y, 0);
 	Matrix.translateM(mTransformUpdateView, 0, rayon, 0, 0);
 	Matrix.setRotateEulerM(wrkRotation, 0, 0, 0, angleRAD);
 

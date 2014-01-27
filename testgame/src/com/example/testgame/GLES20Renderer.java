@@ -1,6 +1,6 @@
 package com.example.testgame;
+import android.app.
 
-import android.app.Activity;
 import android.opengl.GLES20;
 import android.opengl.GLSurfaceView;
 import android.opengl.Matrix;
@@ -124,7 +124,7 @@ public class GLES20Renderer implements GLSurfaceView.Renderer {
 		// en mode points GL_POINTS ,GL_LINES, GL_TRIANGLES
 
 		// CollisionControler.checkAllCollisions(mGameObjectList);
-
+		Matrix.setIdentityM(this.mModelView, 0);
 		for (GameObject gameObject : mActivity.mGameObjectList) {
 			gameObject.onUpdate(mActivity);
 
@@ -135,7 +135,13 @@ public class GLES20Renderer implements GLSurfaceView.Renderer {
 							gameObject.mTexture, 0);
 				}
 
+				// A FAIRE....
+				// - activer le bon shader si cet objet n'utilise pas celui en cours
+				this.mProgramme1.enableVertexAttribArray(gameObject);
+
 				gameObject.draw(this);
+				
+				
 			}
 		}
 	}

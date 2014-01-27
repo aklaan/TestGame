@@ -24,7 +24,7 @@ public class Rectangle2D extends GameObject {
 		this.putVertex(2, new Vertex(1, -1, 0, 1, 1));
 		this.putVertex(3, new Vertex(1, 1, 0, 1, 0));
 
-	/*	updateVertices();*/
+		/* updateVertices(); */
 		// on indique l'ordre dans lequel on doit affichier les vertex
 		// pour dessiner les 2 triangles qui vont former le carré.
 		this.putIndice(0, 0);
@@ -50,51 +50,46 @@ public class Rectangle2D extends GameObject {
 		this.width = w;
 		updateVertices();
 	}
-	
-	private void updateVertices(){
-		
-		float w = (float)width/1;
-		float h = (float)height/1; 
-		
-		
+
+	private void updateVertices() {
+
+		float w = (float) width / 1;
+		float h = (float) height / 1;
+
 		this.putVertex(0, new Vertex(-w, h, 0, 0, 0));
 		this.putVertex(1, new Vertex(-w, -h, 0, 0, 1));
 		this.putVertex(2, new Vertex(w, -h, 0, 1, 1));
 		this.putVertex(3, new Vertex(w, h, 0, 1, 0));
 	}
 
-	
 	@Override
-	public void draw(GLES20Renderer GLES20Renderer){
-	
-		// A FAIRE....
-		// - activer le bon shader si cet objet n'utilise pas celui en cours
-		GLES20Renderer.mProgramme1.enableVertexAttribArray(this);
+	public void draw(float[] modelMatrix) {
+
 		
-		float [] mMvp = new float[16];
-		
-		Matrix.setIdentityM(mModelView, 0);
-		
-		Matrix.translateM(mModelView, 0, X, Y, 0);	
-        	
-		Matrix.multiplyMM(mMvp, 0, GLES20Renderer.mProjectionView, 0, mModelView, 0);
+		float[] mMvp = new float[16];
+		// équivalent du PUSH
+		this.mBackupModelView = modelMatrix.clone();
+
+		Matrix.translateM(modelMatrix, 0, X, Y, 0);
+
+		Matrix.multiplyMM(mMvp, 0, renderer.mProjectionView, 0,
+				renderer.mModelView, 0);
 		// on alimente la donnée UNIFORM mAdressOf_Mvp du programme OpenGL
 		// avec
 		// une matrice de 4 flotant.
-		GLES20.glUniformMatrix4fv(GLES20Renderer.mProgramme1.mAdressOf_Mvp, 1, false,
+		GLES20.glUniformMatrix4fv(renderer.mProgramme1.mAdressOf_Mvp, 1, false,
 				mMvp, 0);
-	
-	
-	
+
 		// on se positionne au debut du Buffer des indices
-				// qui indiquent dans quel ordre les vertex doivent être dessinés
-				this.getIndices().position(0);
+		// qui indiquent dans quel ordre les vertex doivent être dessinés
+		this.getIndices().position(0);
 
-				GLES20.glDrawElements(drawMode, this.getIndices().capacity(),
-						GLES20.GL_UNSIGNED_SHORT, this.getIndices());
+		GLES20.glDrawElements(drawMode, this.getIndices().capacity(),
+				GLES20.GL_UNSIGNED_SHORT, this.getIndices());
 
-				GLES20Renderer.mProgramme1.disableVertexAttribArray();
-	
+		renderer.mProgramme1.disableVertexAttribArray();
+		// équivalent du POP
+		renderer.mModelView = this.mBackupModelView;
 	}
 
 }

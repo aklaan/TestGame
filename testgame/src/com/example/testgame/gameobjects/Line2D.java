@@ -24,14 +24,14 @@ public class Line2D extends GameObject{
 
 	
 	@Override
-	public void draw(GLES20Renderer GLES20Renderer){
+	public void draw(GLES20Renderer renderer){
 	
 	
 		float [] mMvp = new float[16];
 	        	
-		Matrix.multiplyMM(mMvp, 0, GLES20Renderer.mProjectionView, 0, mModelView, 0);
+		Matrix.multiplyMM(mMvp, 0, renderer.mProjectionView, 0, renderer.mModelView, 0);
 		
-		GLES20.glUniformMatrix4fv(GLES20Renderer.mProgramme1.mAdressOf_Mvp, 1, false,
+		GLES20.glUniformMatrix4fv(renderer.mProgramme1.mAdressOf_Mvp, 1, false,
 				mMvp, 0);
 	
 		

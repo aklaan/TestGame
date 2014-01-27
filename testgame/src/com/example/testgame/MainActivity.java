@@ -11,6 +11,7 @@ import com.example.testgame.gameobjects.Starship;
 
 import android.os.Bundle;
 
+
 public class MainActivity extends OpenGLActivity {
 	
 
@@ -57,13 +58,13 @@ public class MainActivity extends OpenGLActivity {
 				
 			Starship mStarship = new Starship();
 				
-				mStarship.setHeight(100);
-				mStarship.setWidth(100);
+				mStarship.setHeight(10);
+				mStarship.setWidth(10);
 				mStarship.angleRAD = 0.0f;
 				mStarship.setTagName("starship1");
 				
 				this.mBitmapProvider.assignTexture(
-						this.getString(R.string.textureStarship), mStarship);
+						this.getString(R.string.boulerouge), mStarship);
 
 				mGameObjectList.add(mStarship);
 
@@ -72,9 +73,10 @@ public class MainActivity extends OpenGLActivity {
 				mStarship2.setHeight(50);
 				mStarship2.setWidth(50);
 				this.mBitmapProvider.assignTexture(
-						this.getString(R.string.textureStarship), mStarship2);
+						this.getString(R.string.boulerouge), mStarship2);
 				mStarship2.setTagName("starship2");
 				mStarship2.cible = mStarship;
+				mStarship2.angleRAD=45.0f;
 				mGameObjectList.add(mStarship2);
 
 				PetitRobot mPetitRobot = new PetitRobot();
@@ -98,6 +100,7 @@ public class MainActivity extends OpenGLActivity {
 		mBitmapProvider.add(getString(R.string.textureStarship));
 		mBitmapProvider.add(getString(R.string.textureRobot));
 		mBitmapProvider.add(getString(R.string.textureRed));
+		mBitmapProvider.add(getString(R.string.boulerouge));
 
 	}
 

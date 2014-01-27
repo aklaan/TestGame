@@ -10,9 +10,12 @@ public class MySurfaceView extends GLSurfaceView {
 	public float touchX = 0;
 	public float touchY = 0;
 	public boolean touched = false;
+	
+	
 
 	public MySurfaceView(Context context) {
 		super(context);
+		
 		// TODO Auto-generated constructor stub
 	}
 
