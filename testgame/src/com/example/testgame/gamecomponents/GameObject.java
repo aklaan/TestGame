@@ -7,6 +7,7 @@ import java.nio.ShortBuffer;
 import java.util.ArrayList;
 
 import com.example.testgame.GLES20Renderer;
+import com.example.testgame.R;
 
 import android.content.Context;
 import android.opengl.GLES20;
@@ -19,6 +20,8 @@ public class GameObject {
 	public Texture mTexture;
 	public Boolean hasTexture;
 	public Boolean isVisible;
+	public String usedShaderName = "";
+	public ShaderProvider mShaderProvider;
 
 	// top permettant de savoir si l'objet est statique ou qu'il
 	// a la possibilité d'être en mouvement. ceci va servir
@@ -33,13 +36,13 @@ public class GameObject {
 	public float rotationAxisY = 0.f;
 	public float rotationAngl = 0.f; // en radian
 	public ArrayList<GameObject> mCollideWithList;
-	
+
 	public float[] mRotationMatrix = new float[16];
 	public float[] mBackupModelView = new float[16];
 	public float[] mTransformUpdateView = new float[16];
-	
+
 	public static final int FLOAT_SIZE = 4;
-	public int drawMode ;
+	public int drawMode;
 	public float angleRAD = 0.0f;
 	// on indique qu'il faut 4 byte pour repésenter un float
 	// 00000000 00000000 00000000 00000000
@@ -81,10 +84,11 @@ public class GameObject {
 		mTagName = "";
 		isVisible = true;
 		Matrix.setIdentityM(this.mRotationMatrix, 0);
-		
+
 		Matrix.setIdentityM(this.mTransformUpdateView, 0);
-		this.drawMode =GLES20.GL_TRIANGLES;
+		this.drawMode = GLES20.GL_TRIANGLES;
 		this.mCollideWithList = new ArrayList<GameObject>();
+	
 
 	}
 
@@ -108,16 +112,14 @@ public class GameObject {
 	}
 
 	public void rotate(float x, float y, float anglRAD) {
-				
-		
-		X = X+ (float) (Math.cos(anglRAD));
-		Y = Y+ (float) (Math.sin(anglRAD));
-		//Matrix.translateM(wrkresult, 0, x, y, 0);
-		Log.i("deug",String.valueOf(X) +" / " +String.valueOf(Y));
-		
-	Log.i("",String.valueOf(Math.cos(anglRAD)) )
-;
-	
+
+		X = X + (float) (Math.cos(anglRAD));
+		Y = Y + (float) (Math.sin(anglRAD));
+		// Matrix.translateM(wrkresult, 0, x, y, 0);
+		Log.i("deug", String.valueOf(X) + " / " + String.valueOf(Y));
+
+		Log.i("", String.valueOf(Math.cos(anglRAD)));
+
 	}
 
 	// setter indices
@@ -207,25 +209,59 @@ public class GameObject {
 
 	}
 
-	public void draw(float[] ModelMatrix) {
+	public void draw(float[] ModelMatrix ) {
 
 	}
 
-public void turnArround(GameObject cible, float angle, float rayon){
+	public void turnArround(GameObject cible, float angle, float rayon) {
 
-	Matrix.setIdentityM(this.mTransformUpdateView,0);
-	angleRAD+=angle;
-	float[] wrkmodelView = new float[16];
-	float[] wrkRotation = new float[16];
-	Matrix.translateM(mTransformUpdateView, 0, cible.X, cible.Y, 0);
-	Matrix.translateM(mTransformUpdateView, 0, rayon, 0, 0);
-	Matrix.setRotateEulerM(wrkRotation, 0, 0, 0, angleRAD);
+		Matrix.setIdentityM(this.mTransformUpdateView, 0);
+		angleRAD += angle;
+		float[] wrkmodelView = new float[16];
+		float[] wrkRotation = new float[16];
+		Matrix.translateM(mTransformUpdateView, 0, cible.X, cible.Y, 0);
+		Matrix.translateM(mTransformUpdateView, 0, rayon, 0, 0);
+		Matrix.setRotateEulerM(wrkRotation, 0, 0, 0, angleRAD);
 
-	wrkmodelView = mTransformUpdateView.clone();
-	Matrix.multiplyMM(mTransformUpdateView, 0, wrkmodelView, 0, wrkRotation,	0);
-	
+		wrkmodelView = mTransformUpdateView.clone();
+		Matrix.multiplyMM(mTransformUpdateView, 0, wrkmodelView, 0,
+				wrkRotation, 0);
+
+	}
+
+	public void sendVertexCoord() {
+
+		Shader sh = new Shader();
+		sh = mShaderProvider.getShaderByName(this.usedShaderName);
+
+		int mAdressOf_VertexPosition = Integer.parseInt(sh.attribCatlg
+				.get(mShaderProvider.mActivity.getString(R.string.vertex_position)));
+
+		if (mAdressOf_VertexPosition != -1) {
+			GLES20.glVertexAttribPointer(mAdressOf_VertexPosition, 3,
+					GLES20.GL_FLOAT, false, Vertex.Vertex_COORD_SIZE_BYTES,
+					this.getVertices());
+		}
+
+	}
 
 
-}
+	public void sendTextureCoord() {
+
+		Shader sh = new Shader();
+		sh = mShaderProvider.getShaderByName(this.usedShaderName);
+
+		int mAdressOf_texturePosition = Integer.parseInt(sh.attribCatlg
+				.get(mShaderProvider.mActivity.getString(R.string.texture_position)));
+
+		if (mAdressOf_texturePosition != -1) {
+			GLES20.glVertexAttribPointer(mAdressOf_texturePosition, 3,
+					GLES20.GL_FLOAT, false, Vertex.Vertex_COORD_SIZE_BYTES,
+					this.getVertices());
+		}
+
+	}
+
+
 
 }

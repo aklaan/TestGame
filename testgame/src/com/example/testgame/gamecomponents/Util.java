@@ -14,7 +14,10 @@ public class Util {
 
     /** read an asset file as Text File and return a string */
     public static String readShaderFile(Context context, String filename) {
-        try {
+		return filename;
+      
+    	/***
+    	try {
             InputStream iStream = context.getAssets().open(
             		   		context.getString(R.string.shaderfolder) +"/" +            		
             		filename);
@@ -23,7 +26,7 @@ public class Util {
             Log.e("Testgame", "Shader " + filename + " cannot be read");
             return "";
         }
-    }
+*/    }
 
     /** read string input stream */
     public  static String readStringInput(InputStream in) throws IOException {

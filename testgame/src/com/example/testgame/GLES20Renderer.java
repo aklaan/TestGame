@@ -1,6 +1,7 @@
 package com.example.testgame;
-import android.app.
 
+
+import android.app.Activity;
 import android.opengl.GLES20;
 import android.opengl.GLSurfaceView;
 import android.opengl.Matrix;
@@ -50,10 +51,10 @@ public class GLES20Renderer implements GLSurfaceView.Renderer {
 	public void onSurfaceCreated(GL10 gl2, EGLConfig eglConfig) {
 
 		// on déclare un nouveau programme GLSL
-		mProgramme1 = new DefaultProgramShader(mActivity);
+		//mProgramme1 = new DefaultProgramShader(mActivity);
 
 		// on construit et compile le programme
-		mProgramme1.make();
+		//mProgramme1.make();
 
 		
 
@@ -84,7 +85,7 @@ public class GLES20Renderer implements GLSurfaceView.Renderer {
 		GLES20.glTexParameteri(GLES20.GL_TEXTURE_2D, GLES20.GL_TEXTURE_WRAP_T,
 				GLES20.GL_CLAMP_TO_EDGE);
 
-		use();
+		//use();
 
 		
 	
@@ -139,7 +140,7 @@ public class GLES20Renderer implements GLSurfaceView.Renderer {
 				// - activer le bon shader si cet objet n'utilise pas celui en cours
 				this.mProgramme1.enableVertexAttribArray(gameObject);
 
-				gameObject.draw(this);
+				gameObject.draw(this.mModelView);
 				
 				
 			}

@@ -23,27 +23,5 @@ public class Line2D extends GameObject{
 	}
 
 	
-	@Override
-	public void draw(GLES20Renderer renderer){
 	
-	
-		float [] mMvp = new float[16];
-	        	
-		Matrix.multiplyMM(mMvp, 0, renderer.mProjectionView, 0, renderer.mModelView, 0);
-		
-		GLES20.glUniformMatrix4fv(renderer.mProgramme1.mAdressOf_Mvp, 1, false,
-				mMvp, 0);
-	
-		
-	
-		// on se positionne au debut du Buffer des indices
-				// qui indiquent dans quel ordre les vertex doivent être dessinés
-				this.getIndices().position(0);
-
-				GLES20.glDrawElements(drawMode, this.getIndices().capacity(),
-						GLES20.GL_UNSIGNED_SHORT, this.getIndices());
-
-				
-	
-	}
 }

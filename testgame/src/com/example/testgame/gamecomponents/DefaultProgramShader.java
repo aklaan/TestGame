@@ -244,7 +244,7 @@ public class DefaultProgramShader {
 
 		try {
 			iStream = mActivity.getAssets()
-					.open(mActivity.getString(R.string.shaderfolder) + "/default/"
+					.open(mActivity.getString(R.string.textureStarship) + "/default/"
 							+ filename);
 
 		} catch (IOException e) {

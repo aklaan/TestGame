@@ -65,7 +65,7 @@ public class Rectangle2D extends GameObject {
 	@Override
 	public void draw(float[] modelMatrix) {
 
-		
+		/**
 		float[] mMvp = new float[16];
 		// équivalent du PUSH
 		this.mBackupModelView = modelMatrix.clone();
@@ -90,6 +90,8 @@ public class Rectangle2D extends GameObject {
 		renderer.mProgramme1.disableVertexAttribArray();
 		// équivalent du POP
 		renderer.mModelView = this.mBackupModelView;
+
+	*/
 	}
 
 }
