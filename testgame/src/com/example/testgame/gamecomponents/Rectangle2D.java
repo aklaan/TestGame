@@ -63,7 +63,7 @@ public class Rectangle2D extends GameObject {
 	}
 
 	@Override
-	public void draw(float[] modelMatrix) {
+	public void draw(float[] ModelView, ShaderProvider shaderProvider) {
 
 		/**
 		float[] mMvp = new float[16];

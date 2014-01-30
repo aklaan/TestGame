@@ -21,7 +21,7 @@ public class GameObject {
 	public Boolean hasTexture;
 	public Boolean isVisible;
 	public String usedShaderName = "";
-	public ShaderProvider mShaderProvider;
+	
 
 	// top permettant de savoir si l'objet est statique ou qu'il
 	// a la possibilité d'être en mouvement. ceci va servir
@@ -209,7 +209,7 @@ public class GameObject {
 
 	}
 
-	public void draw(float[] ModelMatrix ) {
+	public void draw(float[] ModelView, ShaderProvider shaderProvider) {
 
 	}
 
@@ -231,11 +231,11 @@ public class GameObject {
 
 	public void sendVertexCoord() {
 
-		Shader sh = new Shader();
+		Shader sh ;
 		sh = mShaderProvider.getShaderByName(this.usedShaderName);
 
-		int mAdressOf_VertexPosition = Integer.parseInt(sh.attribCatlg
-				.get(mShaderProvider.mActivity.getString(R.string.vertex_position)));
+		int mAdressOf_VertexPosition = sh.attribCatlg
+				.get(mShaderProvider.mActivity.getString(R.string.vertex_position));
 
 		if (mAdressOf_VertexPosition != -1) {
 			GLES20.glVertexAttribPointer(mAdressOf_VertexPosition, 3,
@@ -248,11 +248,11 @@ public class GameObject {
 
 	public void sendTextureCoord() {
 
-		Shader sh = new Shader();
+		Shader sh ;
 		sh = mShaderProvider.getShaderByName(this.usedShaderName);
 
-		int mAdressOf_texturePosition = Integer.parseInt(sh.attribCatlg
-				.get(mShaderProvider.mActivity.getString(R.string.texture_position)));
+		int mAdressOf_texturePosition = sh.attribCatlg
+				.get(mShaderProvider.mActivity.getString(R.string.texture_position));
 
 		if (mAdressOf_texturePosition != -1) {
 			GLES20.glVertexAttribPointer(mAdressOf_texturePosition, 3,

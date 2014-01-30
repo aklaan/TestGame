@@ -6,6 +6,7 @@ import com.example.testgame.gamecomponents.BitmapProvider;
 import com.example.testgame.gamecomponents.GameObject;
 import com.example.testgame.gamecomponents.OpenGLActivity;
 import com.example.testgame.gamecomponents.Rectangle2D;
+import com.example.testgame.gamecomponents.ShaderProvider;
 import com.example.testgame.gameobjects.PetitRobot;
 import com.example.testgame.gameobjects.Starship;
 
@@ -20,8 +21,8 @@ public class MainActivity extends OpenGLActivity {
 		super.onCreate(savedInstanceState);
 		// on définit une liste des composants de jeu
 				
-	
-	
+			
+				
 				Rectangle2D ligne1 = new Rectangle2D();
 				ligne1.setCoord(0, 0);
 				ligne1.setHeight(2000);
@@ -30,7 +31,7 @@ public class MainActivity extends OpenGLActivity {
 				this.mBitmapProvider.assignTexture(
 						this.getString(R.string.textureRed), ligne1);
 
-				mGameObjectList.add(ligne1);
+				//mGameObjectList.add(ligne1);
 
 				
 				Rectangle2D ligne2 = new Rectangle2D();
@@ -41,7 +42,7 @@ public class MainActivity extends OpenGLActivity {
 				this.mBitmapProvider.assignTexture(
 						this.getString(R.string.textureRed), ligne2);
 
-				mGameObjectList.add(ligne2);
+				//mGameObjectList.add(ligne2);
 				
 				
 				Rectangle2D ligne3 = new Rectangle2D();
@@ -53,7 +54,7 @@ public class MainActivity extends OpenGLActivity {
 				this.mBitmapProvider.assignTexture(
 						this.getString(R.string.textureRed), ligne3);
 
-				mGameObjectList.add(ligne3);
+				//mGameObjectList.add(ligne3);
 				
 				
 			Starship mStarship = new Starship();
@@ -87,7 +88,7 @@ public class MainActivity extends OpenGLActivity {
 				this.mBitmapProvider.assignTexture(
 						this.getString(R.string.textureRobot), mPetitRobot);
 
-				mGameObjectList.add(mPetitRobot);
+				//mGameObjectList.add(mPetitRobot);
 			
 	
 				mStarship.cible=mPetitRobot;
@@ -96,7 +97,7 @@ public class MainActivity extends OpenGLActivity {
 	@Override
 	public void init() {
 
-		mBitmapProvider = new BitmapProvider(this);
+		
 		mBitmapProvider.add(getString(R.string.textureStarship));
 		mBitmapProvider.add(getString(R.string.textureRobot));
 		mBitmapProvider.add(getString(R.string.textureRed));

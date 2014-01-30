@@ -14,6 +14,7 @@ import com.example.testgame.gamecomponents.CollisionControler;
 import com.example.testgame.gamecomponents.DefaultProgramShader;
 import com.example.testgame.gamecomponents.GameObject;
 import com.example.testgame.gamecomponents.Rectangle2D;
+import com.example.testgame.gamecomponents.ShaderProvider;
 import com.example.testgame.gameobjects.Starship;
 import com.example.testgame.gameobjects.PetitRobot;
 
@@ -41,12 +42,17 @@ public class GLES20Renderer implements GLSurfaceView.Renderer {
 
 	// ! matrice de transformation des objets
 	public float[] mProjectionView = new float[16];
+	
+	public ShaderProvider mShaderProvider;
 
 	public GLES20Renderer(Activity activity) {
 		mActivity = (MainActivity) activity;
 
 	}
 
+	
+	
+	
 	// @Override
 	public void onSurfaceCreated(GL10 gl2, EGLConfig eglConfig) {
 
@@ -57,7 +63,8 @@ public class GLES20Renderer implements GLSurfaceView.Renderer {
 		//mProgramme1.make();
 
 		
-
+		this.mShaderProvider = new ShaderProvider(this.mActivity);
+		
 		// on active le texturing 2D
 		GLES20.glEnable(GLES20.GL_TEXTURE_2D);
 
@@ -118,7 +125,7 @@ public class GLES20Renderer implements GLSurfaceView.Renderer {
 		// mTimer.addMark();
 		// mTimer.logFPS(); // on veut mesurer les fps
 
-		GLES20.glClearColor(0.2f, 0.2f, 0.2f, 1.0f);
+		GLES20.glClearColor(0.5f, 0.5f, 0.5f, 1.0f);
 		GLES20.glClear(GLES20.GL_COLOR_BUFFER_BIT);
 
 		// ici on peu demander à dessiner
@@ -138,15 +145,15 @@ public class GLES20Renderer implements GLSurfaceView.Renderer {
 
 				// A FAIRE....
 				// - activer le bon shader si cet objet n'utilise pas celui en cours
-				this.mProgramme1.enableVertexAttribArray(gameObject);
-
-				gameObject.draw(this.mModelView);
+			//	this.mProgramme1.enableVertexAttribArray(gameObject);
+				
+				gameObject.draw(this.mModelView,this.mShaderProvider);
 				
 				
 			}
 		}
 	}
-
+/***
 	void use() {
 		// use program
 		GLES20.glUseProgram(mProgramme1.mAdressOf_GLSLProgram);
@@ -227,4 +234,5 @@ public class GLES20Renderer implements GLSurfaceView.Renderer {
 
 	}
 
+*/
 }

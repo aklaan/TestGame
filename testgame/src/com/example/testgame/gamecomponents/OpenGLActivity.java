@@ -20,11 +20,16 @@ public class OpenGLActivity extends Activity {
 	// ! OpenGL SurfaceView
 	public MySurfaceView mGLSurfaceView;
 	public BitmapProvider mBitmapProvider;
+
+	
 	public ArrayList<GameObject> mGameObjectList;
 	private float mXScreenLimit;
 	private float mYScreenLimit;
 	private float mZoomFactor;
 
+	
+	
+	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -41,10 +46,15 @@ public class OpenGLActivity extends Activity {
 		// We don't use Layout. But you can.
 		// create an OpenGLView
 		mGLSurfaceView = new MySurfaceView(this);
+	
 		mGLSurfaceView.setDebugFlags(GLSurfaceView.DEBUG_CHECK_GL_ERROR);
 		mGLSurfaceView.setEGLContextClientVersion(2);
 		mGLSurfaceView.setRenderer(new GLES20Renderer(this));
+		
 		setContentView(mGLSurfaceView);
+
+		
+		this.mBitmapProvider = new BitmapProvider(this);
 		mGameObjectList = new ArrayList<GameObject>();
 		init();
 	}
