@@ -229,35 +229,37 @@ public class GameObject {
 
 	}
 
-	public void sendVertexCoord() {
+	public void sendVertexCoord(Shader shader, String attribVertexPositionName ) {
 
-		Shader sh ;
-		sh = mShaderProvider.getShaderByName(this.usedShaderName);
-
-		int mAdressOf_VertexPosition = sh.attribCatlg
-				.get(mShaderProvider.mActivity.getString(R.string.vertex_position));
-
+		int mAdressOf_VertexPosition = shader.attribCatlg.get(attribVertexPositionName);
+		
+		this.getVertices().position(0);
+		
 		if (mAdressOf_VertexPosition != -1) {
 			GLES20.glVertexAttribPointer(mAdressOf_VertexPosition, 3,
 					GLES20.GL_FLOAT, false, Vertex.Vertex_COORD_SIZE_BYTES,
 					this.getVertices());
+		
+			Log.i("sendVertexCoord : ", " RC:"
+					+String.valueOf(GLES20.glGetError()));
+		
 		}
 
 	}
 
 
-	public void sendTextureCoord() {
+	public void sendTextureCoord(Shader shader, String attribTextCoordName) {
 
-		Shader sh ;
-		sh = mShaderProvider.getShaderByName(this.usedShaderName);
-
-		int mAdressOf_texturePosition = sh.attribCatlg
-				.get(mShaderProvider.mActivity.getString(R.string.texture_position));
-
+	
+		int mAdressOf_texturePosition = shader.attribCatlg.get(attribTextCoordName);
+		this.getTextCoord().position(0);
 		if (mAdressOf_texturePosition != -1) {
-			GLES20.glVertexAttribPointer(mAdressOf_texturePosition, 3,
-					GLES20.GL_FLOAT, false, Vertex.Vertex_COORD_SIZE_BYTES,
-					this.getVertices());
+			GLES20.glVertexAttribPointer(mAdressOf_texturePosition, 2,
+					GLES20.GL_FLOAT, false, Vertex.Vertex_TEXT_SIZE_BYTES,
+					this.getTextCoord());
+	
+			Log.i("sendTextureCoord : ", " RC:"
+					+String.valueOf(GLES20.glGetError()));
 		}
 
 	}

@@ -5,6 +5,7 @@ import android.app.Activity;
 import android.opengl.GLES20;
 import android.opengl.GLSurfaceView;
 import android.opengl.Matrix;
+import android.os.SystemClock;
 import android.util.Log;
 
 import javax.microedition.khronos.egl.EGLConfig;
@@ -67,7 +68,7 @@ public class GLES20Renderer implements GLSurfaceView.Renderer {
 		
 		// on active le texturing 2D
 		GLES20.glEnable(GLES20.GL_TEXTURE_2D);
-
+	
 		// create texture handle
 		int[] textures = new int[1];
 
@@ -148,7 +149,7 @@ public class GLES20Renderer implements GLSurfaceView.Renderer {
 			//	this.mProgramme1.enableVertexAttribArray(gameObject);
 				
 				gameObject.draw(this.mModelView,this.mShaderProvider);
-				
+				SystemClock.sleep(20000); 
 				
 			}
 		}

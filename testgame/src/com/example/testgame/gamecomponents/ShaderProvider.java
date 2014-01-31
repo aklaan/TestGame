@@ -33,11 +33,12 @@ public class ShaderProvider {
 	public Shader mCurrentActiveShader ;
 	
 	//déclaration des attributs du shader : default
-	public final String DEFAULT_VSH_ATTRIB_POSITION = "aPosition";
+	public final String DEFAULT_VSH_ATTRIB_VERTEX_COORD = "aPosition";
 	public final String DEFAULT_VSH_ATTRIB_COLOR = "aColor";
+	public final String DEFAULT_VSH_ATTRIB_TEXTURE_COORD= "aTexCoord";
+	
 	public final String DEFAULT_VSH_UNIFORM_MVP= "uMvp";
-	public final String DEFAULT_VSH_ATTRIB_TEXTURECOORD= "aTexCoord";
-	public final String DEFAULT_VSH_ATTRIB_TEXTURE= "tex0";
+	public final String DEFAULT_FSH_UNIFORM_TEXTURE= "tex0";
 	/***
 	 * 
 	 * @param activity
@@ -78,12 +79,12 @@ public class ShaderProvider {
 		// HashMap<String, String> map;
 		// map = new HashMap<String, String>();
 		defaultShader.mName = "default";
-		defaultShader.attribListNames.add(this.DEFAULT_VSH_ATTRIB_POSITION);
+		defaultShader.attribListNames.add(this.DEFAULT_VSH_ATTRIB_VERTEX_COORD);
 		defaultShader.attribListNames.add(this.DEFAULT_VSH_ATTRIB_COLOR);
-		defaultShader.attribListNames.add(this.DEFAULT_VSH_ATTRIB_TEXTURE);
+		//defaultShader.attribListNames.add(this.DEFAULT_VSH_ATTRIB_TEXTURE_COORD);
 
 		defaultShader.uniformListNames.add(this.DEFAULT_VSH_UNIFORM_MVP);
-		defaultShader.uniformListNames.add("tex0");
+		defaultShader.uniformListNames.add(this.DEFAULT_FSH_UNIFORM_TEXTURE);
 
 		InputStream iStream = null;
 		Log.i("debug",
@@ -129,10 +130,9 @@ public class ShaderProvider {
 				+ String.valueOf(GLES20.glGetError()));
 		}
 		
-/**
-		if (shader.name == "default") {
-			if (shader.getAdressOfUniform(this.mActivity
-					.getString(R.string.texture_position)) != -1) {
+  /**
+		if (shader.mName == "default") {
+			if (shader.getAdressOfUniform(this.DEFAULT_FSH_UNIFORM_TEXTURE) != -1) {
 				
 				GLES20.glEnable(GLES20.GL_TEXTURE_2D);
 				GLES20.glBindTexture(GLES20.GL_TEXTURE_2D, GLES20Renderer.mTex0);
@@ -140,10 +140,11 @@ public class ShaderProvider {
 
 				// on alimente la donnée UNIFORM mAdressOf_Texture0 avc un
 				// integer 0
-				GLES20.glUniform1i(mProgramme1.mAdressOf_Texture0, 0);
+				GLES20.glUniform1i(shader.getAdressOfUniform(this.DEFAULT_FSH_UNIFORM_TEXTURE), 0);
 			}
 
 		}
+
 	*/
 	}
 

@@ -200,9 +200,13 @@ public class Shader {
 			int memoryAdress = this.attribCatlg.get(temps);
 			if (memoryAdress != -1) {
 				GLES20.glEnableVertexAttribArray(memoryAdress);
-				Log.i("enable attrib : ", name + " " +String.valueOf(GLES20.glGetError()));
+				Log.i("enable attrib : ", name 
+						+ "@"
+						+ String.valueOf(memoryAdress)
+						+ " RC:"
+						+String.valueOf(GLES20.glGetError()));
 			} else {
-				Log.i("can't enable attrib : ", name + " " +String.valueOf(GLES20.glGetError()));
+				//Log.i("can't enable attrib : ", name + " " +String.valueOf(GLES20.glGetError()));
 			}
 
 		}
@@ -212,7 +216,11 @@ public class Shader {
 			int memoryAdress = uniformCatlg.get(temps);
 			if (memoryAdress != -1) {
 				GLES20.glEnableVertexAttribArray(memoryAdress);
-				Log.i("enable Uniform : ", name + " " +String.valueOf(GLES20.glGetError()));
+				Log.i("enable Uniform : ", name 
+						+ "@"
+						+ String.valueOf(memoryAdress)
+						+ " RC:"
+						+ " " +String.valueOf(GLES20.glGetError()));
 			}
 
 		}

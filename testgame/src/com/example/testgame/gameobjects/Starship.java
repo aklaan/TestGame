@@ -10,6 +10,7 @@ import com.example.testgame.gamecomponents.OpenGLActivity;
 import com.example.testgame.gamecomponents.Rectangle2D;
 import com.example.testgame.gamecomponents.Shader;
 import com.example.testgame.gamecomponents.ShaderProvider;
+import com.example.testgame.gamecomponents.Vertex;
 
 public class Starship extends Rectangle2D {
 
@@ -20,7 +21,7 @@ public class Starship extends Rectangle2D {
 		this.setTagName("starship");
 		this.isStatic = false;
 		this.usedShaderName = "default";
-	
+
 	}
 
 	@Override
@@ -39,13 +40,21 @@ public class Starship extends Rectangle2D {
 	}
 
 	@Override
-	public void draw(float[] ModelView, ShaderProvider shaderProvider) {
+	public void draw(float[] ModelView, ShaderProvider myShaderProvider) {
 
-		shaderProvider.use(usedShaderName);
+		myShaderProvider.use(usedShaderName);
+
+		Shader myShader = myShaderProvider.getShaderByName(usedShaderName);
 		
-		Shader shader = shaderProvider.getShaderByName(usedShaderName);
-		shader.enableShaderVar();
-	//	Log.i("starship-enableShaderVar", String.valueOf(GLES20.glGetError()));
+//		this.sendTextureCoord(myShader,
+//				myShaderProvider.DEFAULT_VSH_ATTRIB_TEXTURE_COORD);
+		
+		this.sendVertexCoord(myShader,
+				myShaderProvider.DEFAULT_VSH_ATTRIB_VERTEX_COORD);
+		
+		myShader.enableShaderVar();
+		// Log.i("starship-enableShaderVar",
+		// String.valueOf(GLES20.glGetError()));
 		// équivalent du PUSH
 		this.mBackupModelView = ModelView.clone();
 		float[] mMvp = new float[16];
@@ -96,28 +105,27 @@ public class Starship extends Rectangle2D {
 		// on alimente la donnée UNIFORM mAdressOf_Mvp du programme OpenGL
 		// avec
 		// une matrice de 4 flotant.
-		String uMvpName = shaderProvider.mActivity
-				.getString(R.string.umvp_matrix);
-		
 
-		int mAdressOf_Mvp = shader.getAdressOfUniform(uMvpName);
+		int mAdressOf_Mvp = myShader
+				.getAdressOfUniform(myShaderProvider.DEFAULT_VSH_UNIFORM_MVP);
 
 		GLES20.glUniformMatrix4fv(mAdressOf_Mvp, 1, false, mMvp, 0);
-		//Log.i("starship-glUniformMatrix4fv", String.valueOf(GLES20.glGetError()));
+		// Log.i("starship-glUniformMatrix4fv",
+		// String.valueOf(GLES20.glGetError()));
 		// on se positionne au debut du Buffer des indices
 		// qui indiquent dans quel ordre les vertex doivent être dessinés
 		this.getIndices().position(0);
 
-	this.sendTextureCoord();
-	this.sendVertexCoord();
+		
+
+				
+		
 		GLES20.glDrawElements(drawMode, this.getIndices().capacity(),
 				GLES20.GL_UNSIGNED_SHORT, this.getIndices());
-	
-	//	Log.i("starShip Draw : ", String.valueOf(GLES20.glGetError()));
-		shader.disableShaderVar();
 
-		
-		
+		// Log.i("starShip Draw : ", String.valueOf(GLES20.glGetError()));
+		myShader.disableShaderVar();
+
 	}
 
 }
