@@ -126,7 +126,7 @@ public class GLES20Renderer implements GLSurfaceView.Renderer {
 		// mTimer.addMark();
 		// mTimer.logFPS(); // on veut mesurer les fps
 
-		GLES20.glClearColor(0.5f, 0.5f, 0.5f, 1.0f);
+		GLES20.glClearColor(0.5f, 0.5f, 0.1f, 1.0f);
 		GLES20.glClear(GLES20.GL_COLOR_BUFFER_BIT);
 
 		// ici on peu demander à dessiner
@@ -149,7 +149,7 @@ public class GLES20Renderer implements GLSurfaceView.Renderer {
 			//	this.mProgramme1.enableVertexAttribArray(gameObject);
 				
 				gameObject.draw(this.mModelView,this.mShaderProvider);
-				SystemClock.sleep(20000); 
+				SystemClock.sleep(2000); 
 				
 			}
 		}

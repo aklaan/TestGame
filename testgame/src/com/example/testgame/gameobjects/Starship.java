@@ -20,7 +20,7 @@ public class Starship extends Rectangle2D {
 		super();
 		this.setTagName("starship");
 		this.isStatic = false;
-		this.usedShaderName = "default";
+		
 
 	}
 
@@ -42,17 +42,19 @@ public class Starship extends Rectangle2D {
 	@Override
 	public void draw(float[] ModelView, ShaderProvider myShaderProvider) {
 
-		myShaderProvider.use(usedShaderName);
-
-		Shader myShader = myShaderProvider.getShaderByName(usedShaderName);
 		
+		
+		 this.mShader = myShaderProvider.getShaderByName("default");
+		
+		 myShaderProvider.use(mShader);
+
 //		this.sendTextureCoord(myShader,
 //				myShaderProvider.DEFAULT_VSH_ATTRIB_TEXTURE_COORD);
 		
-		this.sendVertexCoord(myShader,
+		this.sendVertexCoord(mShader,
 				myShaderProvider.DEFAULT_VSH_ATTRIB_VERTEX_COORD);
 		
-		myShader.enableShaderVar();
+		mShader.enableShaderVar();
 		// Log.i("starship-enableShaderVar",
 		// String.valueOf(GLES20.glGetError()));
 		// équivalent du PUSH
@@ -106,12 +108,16 @@ public class Starship extends Rectangle2D {
 		// avec
 		// une matrice de 4 flotant.
 
-		int mAdressOf_Mvp = myShader
+		int mAdressOf_Mvp = mShader
 				.getAdressOfUniform(myShaderProvider.DEFAULT_VSH_UNIFORM_MVP);
 
 		GLES20.glUniformMatrix4fv(mAdressOf_Mvp, 1, false, mMvp, 0);
-		// Log.i("starship-glUniformMatrix4fv",
-		// String.valueOf(GLES20.glGetError()));
+		if (GLES20.glGetError() != GLES20.GL_NO_ERROR){
+			 Log.i("debug",
+					 "starship - glUniformMatrix4fv - RC:"
+			 +String.valueOf(GLES20.glGetError()));	
+		}
+		
 		// on se positionne au debut du Buffer des indices
 		// qui indiquent dans quel ordre les vertex doivent être dessinés
 		this.getIndices().position(0);
@@ -123,8 +129,14 @@ public class Starship extends Rectangle2D {
 		GLES20.glDrawElements(drawMode, this.getIndices().capacity(),
 				GLES20.GL_UNSIGNED_SHORT, this.getIndices());
 
+		
+		if (GLES20.glGetError() != GLES20.GL_NO_ERROR){
+			 Log.i("debug",
+					 "starship - glDrawElements - RC:"
+			 +String.valueOf(GLES20.glGetError()));	
+		}
 		// Log.i("starShip Draw : ", String.valueOf(GLES20.glGetError()));
-		myShader.disableShaderVar();
+		mShader.disableShaderVar();
 
 	}
 

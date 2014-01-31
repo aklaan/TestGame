@@ -26,7 +26,7 @@ public class Shader {
 	public String mProgramName;
 
 	public ArrayList<String> attribListNames;
-	public HashMap<String, Integer>attribCatlg;
+	public HashMap<String, Integer> attribCatlg;
 
 	public ArrayList<String> uniformListNames;
 	public HashMap<String, Integer> uniformCatlg;
@@ -39,11 +39,11 @@ public class Shader {
 		// On crée le GSL Program dans OpenGL et on mémorise
 		// son adresse.
 		mAdressOf_GLSLProgram = GLES20.glCreateProgram();
-		
-		attribListNames = new ArrayList<String>() ;
-		uniformListNames = new ArrayList<String>() ;
-		attribCatlg = new HashMap<String, Integer>() ;
-		uniformCatlg = new HashMap<String, Integer>() ;
+
+		attribListNames = new ArrayList<String>();
+		uniformListNames = new ArrayList<String>();
+		attribCatlg = new HashMap<String, Integer>();
+		uniformCatlg = new HashMap<String, Integer>();
 	}
 
 	public void delete() {
@@ -63,26 +63,31 @@ public class Shader {
 
 	public void initAttribLocation() {
 		for (String attribName : this.attribListNames) {
-		    // je passe pas une variable intermédiaire sinon le PUT ne fonctionne pas bien.
+			// je passe pas une variable intermédiaire sinon le PUT ne
+			// fonctionne pas bien.
 			String temps = attribName;
-			this.attribCatlg.put(temps, GLES20.glGetAttribLocation(mAdressOf_GLSLProgram, temps));
-			Log.i("initAttribLocation", attribName 
-					+ " @ " 
-					+GLES20.glGetAttribLocation(mAdressOf_GLSLProgram, temps)
-					+" rc: "
-					+String.valueOf(GLES20.glGetError()));	}
+			this.attribCatlg.put(temps,
+					GLES20.glGetAttribLocation(mAdressOf_GLSLProgram, temps));
+			Log.i("initAttribLocation",
+					attribName
+							+ " @ "
+							+ GLES20.glGetAttribLocation(mAdressOf_GLSLProgram,
+									temps) + " rc: "
+							+ String.valueOf(GLES20.glGetError()));
+		}
 	}
 
 	public void initUniformLocation() {
 		for (String uniformName : this.uniformListNames) {
 			String temps = uniformName;
-			uniformCatlg.put(temps, GLES20.glGetUniformLocation(mAdressOf_GLSLProgram, temps));
+			uniformCatlg.put(temps,
+					GLES20.glGetUniformLocation(mAdressOf_GLSLProgram, temps));
 			Log.i("initUniformLocation",
-					uniformName 
-					+ " @ " 
-					+GLES20.glGetUniformLocation(mAdressOf_GLSLProgram, temps)
-					+" rc: "
-					+String.valueOf(GLES20.glGetError()));
+					uniformName
+							+ " @ "
+							+ GLES20.glGetUniformLocation(
+									mAdressOf_GLSLProgram, temps) + " rc: "
+							+ String.valueOf(GLES20.glGetError()));
 		}
 
 	}
@@ -185,28 +190,31 @@ public class Shader {
 			mAdressOf_GLSLProgram = 0;
 			return false;
 		}
-		Log.i("Shader", "link ok - ID : " + String.valueOf(mAdressOf_GLSLProgram));
+		Log.i("Shader",
+				"link ok - ID : " + String.valueOf(mAdressOf_GLSLProgram));
 		Log.i("Shader",
 				"logs:" + GLES20.glGetProgramInfoLog(mAdressOf_GLSLProgram));
-	Log.i("Shader", String.valueOf(GLES20.glGetError()));
+		Log.i("Shader", String.valueOf(GLES20.glGetError()));
 		return true;
 	}
 
 	public void enableShaderVar() {
-		// si l'adresse mémoire de l'objet désigné par mAdressOf_VertexPosition	shader.enableShaderVar();	// n'est pas vide
-		
+		// si l'adresse mémoire de l'objet désigné par mAdressOf_VertexPosition
+		// shader.enableShaderVar(); // n'est pas vide
+
 		for (String name : this.attribListNames) {
 			String temps = name;
 			int memoryAdress = this.attribCatlg.get(temps);
 			if (memoryAdress != -1) {
 				GLES20.glEnableVertexAttribArray(memoryAdress);
-				Log.i("enable attrib : ", name 
-						+ "@"
-						+ String.valueOf(memoryAdress)
-						+ " RC:"
-						+String.valueOf(GLES20.glGetError()));
-			} else {
-				//Log.i("can't enable attrib : ", name + " " +String.valueOf(GLES20.glGetError()));
+
+				if (GLES20.glGetError() != GLES20.GL_NO_ERROR) {
+					Log.i("mdebug",
+							"Fail to enable attrib " + name + "@"
+
+							+ String.valueOf(memoryAdress) + " RC:"
+									+ String.valueOf(GLES20.glGetError()));
+				}
 			}
 
 		}
@@ -216,11 +224,14 @@ public class Shader {
 			int memoryAdress = uniformCatlg.get(temps);
 			if (memoryAdress != -1) {
 				GLES20.glEnableVertexAttribArray(memoryAdress);
-				Log.i("enable Uniform : ", name 
-						+ "@"
-						+ String.valueOf(memoryAdress)
-						+ " RC:"
-						+ " " +String.valueOf(GLES20.glGetError()));
+
+				if (GLES20.glGetError() != GLES20.GL_NO_ERROR) {
+					Log.i("mdebug",
+							"Fail to enable Uniform " + name + "@"
+									+ String.valueOf(memoryAdress) + " RC:"
+									+ " " + String.valueOf(GLES20.glGetError()));
+
+				}
 			}
 
 		}
@@ -229,7 +240,7 @@ public class Shader {
 	public void disableShaderVar() {
 		// si l'adresse mémoire de l'objet désigné par mAdressOf_VertexPosition
 		// n'est pas vide
-		
+
 		for (String name : this.attribListNames) {
 			int memoryAdress = this.attribCatlg.get(name);
 			if (memoryAdress != -1) {

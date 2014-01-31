@@ -20,8 +20,7 @@ public class GameObject {
 	public Texture mTexture;
 	public Boolean hasTexture;
 	public Boolean isVisible;
-	public String usedShaderName = "";
-	
+	public Shader mShader;
 
 	// top permettant de savoir si l'objet est statique ou qu'il
 	// a la possibilité d'être en mouvement. ceci va servir
@@ -88,7 +87,6 @@ public class GameObject {
 		Matrix.setIdentityM(this.mTransformUpdateView, 0);
 		this.drawMode = GLES20.GL_TRIANGLES;
 		this.mCollideWithList = new ArrayList<GameObject>();
-	
 
 	}
 
@@ -116,9 +114,9 @@ public class GameObject {
 		X = X + (float) (Math.cos(anglRAD));
 		Y = Y + (float) (Math.sin(anglRAD));
 		// Matrix.translateM(wrkresult, 0, x, y, 0);
-		Log.i("deug", String.valueOf(X) + " / " + String.valueOf(Y));
+		Log.i("debug", String.valueOf(X) + " / " + String.valueOf(Y));
 
-		Log.i("", String.valueOf(Math.cos(anglRAD)));
+		Log.i("debug", String.valueOf(Math.cos(anglRAD)));
 
 	}
 
@@ -229,41 +227,46 @@ public class GameObject {
 
 	}
 
-	public void sendVertexCoord(Shader shader, String attribVertexPositionName ) {
+	public void sendVertexCoord(Shader shader, String attribVertexPositionName) {
 
-		int mAdressOf_VertexPosition = shader.attribCatlg.get(attribVertexPositionName);
-		
+		// int mAdressOf_VertexPosition =
+		// shader.attribCatlg.get(attribVertexPositionName);
+
 		this.getVertices().position(0);
-		
-		if (mAdressOf_VertexPosition != -1) {
-			GLES20.glVertexAttribPointer(mAdressOf_VertexPosition, 3,
+
+		if (shader.attribCatlg.get(attribVertexPositionName) != -1) {
+			GLES20.glVertexAttribPointer(
+					shader.attribCatlg.get(attribVertexPositionName), 3,
 					GLES20.GL_FLOAT, false, Vertex.Vertex_COORD_SIZE_BYTES,
 					this.getVertices());
-		
-			Log.i("sendVertexCoord : ", " RC:"
-					+String.valueOf(GLES20.glGetError()));
-		
+
+			if (GLES20.glGetError() != GLES20.GL_NO_ERROR) {
+				Log.i("mdebug",
+						"gameobject.senVertexposition- RC:"
+								+ String.valueOf(GLES20.glGetError()));
+			}
 		}
 
 	}
-
 
 	public void sendTextureCoord(Shader shader, String attribTextCoordName) {
 
-	
-		int mAdressOf_texturePosition = shader.attribCatlg.get(attribTextCoordName);
+		int mAdressOf_texturePosition = shader.attribCatlg
+				.get(attribTextCoordName);
 		this.getTextCoord().position(0);
-		if (mAdressOf_texturePosition != -1) {
-			GLES20.glVertexAttribPointer(mAdressOf_texturePosition, 2,
+		if (shader.attribCatlg.get(attribTextCoordName) != -1) {
+			GLES20.glVertexAttribPointer(
+					shader.attribCatlg.get(attribTextCoordName), 2,
 					GLES20.GL_FLOAT, false, Vertex.Vertex_TEXT_SIZE_BYTES,
 					this.getTextCoord());
-	
-			Log.i("sendTextureCoord : ", " RC:"
-					+String.valueOf(GLES20.glGetError()));
+
+			if (GLES20.glGetError() != GLES20.GL_NO_ERROR) {
+				Log.i("mdebug",
+						"gameobject.senTexture RC:"
+								+ String.valueOf(GLES20.glGetError()));
+			}
 		}
 
 	}
-
-
 
 }

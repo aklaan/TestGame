@@ -118,13 +118,13 @@ public class ShaderProvider {
 		return defaultShader;
 	}
 
-	public void use(String shaderName) {
-		Shader shader = this.getShaderByName(shaderName);
+	public void use(Shader shader) {
+		
 		// use program
 		if (this.mCurrentActiveShader != shader){
 			GLES20.glUseProgram(shader.mAdressOf_GLSLProgram);	
 		this.mCurrentActiveShader = shader;
-		Log.i("use", shaderName + "@"
+		Log.i("use", shader.mName + "@"
 				+ String.valueOf(shader.mAdressOf_GLSLProgram)
 				+" errcode : "
 				+ String.valueOf(GLES20.glGetError()));
