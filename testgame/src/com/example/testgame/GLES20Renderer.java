@@ -15,6 +15,7 @@ import com.example.testgame.gamecomponents.CollisionControler;
 import com.example.testgame.gamecomponents.DefaultProgramShader;
 import com.example.testgame.gamecomponents.GameObject;
 import com.example.testgame.gamecomponents.Rectangle2D;
+import com.example.testgame.gamecomponents.Shader;
 import com.example.testgame.gamecomponents.ShaderProvider;
 import com.example.testgame.gameobjects.Starship;
 import com.example.testgame.gameobjects.PetitRobot;
@@ -48,7 +49,7 @@ public class GLES20Renderer implements GLSurfaceView.Renderer {
 
 	public GLES20Renderer(Activity activity) {
 		mActivity = (MainActivity) activity;
-
+		this.mShaderProvider = new ShaderProvider(this.mActivity);
 	}
 
 	
@@ -64,7 +65,7 @@ public class GLES20Renderer implements GLSurfaceView.Renderer {
 		//mProgramme1.make();
 
 		
-		this.mShaderProvider = new ShaderProvider(this.mActivity);
+
 		
 		// on active le texturing 2D
 		GLES20.glEnable(GLES20.GL_TEXTURE_2D);
@@ -95,7 +96,9 @@ public class GLES20Renderer implements GLSurfaceView.Renderer {
 
 		//use();
 
-		
+		 Shader mShader = mShaderProvider.getShaderByName("default");
+			
+		 mShaderProvider.use(mShader);
 	
 	}
 
@@ -104,6 +107,10 @@ public class GLES20Renderer implements GLSurfaceView.Renderer {
 		// lorsqu'il y a une modification de la vue , on redéfinie la nouvelle
 		// taille de la vue (par exemple quand on incline le téléphone et
 		// que l'on passe de la vue portait à la vue paysage
+	
+		
+		Log.i("",String.valueOf(width) + "/" + String.valueOf(height));
+		
 		GLES20.glViewport(0, 0, width, height);
 		mActivity.setXScreenLimit(width);
 		mActivity.setYScreenLimit(height);
@@ -126,33 +133,39 @@ public class GLES20Renderer implements GLSurfaceView.Renderer {
 		// mTimer.addMark();
 		// mTimer.logFPS(); // on veut mesurer les fps
 
-		GLES20.glClearColor(0.5f, 0.5f, 0.1f, 1.0f);
+		GLES20.glClearColor(0.0f, 0.5f, 0.1f, 1.0f);
 		GLES20.glClear(GLES20.GL_COLOR_BUFFER_BIT);
 
+		
+		 
 		// ici on peu demander à dessiner
 		// en mode points GL_POINTS ,GL_LINES, GL_TRIANGLES
 
 		// CollisionControler.checkAllCollisions(mGameObjectList);
 		Matrix.setIdentityM(this.mModelView, 0);
+		
 		for (GameObject gameObject : mActivity.mGameObjectList) {
 			gameObject.onUpdate(mActivity);
 
 			if (gameObject.isVisible) {
-
+/**
 				if (gameObject.hasTexture) {
 					mActivity.mBitmapProvider.putTextureToGLUnit(
 							gameObject.mTexture, 0);
 				}
-
+*/
 				// A FAIRE....
 				// - activer le bon shader si cet objet n'utilise pas celui en cours
 			//	this.mProgramme1.enableVertexAttribArray(gameObject);
 				
-				gameObject.draw(this.mModelView,this.mShaderProvider);
-				SystemClock.sleep(2000); 
+				gameObject.draw(this.mModelView,this.mProjectionView,this.mShaderProvider);
+			SystemClock.sleep(2000); 
 				
+	
 			}
+		
 		}
+	
 	}
 /***
 	void use() {

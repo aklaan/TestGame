@@ -40,30 +40,30 @@ public class Starship extends Rectangle2D {
 	}
 
 	@Override
-	public void draw(float[] ModelView, ShaderProvider myShaderProvider) {
+	public void draw(float[] modelView, float[] projectionView ,ShaderProvider shaderProvider) {
 
+	
 		
+		 this.mShader = shaderProvider.getShaderByName("default");
 		
-		 this.mShader = myShaderProvider.getShaderByName("default");
-		
-		 myShaderProvider.use(mShader);
-
+	//shaderProvider.use(mShader);
+			
 //		this.sendTextureCoord(myShader,
 //				myShaderProvider.DEFAULT_VSH_ATTRIB_TEXTURE_COORD);
 		
 		this.sendVertexCoord(mShader,
-				myShaderProvider.DEFAULT_VSH_ATTRIB_VERTEX_COORD);
+				shaderProvider.DEFAULT_VSH_ATTRIB_VERTEX_COORD);
 		
 		mShader.enableShaderVar();
 		// Log.i("starship-enableShaderVar",
 		// String.valueOf(GLES20.glGetError()));
 		// équivalent du PUSH
-		this.mBackupModelView = ModelView.clone();
+		this.mBackupModelView = modelView.clone();
 		float[] mMvp = new float[16];
 		float[] wrkmodelView = new float[16];
 
-		Matrix.setIdentityM(mMvp, 0);
-		wrkmodelView = ModelView.clone();
+		//Matrix.setIdentityM(mMvp, 0);
+		wrkmodelView = modelView.clone();
 
 		// on applique la transfo commandée en update
 
@@ -83,9 +83,9 @@ public class Starship extends Rectangle2D {
 
 		if (this.cible != null) {
 
-			Matrix.translateM(ModelView, 0, (float) (cible.X
-					- (float) ModelView[12] + (Math.cos(angleRAD) * 50.0f)),
-					(float) (cible.Y - (float) ModelView[13] + (Math
+			Matrix.translateM(modelView, 0, (float) (cible.X
+					- (float) modelView[12] + (Math.cos(angleRAD) * 50.0f)),
+					(float) (cible.Y - (float) modelView[13] + (Math
 							.sin(angleRAD) * 50.0f)), 0);
 
 			// Log.i(this.getTagName(),"X:"+String.valueOf(this.X) +
@@ -95,23 +95,23 @@ public class Starship extends Rectangle2D {
 
 		}
 
-		// Matrix.multiplyMM(mMvp, 0, renderer.mProjectionView, 0,
-		// renderer.mModelView, 0);
+		 Matrix.multiplyMM(mMvp, 0, projectionView, 0, wrkmodelView, 0);
 
 		// Log.i("draw-"+this.getTagName(),"X:"+String.valueOf(this.X) +
 		// "- Y:"+String.valueOf(this.Y) );
 
-		this.X = ModelView[12];
-		this.Y = ModelView[13];
+		this.X = modelView[12];
+		this.Y = modelView[13];
 
 		// on alimente la donnée UNIFORM mAdressOf_Mvp du programme OpenGL
 		// avec
 		// une matrice de 4 flotant.
 
 		int mAdressOf_Mvp = mShader
-				.getAdressOfUniform(myShaderProvider.DEFAULT_VSH_UNIFORM_MVP);
+				.getAdressOfUniform(shaderProvider.DEFAULT_VSH_UNIFORM_MVP);
 
-		GLES20.glUniformMatrix4fv(mAdressOf_Mvp, 1, false, mMvp, 0);
+		//GLES20.glUniformMatrix4fv(mAdressOf_Mvp, 1, false, mMvp, 0);
+		
 		if (GLES20.glGetError() != GLES20.GL_NO_ERROR){
 			 Log.i("debug",
 					 "starship - glUniformMatrix4fv - RC:"
@@ -122,11 +122,12 @@ public class Starship extends Rectangle2D {
 		// qui indiquent dans quel ordre les vertex doivent être dessinés
 		this.getIndices().position(0);
 
-		
-
-				
-		
-		GLES20.glDrawElements(drawMode, this.getIndices().capacity(),
+	
+	//	GLES20.glVertexAttribPointer(
+	//			mShader.attribCatlg.get(shaderProvider.DEFAULT_VSH_ATTRIB_VERTEX_COORD), 3,
+//				GLES20.GL_FLOAT, false, Vertex.Vertex_COORD_SIZE_BYTES,
+//				this.getVertices());
+		GLES20.glDrawElements(GLES20.GL_TRIANGLES, this.getIndices().capacity(),
 				GLES20.GL_UNSIGNED_SHORT, this.getIndices());
 
 		

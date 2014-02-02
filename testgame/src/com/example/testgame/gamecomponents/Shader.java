@@ -120,7 +120,7 @@ public class Shader {
 	 * @return
 	 */
 	public boolean loadShaders(String vertexCode, String fragmentCode) {
-		if (mAdressOf_GLSLProgram == -1) {
+		if (mAdressOf_GLSLProgram == 0) {
 			Log.e(this.getClass().getName(), "No GLSL Program created!");
 			return false;
 		}
@@ -129,7 +129,7 @@ public class Shader {
 		this.setVertexShader(vertexCode);
 
 		// if one of shader cannot be read return false
-		if (mAdressOf_VertexShader == -1 || mAdressOf_FragmentShader == -1) {
+		if (mAdressOf_VertexShader == 0 || mAdressOf_FragmentShader == 0) {
 			Log.e(this.getClass().getName(), "Shader doesn' compile");
 			return false;
 		}
@@ -169,7 +169,7 @@ public class Shader {
 	}
 
 	public boolean link() {
-		if (mAdressOf_GLSLProgram == -1) {
+		if (mAdressOf_GLSLProgram == 0) {
 			Log.e(this.getClass().getName(),
 					"Please create a GL program before Link shaders!");
 			return false;
@@ -190,11 +190,11 @@ public class Shader {
 			mAdressOf_GLSLProgram = 0;
 			return false;
 		}
-		Log.i("Shader",
-				"link ok - ID : " + String.valueOf(mAdressOf_GLSLProgram));
-		Log.i("Shader",
-				"logs:" + GLES20.glGetProgramInfoLog(mAdressOf_GLSLProgram));
-		Log.i("Shader", String.valueOf(GLES20.glGetError()));
+		
+		Log.i("Shader.link()",
+				"errorlogs :" + GLES20.glGetProgramInfoLog(mAdressOf_GLSLProgram));
+		Log.i("Shader.link()", "ProgramID : " + String.valueOf(mAdressOf_GLSLProgram) 
+				+" RC : " + String.valueOf(GLES20.glGetError()));
 		return true;
 	}
 
@@ -204,12 +204,13 @@ public class Shader {
 
 		for (String name : this.attribListNames) {
 			String temps = name;
+			Log.i("shader.enableShaderVar()", "Enable attrib " + name + " @ " + this.attribCatlg.get(temps));
 			int memoryAdress = this.attribCatlg.get(temps);
 			if (memoryAdress != -1) {
 				GLES20.glEnableVertexAttribArray(memoryAdress);
 
 				if (GLES20.glGetError() != GLES20.GL_NO_ERROR) {
-					Log.i("mdebug",
+					Log.i("shader.enableShaderVar()",
 							"Fail to enable attrib " + name + "@"
 
 							+ String.valueOf(memoryAdress) + " RC:"
@@ -221,6 +222,7 @@ public class Shader {
 
 		for (String name : this.uniformListNames) {
 			String temps = name;
+			Log.i("shader.enableShaderVar()", "Enable Uniform " + name + " @ " + this.uniformCatlg.get(temps));
 			int memoryAdress = uniformCatlg.get(temps);
 			if (memoryAdress != -1) {
 				GLES20.glEnableVertexAttribArray(memoryAdress);

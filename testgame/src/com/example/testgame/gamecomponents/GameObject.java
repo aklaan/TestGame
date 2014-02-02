@@ -85,7 +85,7 @@ public class GameObject {
 		Matrix.setIdentityM(this.mRotationMatrix, 0);
 
 		Matrix.setIdentityM(this.mTransformUpdateView, 0);
-		this.drawMode = GLES20.GL_TRIANGLES;
+	
 		this.mCollideWithList = new ArrayList<GameObject>();
 
 	}
@@ -178,7 +178,7 @@ public class GameObject {
 	public void setCoord(int x, int y) {
 		this.X = x;
 		this.Y = y;
-		// updateModelMatrix();
+		 updateModelMatrix();
 
 	}
 
@@ -199,7 +199,7 @@ public class GameObject {
 		// String.valueOf(width)+" / height="+String.valueOf(height));
 
 		// this.scale(width, height);
-		// this.translate(X,Y);
+		 //this.translate(X,Y);
 	}
 
 	public void onUpdate(OpenGLActivity openGLActivity) {
@@ -207,7 +207,7 @@ public class GameObject {
 
 	}
 
-	public void draw(float[] ModelView, ShaderProvider shaderProvider) {
+	public void draw(float[] ModelView, float[] projectionView ,ShaderProvider shaderProvider) {
 
 	}
 
@@ -238,13 +238,15 @@ public class GameObject {
 			GLES20.glVertexAttribPointer(
 					shader.attribCatlg.get(attribVertexPositionName), 3,
 					GLES20.GL_FLOAT, false, Vertex.Vertex_COORD_SIZE_BYTES,
-					this.getVertices());
+					this.getVertices());		
 
 			if (GLES20.glGetError() != GLES20.GL_NO_ERROR) {
 				Log.i("mdebug",
 						"gameobject.senVertexposition- RC:"
 								+ String.valueOf(GLES20.glGetError()));
 			}
+		} else {
+			Log.i("GameObject.sendvertex...", attribVertexPositionName + " not found");
 		}
 
 	}

@@ -59,8 +59,8 @@ public class MainActivity extends OpenGLActivity {
 				
 			Starship mStarship = new Starship();
 				
-				mStarship.setHeight(10);
-				mStarship.setWidth(10);
+				mStarship.setHeight(100);
+				mStarship.setWidth(100);
 				mStarship.angleRAD = 0.0f;
 				mStarship.setTagName("starship1");
 				
@@ -78,7 +78,7 @@ public class MainActivity extends OpenGLActivity {
 				mStarship2.setTagName("starship2");
 				mStarship2.cible = mStarship;
 				mStarship2.angleRAD=45.0f;
-				mGameObjectList.add(mStarship2);
+				//mGameObjectList.add(mStarship2);
 
 				PetitRobot mPetitRobot = new PetitRobot();
 				mPetitRobot.setCoord(50,0);

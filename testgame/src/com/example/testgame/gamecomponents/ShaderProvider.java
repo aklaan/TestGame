@@ -5,16 +5,10 @@ import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-import com.example.testgame.GLES20Renderer;
 import com.example.testgame.R;
-import com.example.testgame.R.string;
-
 import android.app.Activity;
 import android.content.Context;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.opengl.GLES20;
-import android.opengl.Matrix;
 import android.util.Log;
 
 /**
@@ -30,7 +24,7 @@ public class ShaderProvider {
 	public Context glContext;
 	public ArrayList<Shader> shaderList;
 	public HashMap<String, Integer> catalogShader;
-	public Shader mCurrentActiveShader ;
+	public int mCurrentActiveShader ;
 	
 	//déclaration des attributs du shader : default
 	public final String DEFAULT_VSH_ATTRIB_VERTEX_COORD = "aPosition";
@@ -81,14 +75,13 @@ public class ShaderProvider {
 		defaultShader.mName = "default";
 		defaultShader.attribListNames.add(this.DEFAULT_VSH_ATTRIB_VERTEX_COORD);
 		defaultShader.attribListNames.add(this.DEFAULT_VSH_ATTRIB_COLOR);
-		//defaultShader.attribListNames.add(this.DEFAULT_VSH_ATTRIB_TEXTURE_COORD);
+		defaultShader.attribListNames.add(this.DEFAULT_VSH_ATTRIB_TEXTURE_COORD);
 
 		defaultShader.uniformListNames.add(this.DEFAULT_VSH_UNIFORM_MVP);
 		defaultShader.uniformListNames.add(this.DEFAULT_FSH_UNIFORM_TEXTURE);
 
 		InputStream iStream = null;
-		Log.i("debug",
-				this.mActivity.getString(R.string.defaultshader_vertex_source));
+		
 		try {
 
 			iStream = this.mActivity.getAssets().open(
@@ -96,6 +89,7 @@ public class ShaderProvider {
 
 			String vertexCode;
 			vertexCode = Util.readStringInput(iStream);
+			
 			iStream = null;
 			iStream = this.mActivity.getAssets()
 					.open(mActivity
@@ -111,7 +105,7 @@ public class ShaderProvider {
 
 		}
 
-		defaultShader.link();
+		//defaultShader.link();
 		defaultShader.initAttribLocation();
 		defaultShader.initUniformLocation();
 
@@ -120,10 +114,12 @@ public class ShaderProvider {
 
 	public void use(Shader shader) {
 		
+		
 		// use program
-		if (this.mCurrentActiveShader != shader){
-			GLES20.glUseProgram(shader.mAdressOf_GLSLProgram);	
-		this.mCurrentActiveShader = shader;
+		if (this.mCurrentActiveShader != shader.mAdressOf_GLSLProgram){
+			this.mCurrentActiveShader = shader.mAdressOf_GLSLProgram;
+			GLES20.glUseProgram(this.mCurrentActiveShader);	
+		
 		Log.i("use", shader.mName + "@"
 				+ String.valueOf(shader.mAdressOf_GLSLProgram)
 				+" errcode : "

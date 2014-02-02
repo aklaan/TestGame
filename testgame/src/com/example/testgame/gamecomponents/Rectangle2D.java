@@ -19,10 +19,10 @@ public class Rectangle2D extends GameObject {
 		// les 3 premiers chiffre sont les coordonées X,Y,Z
 		// les 2 derniers U et W
 
-		this.putVertex(0, new Vertex(-1, 1, 0, 0, 0));
-		this.putVertex(1, new Vertex(-1, -1, 0, 0, 1));
-		this.putVertex(2, new Vertex(1, -1, 0, 1, 1));
-		this.putVertex(3, new Vertex(1, 1, 0, 1, 0));
+		this.putVertex(0, new Vertex(-0.1f, 0.1f, 0f, 0f, 0f));
+		this.putVertex(1, new Vertex(-0.1f, -0.1f, 0f, 0f, 1f));
+		this.putVertex(2, new Vertex(0.1f, -0.1f, 0f, 1f, 1f));
+		this.putVertex(3, new Vertex(0.1f, 0.1f, 0, 1f, 0f));
 
 		/* updateVertices(); */
 		// on indique l'ordre dans lequel on doit affichier les vertex
@@ -63,7 +63,7 @@ public class Rectangle2D extends GameObject {
 	}
 
 	@Override
-	public void draw(float[] ModelView, ShaderProvider shaderProvider) {
+	public void draw(float[] ModelView, float[] projectionView ,ShaderProvider shaderProvider) {
 
 		/**
 		float[] mMvp = new float[16];

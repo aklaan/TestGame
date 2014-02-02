@@ -15,7 +15,5 @@
     <!--  déclaration des sources de shaders -->
     <string name="defaultshader_vertex_source">shaders/default/simple_shader.vsh</string>
 	<string name="defaultshader_fragment_source">shaders/default/simple_shader.fsh</string>
-	<string name="vertex_position">aPosition</string>
-	<string name="texture_position">aTexCoord</string>
-	<string name="umvp_matrix">uMvp</string>
+
 </resources>
