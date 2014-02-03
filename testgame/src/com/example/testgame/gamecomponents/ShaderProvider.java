@@ -24,7 +24,7 @@ public class ShaderProvider {
 	public Context glContext;
 	public ArrayList<Shader> shaderList;
 	public HashMap<String, Integer> catalogShader;
-	public int mCurrentActiveShader ;
+	public Shader mCurrentActiveShader ;
 	
 	//déclaration des attributs du shader : default
 	public final String DEFAULT_VSH_ATTRIB_VERTEX_COORD = "aPosition";
@@ -114,11 +114,12 @@ public class ShaderProvider {
 
 	public void use(Shader shader) {
 		
-		
+		GLES20.glUseProgram(shader.mAdressOf_GLSLProgram);	
 		// use program
-		if (this.mCurrentActiveShader != shader.mAdressOf_GLSLProgram){
-			this.mCurrentActiveShader = shader.mAdressOf_GLSLProgram;
-			GLES20.glUseProgram(this.mCurrentActiveShader);	
+		if (this.mCurrentActiveShader != shader){
+			this.mCurrentActiveShader = shader;
+		
+			GLES20.glUseProgram(shader.mAdressOf_GLSLProgram);	
 		
 		Log.i("use", shader.mName + "@"
 				+ String.valueOf(shader.mAdressOf_GLSLProgram)

@@ -4,12 +4,10 @@ import android.opengl.GLES20;
 import android.opengl.Matrix;
 import android.util.Log;
 
-import com.example.testgame.R;
+import com.example.testgame.GLES20Renderer;
 import com.example.testgame.gamecomponents.GameObject;
 import com.example.testgame.gamecomponents.OpenGLActivity;
 import com.example.testgame.gamecomponents.Rectangle2D;
-import com.example.testgame.gamecomponents.Shader;
-import com.example.testgame.gamecomponents.ShaderProvider;
 import com.example.testgame.gamecomponents.Vertex;
 
 public class Starship extends Rectangle2D {
@@ -40,30 +38,58 @@ public class Starship extends Rectangle2D {
 	}
 
 	@Override
-	public void draw(float[] modelView, float[] projectionView ,ShaderProvider shaderProvider) {
+	
+	
+	public void draw(GLES20Renderer renderer) {
 
 	
+		//renderer.mProgramme1.enableVertexAttribArray(this);
+		this.mShader = renderer.mShaderProvider.getShaderByName("default");
+		//GLES20.glUseProgram(mShader.mAdressOf_GLSLProgram);
 		
-		 this.mShader = shaderProvider.getShaderByName("default");
-		
-	//shaderProvider.use(mShader);
+		renderer.mShaderProvider.use(mShader);
 			
 //		this.sendTextureCoord(myShader,
 //				myShaderProvider.DEFAULT_VSH_ATTRIB_TEXTURE_COORD);
 		
-		this.sendVertexCoord(mShader,
-				shaderProvider.DEFAULT_VSH_ATTRIB_VERTEX_COORD);
+	//	this.sendVertexCoord(mShader,
+	//			shaderProvider.DEFAULT_VSH_ATTRIB_VERTEX_COORD);
 		
-		mShader.enableShaderVar();
+		
+		
+		// on se positionne au debut du Buffer des indices
+		// qui indiquent dans quel ordre les vertex doivent être dessinés
+	  	this.getIndices().position(0);
+
+	  	int mAdressOf_VertexPosition = mShader.getAdressOfAttrib(renderer.mShaderProvider.DEFAULT_VSH_ATTRIB_VERTEX_COORD);
+		GLES20.glVertexAttribPointer(mAdressOf_VertexPosition, 3,
+				GLES20.GL_FLOAT, false, Vertex.Vertex_COORD_SIZE_BYTES,
+				this.getVertices());
+		
+		
+		GLES20.glEnableVertexAttribArray(mAdressOf_VertexPosition);
+
+		this.getVertices().position(0);
+	 	int mAdressOf_TextCoord = mShader.getAdressOfAttrib(renderer.mShaderProvider.DEFAULT_VSH_ATTRIB_TEXTURE_COORD);
+		GLES20.glVertexAttribPointer(mAdressOf_TextCoord, 2,
+				GLES20.GL_FLOAT, false, Vertex.Vertex_TEXT_SIZE_BYTES,
+				this.getTextCoord());
+	GLES20.glEnableVertexAttribArray(mAdressOf_TextCoord);
+		
+		
+		
+	//mShader.enableShaderVar();
+		
 		// Log.i("starship-enableShaderVar",
 		// String.valueOf(GLES20.glGetError()));
 		// équivalent du PUSH
-		this.mBackupModelView = modelView.clone();
+		this.mBackupModelView = renderer.mModelView.clone();
 		float[] mMvp = new float[16];
 		float[] wrkmodelView = new float[16];
 
+		Matrix.setIdentityM(renderer.mModelView, 0);
 		//Matrix.setIdentityM(mMvp, 0);
-		wrkmodelView = modelView.clone();
+		wrkmodelView = renderer.mModelView.clone();
 
 		// on applique la transfo commandée en update
 
@@ -80,12 +106,12 @@ public class Starship extends Rectangle2D {
 		// this.mRotationMatrix, 0);
 
 		angleRAD = angleRAD + 0.05F;
-
+/**
 		if (this.cible != null) {
 
-			Matrix.translateM(modelView, 0, (float) (cible.X
-					- (float) modelView[12] + (Math.cos(angleRAD) * 50.0f)),
-					(float) (cible.Y - (float) modelView[13] + (Math
+			Matrix.translateM(renderer.mModelView, 0, (float) (cible.X
+					- (float) renderer.mModelView[12] + (Math.cos(angleRAD) * 50.0f)),
+					(float) (cible.Y - (float) renderer.mModelView[13] + (Math
 							.sin(angleRAD) * 50.0f)), 0);
 
 			// Log.i(this.getTagName(),"X:"+String.valueOf(this.X) +
@@ -94,23 +120,25 @@ public class Starship extends Rectangle2D {
 			// " - CibleY:"+String.valueOf(cible.Y));
 
 		}
-
-		 Matrix.multiplyMM(mMvp, 0, projectionView, 0, wrkmodelView, 0);
+*/
+		 Matrix.multiplyMM(mMvp, 0, renderer.mProjectionView, 0, renderer.mModelView, 0);
 
 		// Log.i("draw-"+this.getTagName(),"X:"+String.valueOf(this.X) +
 		// "- Y:"+String.valueOf(this.Y) );
 
-		this.X = modelView[12];
-		this.Y = modelView[13];
+		this.X = renderer.mModelView[12];
+		this.Y = renderer.mModelView[13];
 
 		// on alimente la donnée UNIFORM mAdressOf_Mvp du programme OpenGL
 		// avec
 		// une matrice de 4 flotant.
 
 		int mAdressOf_Mvp = mShader
-				.getAdressOfUniform(shaderProvider.DEFAULT_VSH_UNIFORM_MVP);
+				.getAdressOfUniform(renderer.mShaderProvider.DEFAULT_VSH_UNIFORM_MVP);
 
-		//GLES20.glUniformMatrix4fv(mAdressOf_Mvp, 1, false, mMvp, 0);
+		GLES20.glUniformMatrix4fv(mAdressOf_Mvp, 1, false, mMvp, 0);
+		
+		//GLES20.glUniformMatrix4fv(renderer.mProgramme1.mAdressOf_Mvp, 1, false,	mMvp, 0);
 		
 		if (GLES20.glGetError() != GLES20.GL_NO_ERROR){
 			 Log.i("debug",
@@ -118,27 +146,24 @@ public class Starship extends Rectangle2D {
 			 +String.valueOf(GLES20.glGetError()));	
 		}
 		
-		// on se positionne au debut du Buffer des indices
-		// qui indiquent dans quel ordre les vertex doivent être dessinés
-		this.getIndices().position(0);
-
-	
-	//	GLES20.glVertexAttribPointer(
-	//			mShader.attribCatlg.get(shaderProvider.DEFAULT_VSH_ATTRIB_VERTEX_COORD), 3,
-//				GLES20.GL_FLOAT, false, Vertex.Vertex_COORD_SIZE_BYTES,
-//				this.getVertices());
-		GLES20.glDrawElements(GLES20.GL_TRIANGLES, this.getIndices().capacity(),
-				GLES20.GL_UNSIGNED_SHORT, this.getIndices());
-
-		
+			
 		if (GLES20.glGetError() != GLES20.GL_NO_ERROR){
-			 Log.i("debug",
-					 "starship - glDrawElements - RC:"
+			 Log.i("starship.draw()", "GLES20.glVertexAttribPointerRC:"
 			 +String.valueOf(GLES20.glGetError()));	
 		}
-		// Log.i("starShip Draw : ", String.valueOf(GLES20.glGetError()));
-		mShader.disableShaderVar();
+		
+		GLES20.glDrawElements(drawMode, this.getIndices().capacity(),
+				GLES20.GL_UNSIGNED_SHORT, this.getIndices());
 
+		int err =GLES20.glGetError(); 
+		if (err != GLES20.GL_NO_ERROR){
+			 Log.i("starship.draw()",
+					 "GLES20.glDrawElements - RC:"
+			 +String.valueOf(err));	
+		}
+		// Log.i("starShip Draw : ", String.valueOf(GLES20.glGetError()));
+	mShader.disableShaderVar();
+		renderer.mProgramme1.disableVertexAttribArray();
 	}
 
 }

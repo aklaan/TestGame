@@ -39,9 +39,9 @@ public class DefaultProgramShader {
 	public float[] mProjection = new float[16];
 
 	// attibutes
-	private int mAdressOf_VertexPosition;
-	private int mAdressOf_VertexColor;
-	private int mAdressOf_TextCoord;
+	public int mAdressOf_VertexPosition;
+	public int mAdressOf_VertexColor;
+	public int mAdressOf_TextCoord;
 
 	// uniform
 	public int mAdressOf_Mvp;
@@ -76,8 +76,8 @@ public class DefaultProgramShader {
 	}
 
 	public boolean make() {
-		String vShaderFilename = "simple_shader.vsh";
-		String fShaderFilename = "simple_shader.fsh";
+		String vShaderFilename = "shader2.vsh";
+		String fShaderFilename = "shader2.fsh";
 
 		// load and compile Shaders
 		if (loadShaders(vShaderFilename, fShaderFilename) == false) {
@@ -244,8 +244,7 @@ public class DefaultProgramShader {
 
 		try {
 			iStream = mActivity.getAssets()
-					.open(mActivity.getString(R.string.textureStarship) + "/default/"
-							+ filename);
+					.open("shaders/shader2/"+ filename);
 
 		} catch (IOException e) {
 			Log.e("Testgame", "Shader simple_Shader cannot be read");

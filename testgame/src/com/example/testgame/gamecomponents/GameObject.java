@@ -41,7 +41,7 @@ public class GameObject {
 	public float[] mTransformUpdateView = new float[16];
 
 	public static final int FLOAT_SIZE = 4;
-	public int drawMode;
+	public int drawMode = GLES20.GL_TRIANGLES;
 	public float angleRAD = 0.0f;
 	// on indique qu'il faut 4 byte pour repésenter un float
 	// 00000000 00000000 00000000 00000000
@@ -207,7 +207,7 @@ public class GameObject {
 
 	}
 
-	public void draw(float[] ModelView, float[] projectionView ,ShaderProvider shaderProvider) {
+	public void draw(GLES20Renderer renderer) {
 
 	}
 
@@ -241,9 +241,8 @@ public class GameObject {
 					this.getVertices());		
 
 			if (GLES20.glGetError() != GLES20.GL_NO_ERROR) {
-				Log.i("mdebug",
-						"gameobject.senVertexposition- RC:"
-								+ String.valueOf(GLES20.glGetError()));
+				Log.i("gameobject.sendVertexposition",
+						"RC :"	+ String.valueOf(GLES20.glGetError()));
 			}
 		} else {
 			Log.i("GameObject.sendvertex...", attribVertexPositionName + " not found");

@@ -25,13 +25,13 @@ public class MainActivity extends OpenGLActivity {
 				
 				Rectangle2D ligne1 = new Rectangle2D();
 				ligne1.setCoord(0, 0);
-				ligne1.setHeight(2000);
+				ligne1.setHeight(200);
 				ligne1.setWidth(2);
 				ligne1.setTagName("ligne1");
 				this.mBitmapProvider.assignTexture(
 						this.getString(R.string.textureRed), ligne1);
 
-				//mGameObjectList.add(ligne1);
+				mGameObjectList.add(ligne1);
 
 				
 				Rectangle2D ligne2 = new Rectangle2D();
@@ -67,7 +67,7 @@ public class MainActivity extends OpenGLActivity {
 				this.mBitmapProvider.assignTexture(
 						this.getString(R.string.boulerouge), mStarship);
 
-				mGameObjectList.add(mStarship);
+			  	mGameObjectList.add(mStarship);
 
 				Starship mStarship2 = new Starship();
 				

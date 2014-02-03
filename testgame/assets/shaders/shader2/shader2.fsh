@@ -17,7 +17,7 @@ void main()
     // il retourne la couleur de la texture 
    // gl_FragColor = texture2D(tex0, gl_PointCoord) * vColor;
     //gl_FragColor = texture2D(tex0, gl_PointCoord);
-    //gl_FragColor = texture2D(tex0, vTexCoord);
-    gl_FragColor =  vec4(1.0, 1.0, 0.0, 1.0);
+    gl_FragColor = texture2D(tex0, vTexCoord);
+   // gl_FragColor =  vec4(1.0, 0.0, 0.0, 1.0);
 }
 

@@ -11,16 +11,10 @@ import android.util.Log;
 import javax.microedition.khronos.egl.EGLConfig;
 import javax.microedition.khronos.opengles.GL10;
 
-import com.example.testgame.gamecomponents.CollisionControler;
 import com.example.testgame.gamecomponents.DefaultProgramShader;
 import com.example.testgame.gamecomponents.GameObject;
-import com.example.testgame.gamecomponents.Rectangle2D;
 import com.example.testgame.gamecomponents.Shader;
 import com.example.testgame.gamecomponents.ShaderProvider;
-import com.example.testgame.gameobjects.Starship;
-import com.example.testgame.gameobjects.PetitRobot;
-
-import java.util.ArrayList;
 
 /**
  * GLES20Renderer: the OGLES 2.0 Thread.
@@ -32,7 +26,7 @@ public class GLES20Renderer implements GLSurfaceView.Renderer {
 	public static int mTex0;
 	public MainActivity mActivity;
 	public DefaultProgramShader mProgramme1;
-	
+	public ShaderProvider mShaderProvider;
 	// ! Matrix Model View Projection
 	public float[] mMvp = new float[16];
 
@@ -45,11 +39,11 @@ public class GLES20Renderer implements GLSurfaceView.Renderer {
 	// ! matrice de transformation des objets
 	public float[] mProjectionView = new float[16];
 	
-	public ShaderProvider mShaderProvider;
+//	public ShaderProvider mShaderProvider;
 
 	public GLES20Renderer(Activity activity) {
 		mActivity = (MainActivity) activity;
-		this.mShaderProvider = new ShaderProvider(this.mActivity);
+		
 	}
 
 	
@@ -58,13 +52,15 @@ public class GLES20Renderer implements GLSurfaceView.Renderer {
 	// @Override
 	public void onSurfaceCreated(GL10 gl2, EGLConfig eglConfig) {
 
+		this.mShaderProvider = new ShaderProvider(mActivity);
+		
 		// on déclare un nouveau programme GLSL
-		//mProgramme1 = new DefaultProgramShader(mActivity);
+		mProgramme1 = new DefaultProgramShader(mActivity);
 
 		// on construit et compile le programme
-		//mProgramme1.make();
+		mProgramme1.make();
 
-		
+	//	this.mShaderProvider = new ShaderProvider(this.mActivity);
 
 		
 		// on active le texturing 2D
@@ -94,12 +90,12 @@ public class GLES20Renderer implements GLSurfaceView.Renderer {
 		GLES20.glTexParameteri(GLES20.GL_TEXTURE_2D, GLES20.GL_TEXTURE_WRAP_T,
 				GLES20.GL_CLAMP_TO_EDGE);
 
-		//use();
+//		use();
 
 		 Shader mShader = mShaderProvider.getShaderByName("default");
-			
-		 mShaderProvider.use(mShader);
-	
+		
+			 mShaderProvider.use(mShader);
+		
 	}
 
 	// @Override
@@ -133,7 +129,7 @@ public class GLES20Renderer implements GLSurfaceView.Renderer {
 		// mTimer.addMark();
 		// mTimer.logFPS(); // on veut mesurer les fps
 
-		GLES20.glClearColor(0.0f, 0.5f, 0.1f, 1.0f);
+		GLES20.glClearColor(0.3f, 0.3f, 0.3f, 1.0f);
 		GLES20.glClear(GLES20.GL_COLOR_BUFFER_BIT);
 
 		
@@ -142,23 +138,24 @@ public class GLES20Renderer implements GLSurfaceView.Renderer {
 		// en mode points GL_POINTS ,GL_LINES, GL_TRIANGLES
 
 		// CollisionControler.checkAllCollisions(mGameObjectList);
-		Matrix.setIdentityM(this.mModelView, 0);
+		//Matrix.setIdentityM(this.mModelView, 0);
 		
 		for (GameObject gameObject : mActivity.mGameObjectList) {
 			gameObject.onUpdate(mActivity);
 
+			 this.use();
 			if (gameObject.isVisible) {
-/**
+
 				if (gameObject.hasTexture) {
 					mActivity.mBitmapProvider.putTextureToGLUnit(
 							gameObject.mTexture, 0);
 				}
-*/
+
 				// A FAIRE....
 				// - activer le bon shader si cet objet n'utilise pas celui en cours
-			//	this.mProgramme1.enableVertexAttribArray(gameObject);
+				//this.mProgramme1.enableVertexAttribArray(gameObject);
 				
-				gameObject.draw(this.mModelView,this.mProjectionView,this.mShaderProvider);
+				gameObject.draw(this);
 			SystemClock.sleep(2000); 
 				
 	
@@ -167,9 +164,11 @@ public class GLES20Renderer implements GLSurfaceView.Renderer {
 		}
 	
 	}
-/***
+
 	void use() {
 		// use program
+		GLES20.glUseProgram(0);
+
 		GLES20.glUseProgram(mProgramme1.mAdressOf_GLSLProgram);
 
 		if (mProgramme1.mAdressOf_Mvp != -1) {
@@ -248,5 +247,5 @@ public class GLES20Renderer implements GLSurfaceView.Renderer {
 
 	}
 
-*/
+
 }

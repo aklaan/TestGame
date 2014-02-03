@@ -97,6 +97,11 @@ public class Shader {
 
 	}
 
+	public int getAdressOfAttrib(String name) {
+		return attribCatlg.get(name);
+
+	}
+
 	/**
 	 * 
 	 * @param source
@@ -164,7 +169,7 @@ public class Shader {
 				shader = 0;
 			}
 		}
-
+		Log.i(this.getClass().getName(),  this.mName +" : "+ shaderType + " shader compiled" );
 		return shader;
 	}
 
@@ -191,10 +196,7 @@ public class Shader {
 			return false;
 		}
 		
-		Log.i("Shader.link()",
-				"errorlogs :" + GLES20.glGetProgramInfoLog(mAdressOf_GLSLProgram));
-		Log.i("Shader.link()", "ProgramID : " + String.valueOf(mAdressOf_GLSLProgram) 
-				+" RC : " + String.valueOf(GLES20.glGetError()));
+		Log.i("Shader.link()", "Shader linkded");
 		return true;
 	}
 
@@ -204,11 +206,11 @@ public class Shader {
 
 		for (String name : this.attribListNames) {
 			String temps = name;
-			Log.i("shader.enableShaderVar()", "Enable attrib " + name + " @ " + this.attribCatlg.get(temps));
-			int memoryAdress = this.attribCatlg.get(temps);
+			
+			int memoryAdress = this.getAdressOfAttrib(temps);
 			if (memoryAdress != -1) {
 				GLES20.glEnableVertexAttribArray(memoryAdress);
-
+				Log.i("shader.enableShaderVar()", "Enable attrib " + name + " @ " + this.attribCatlg.get(temps));
 				if (GLES20.glGetError() != GLES20.GL_NO_ERROR) {
 					Log.i("shader.enableShaderVar()",
 							"Fail to enable attrib " + name + "@"
@@ -222,11 +224,11 @@ public class Shader {
 
 		for (String name : this.uniformListNames) {
 			String temps = name;
-			Log.i("shader.enableShaderVar()", "Enable Uniform " + name + " @ " + this.uniformCatlg.get(temps));
-			int memoryAdress = uniformCatlg.get(temps);
+			
+			int memoryAdress = this.getAdressOfUniform(temps);
 			if (memoryAdress != -1) {
 				GLES20.glEnableVertexAttribArray(memoryAdress);
-
+				Log.i("shader.enableShaderVar()", "Enable Uniform " + name + " @ " + this.uniformCatlg.get(temps));
 				if (GLES20.glGetError() != GLES20.GL_NO_ERROR) {
 					Log.i("mdebug",
 							"Fail to enable Uniform " + name + "@"

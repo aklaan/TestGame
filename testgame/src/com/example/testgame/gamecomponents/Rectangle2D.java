@@ -19,10 +19,10 @@ public class Rectangle2D extends GameObject {
 		// les 3 premiers chiffre sont les coordonées X,Y,Z
 		// les 2 derniers U et W
 
-		this.putVertex(0, new Vertex(-0.1f, 0.1f, 0f, 0f, 0f));
-		this.putVertex(1, new Vertex(-0.1f, -0.1f, 0f, 0f, 1f));
-		this.putVertex(2, new Vertex(0.1f, -0.1f, 0f, 1f, 1f));
-		this.putVertex(3, new Vertex(0.1f, 0.1f, 0, 1f, 0f));
+		this.putVertex(0, new Vertex(-1f, 1f, 0f, 0f, 0f));
+		this.putVertex(1, new Vertex(-1f, -1f, 0f, 0f, 1f));
+		this.putVertex(2, new Vertex(1f, -1f, 0f, 1f, 1f));
+		this.putVertex(3, new Vertex(1f, 1f, 0, 1f, 0f));
 
 		/* updateVertices(); */
 		// on indique l'ordre dans lequel on doit affichier les vertex
@@ -63,14 +63,17 @@ public class Rectangle2D extends GameObject {
 	}
 
 	@Override
-	public void draw(float[] ModelView, float[] projectionView ,ShaderProvider shaderProvider) {
+	public void draw (GLES20Renderer renderer) {
 
-		/**
+		renderer.mProgramme1.enableVertexAttribArray(this);
+		
 		float[] mMvp = new float[16];
 		// équivalent du PUSH
-		this.mBackupModelView = modelMatrix.clone();
+		this.mBackupModelView = renderer.mModelView.clone();
 
-		Matrix.translateM(modelMatrix, 0, X, Y, 0);
+		Matrix.setIdentityM(renderer.mModelView, 0);
+		
+		Matrix.translateM(renderer.mModelView, 0, X, Y, 0);
 
 		Matrix.multiplyMM(mMvp, 0, renderer.mProjectionView, 0,
 				renderer.mModelView, 0);
@@ -84,14 +87,15 @@ public class Rectangle2D extends GameObject {
 		// qui indiquent dans quel ordre les vertex doivent être dessinés
 		this.getIndices().position(0);
 
+		
 		GLES20.glDrawElements(drawMode, this.getIndices().capacity(),
 				GLES20.GL_UNSIGNED_SHORT, this.getIndices());
 
 		renderer.mProgramme1.disableVertexAttribArray();
 		// équivalent du POP
 		renderer.mModelView = this.mBackupModelView;
-
-	*/
+		renderer.mProgramme1.disableVertexAttribArray();
+	
 	}
 
 }
