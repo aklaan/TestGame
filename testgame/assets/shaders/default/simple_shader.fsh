@@ -4,7 +4,7 @@ precision highp float;
 uniform sampler2D tex0;
 varying vec2 vTexCoord; 
 varying vec4 vColor;
-
+varying vec3 pos;
 void main() 
 {
     //on n'accède jamais au fragment shader en direct.
@@ -18,6 +18,6 @@ void main()
    // gl_FragColor = texture2D(tex0, gl_PointCoord) * vColor;
     //gl_FragColor = texture2D(tex0, gl_PointCoord);
     //gl_FragColor = texture2D(tex0, vTexCoord);
-    gl_FragColor =  vec4(1.0, 1.0, 0.0, 1.0);
+    gl_FragColor =  vec4(sin(pos.x), sin(pos.y), 0.0, 1.0);
 }
 

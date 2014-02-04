@@ -156,7 +156,7 @@ public class GLES20Renderer implements GLSurfaceView.Renderer {
 				//this.mProgramme1.enableVertexAttribArray(gameObject);
 				
 				gameObject.draw(this);
-			SystemClock.sleep(2000); 
+		//SystemClock.sleep(2000); 
 				
 	
 			}
