@@ -227,47 +227,5 @@ public class GameObject {
 
 	}
 
-	public void sendVertexCoord(Shader shader, String attribVertexPositionName) {
-
-		// int mAdressOf_VertexPosition =
-		// shader.attribCatlg.get(attribVertexPositionName);
-
-		this.getVertices().position(0);
-
-		if (shader.attribCatlg.get(attribVertexPositionName) != -1) {
-			GLES20.glVertexAttribPointer(
-					shader.attribCatlg.get(attribVertexPositionName), 3,
-					GLES20.GL_FLOAT, false, Vertex.Vertex_COORD_SIZE_BYTES,
-					this.getVertices());		
-
-			if (GLES20.glGetError() != GLES20.GL_NO_ERROR) {
-				Log.i("gameobject.sendVertexposition",
-						"RC :"	+ String.valueOf(GLES20.glGetError()));
-			}
-		} else {
-			Log.i("GameObject.sendvertex...", attribVertexPositionName + " not found");
-		}
-
-	}
-
-	public void sendTextureCoord(Shader shader, String attribTextCoordName) {
-
-		int mAdressOf_texturePosition = shader.attribCatlg
-				.get(attribTextCoordName);
-		this.getTextCoord().position(0);
-		if (shader.attribCatlg.get(attribTextCoordName) != -1) {
-			GLES20.glVertexAttribPointer(
-					shader.attribCatlg.get(attribTextCoordName), 2,
-					GLES20.GL_FLOAT, false, Vertex.Vertex_TEXT_SIZE_BYTES,
-					this.getTextCoord());
-
-			if (GLES20.glGetError() != GLES20.GL_NO_ERROR) {
-				Log.i("mdebug",
-						"gameobject.senTexture RC:"
-								+ String.valueOf(GLES20.glGetError()));
-			}
-		}
-
-	}
 
 }

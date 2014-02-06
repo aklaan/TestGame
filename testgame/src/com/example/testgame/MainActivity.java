@@ -31,7 +31,7 @@ public class MainActivity extends OpenGLActivity {
 				this.mBitmapProvider.assignTexture(
 						this.getString(R.string.textureRed), ligne1);
 
-				mGameObjectList.add(ligne1);
+			//	mGameObjectList.add(ligne1);
 
 				
 				Rectangle2D ligne2 = new Rectangle2D();

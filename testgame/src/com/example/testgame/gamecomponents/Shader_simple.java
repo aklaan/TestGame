@@ -2,6 +2,7 @@ package com.example.testgame.gamecomponents;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.nio.FloatBuffer;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -11,149 +12,107 @@ import android.app.Activity;
 import android.opengl.GLES20;
 import android.util.Log;
 
-public class Shader_simple {
+public class Shader_simple extends Shader {
+	
+	// déclaration des attributs spécifiques au shader
+	public final String VSH_ATTRIB_VERTEX_COORD = "aPosition";
+	public int attrib_vertex_coord_location;
 
-	// public String vShaderFilename = "simple_shader.vsh";
-	// public String fShaderFilename = "simple_shader.fsh";
+	public final String VSH_ATTRIB_COLOR = "aColor";
+	public int attrib_color_location;
 
-	public String mName;
+	public final String VSH_ATTRIB_TEXTURE_COORD = "aTexCoord";
+	public int attrib_texture_coord_location;
 
-	// ! GLES20 Program
-	public int mAdressOf_GLSLProgram;
-	// ! Vertex shader
-	public int mAdressOf_VertexShader;
-	// Fragment shader
-	public int mAdressOf_FragmentShader;
+	public final String VSH_UNIFORM_MVP = "uMvp";
+	public int uniform_mvp_location;
 
-	// ! ProgramName (Vertex filename is ProgramName.vsh and Fragment filename
-	// is ProgramName.fsh)
-	public String mProgramName;
+	public final String FSH_UNIFORM_TEXTURE = "tex0";
+	public int uniform_texture_location;
 
-	public ArrayList<String> attribListNames;
-	public HashMap<String, Integer> attribCatlg;
+	private final String fsh_Source = 
+			  "#ifdef GL_ES \n"
+			+ " precision highp float; \n" 
+			+ " #endif \n"
+			+ " uniform sampler2D " + this.FSH_UNIFORM_TEXTURE+";" 
+			+ " varying vec2 vTexCoord; "
+			+ " varying vec4 vColor;" 
+			+ " varying vec3 pos;" 
+			+ " void main() {"
+//		    + "    gl_FragColor =  vColor;"
+			+ "gl_FragColor = texture2D(tex0, vTexCoord);"
+			// + "    gl_FragColor =  vec4(sin(pos.x), sin(pos.y), 0.0, 1.0);"
+			+ " " + "}";
 
-	public ArrayList<String> uniformListNames;
-	public HashMap<String, Integer> uniformCatlg;
-
-	// déclaration des attributs du shader : default
-	public final String DEFAULT_VSH_ATTRIB_VERTEX_COORD = "aPosition";
-	public final String DEFAULT_VSH_ATTRIB_COLOR = "aColor";
-	public final String DEFAULT_VSH_ATTRIB_TEXTURE_COORD = "aTexCoord";
-
-	public final String DEFAULT_VSH_UNIFORM_MVP = "uMvp";
-	public final String DEFAULT_FSH_UNIFORM_TEXTURE = "tex0";
-
-	private final String fsh_Source = " #ifdef GL_ES"
-			+ " precision highp float;" + " #endif"
-			+ " uniform sampler2D tex0;" + " varying vec2 vTexCoord; "
-			+ " varying vec4 vColor;" + " varying vec3 pos;" + " void main()"
-			+ " {"
-			+ "    gl_FragColor =  vec4(sin(pos.x), sin(pos.y), 0.0, 1.0);"
-			+ " }";
-
-	private final String vsh_Source = "uniform mat4 uMvp;"
-
-	+ "attribute vec3 aPosition;" + "attribute vec2 aTexCoord;"
-			+ "attribute vec4 aColor;"
-
-			+ "varying vec4 vColor;" + "varying vec2 vTexCoord;"
-			+ "varying vec3 pos;" + "void main() {"
+	private final String vsh_Source =
+			  "uniform mat4 "	+ this.VSH_UNIFORM_MVP + ";" 
+			+ "attribute vec3 " + this.VSH_ATTRIB_VERTEX_COORD + ";"
+			+ "attribute vec2 " + this.VSH_ATTRIB_TEXTURE_COORD + ";"
+			+ "attribute vec4 " + this.VSH_ATTRIB_COLOR + ";"
+			+ "varying vec4 vColor;" 
+			+ "varying vec2 vTexCoord;"
+			+ "varying vec3 pos;" 
+			+ "void main() {"
 			// on calcule la position du point via la matrice de projection
 			+ " pos = aPosition;"
 			+ " vec4 position = uMvp * vec4(aPosition.xyz, 1.);"
 			// vec4 position = vec4(aPosition.xyz, 1.);
 			+ " vColor = aColor;" + " vTexCoord = aTexCoord;"
 			// gl_PointSize = 10.;
-
 			// cette commande doit toujours être la dernière du vertex shader.
-			+ "	gl_Position =  position;"
+			+ "	gl_Position =  position;" + "}";
 
-			+ "}";
-
-	
-	
 	public Shader_simple() {
-		mAdressOf_GLSLProgram = 0;
-		mAdressOf_VertexShader = 0;
-		mAdressOf_FragmentShader = 0;
+
+	}
+
+	public void make() {
+		Log.i("", fsh_Source);
+		Log.i("", vsh_Source);
+		mGLSLProgram_location = 0;
+		VertexShader_location = 0;
+		FragmentShader_location = 0;
 
 		// On crée le GSL Program dans OpenGL et on mémorise
 		// son adresse.
-		mAdressOf_GLSLProgram = GLES20.glCreateProgram();
+		mGLSLProgram_location = GLES20.glCreateProgram();
 
-		attribListNames = new ArrayList<String>();
-		uniformListNames = new ArrayList<String>();
-		attribCatlg = new HashMap<String, Integer>();
-		uniformCatlg = new HashMap<String, Integer>();
-
-		this.mName = "default";
-		this.attribListNames.add(this.DEFAULT_VSH_ATTRIB_VERTEX_COORD);
-		this.attribListNames.add(this.DEFAULT_VSH_ATTRIB_COLOR);
-		this.attribListNames.add(this.DEFAULT_VSH_ATTRIB_TEXTURE_COORD);
-
-		this.uniformListNames.add(this.DEFAULT_VSH_UNIFORM_MVP);
-		this.uniformListNames.add(this.DEFAULT_FSH_UNIFORM_TEXTURE);
-
+		this.mName = "simple";
+		
 		this.loadShaders(vsh_Source, fsh_Source);
-		this.initAttribLocation();
-		this.initUniformLocation();
-
+		this.initLocations();
 	}
 
 	public void delete() {
 		// delete Vertex shader
-		if (mAdressOf_VertexShader != 0) {
-			GLES20.glDeleteShader(mAdressOf_VertexShader);
+		if (VertexShader_location != 0) {
+			GLES20.glDeleteShader(VertexShader_location);
 		}
 		// delete Fragment shader
-		if (mAdressOf_FragmentShader != 0) {
-			GLES20.glDeleteShader(mAdressOf_FragmentShader);
+		if (FragmentShader_location != 0) {
+			GLES20.glDeleteShader(FragmentShader_location);
 		}
 		// delete a GLES20 program
-		if (mAdressOf_GLSLProgram != 0) {
-			GLES20.glDeleteProgram(mAdressOf_GLSLProgram);
+		if (mGLSLProgram_location != 0) {
+			GLES20.glDeleteProgram(mGLSLProgram_location);
 		}
 	}
 
-	public void initAttribLocation() {
-		for (String attribName : this.attribListNames) {
-			// je passe pas une variable intermédiaire sinon le PUT ne
-			// fonctionne pas bien.
-			String temps = attribName;
-			this.attribCatlg.put(temps,
-					GLES20.glGetAttribLocation(mAdressOf_GLSLProgram, temps));
-			Log.i("initAttribLocation",
-					attribName
-							+ " @ "
-							+ GLES20.glGetAttribLocation(mAdressOf_GLSLProgram,
-									temps) + " rc: "
-							+ String.valueOf(GLES20.glGetError()));
-		}
-	}
+	public void initLocations() {
+		// les attribs
+		this.attrib_vertex_coord_location = GLES20.glGetAttribLocation(
+				mGLSLProgram_location, this.VSH_ATTRIB_VERTEX_COORD);
+		this.attrib_color_location = GLES20.glGetAttribLocation(
+				mGLSLProgram_location, this.VSH_ATTRIB_COLOR);
+		this.attrib_texture_coord_location = GLES20.glGetAttribLocation(
+				this.mGLSLProgram_location, this.VSH_ATTRIB_TEXTURE_COORD);
 
-	public void initUniformLocation() {
-		for (String uniformName : this.uniformListNames) {
-			String temps = uniformName;
-			uniformCatlg.put(temps,
-					GLES20.glGetUniformLocation(mAdressOf_GLSLProgram, temps));
-			Log.i("initUniformLocation",
-					uniformName
-							+ " @ "
-							+ GLES20.glGetUniformLocation(
-									mAdressOf_GLSLProgram, temps) + " rc: "
-							+ String.valueOf(GLES20.glGetError()));
-		}
+		// les Uniforms
 
-	}
-
-	public int getAdressOfUniform(String name) {
-		return uniformCatlg.get(name);
-
-	}
-
-	public int getAdressOfAttrib(String name) {
-		return attribCatlg.get(name);
-
+		this.uniform_mvp_location = GLES20.glGetUniformLocation(
+				this.mGLSLProgram_location, this.VSH_UNIFORM_MVP);
+		this.uniform_texture_location = GLES20.glGetUniformLocation(
+				this.mGLSLProgram_location, this.FSH_UNIFORM_TEXTURE);
 	}
 
 	/**
@@ -161,13 +120,13 @@ public class Shader_simple {
 	 * @param source
 	 */
 	public void setFragmentShader(String source) {
-		this.mAdressOf_FragmentShader = this.loadShader(source,
+		this.FragmentShader_location = this.loadShader(source,
 				GLES20.GL_FRAGMENT_SHADER);
 
 	}
 
 	public void setVertexShader(String source) {
-		this.mAdressOf_VertexShader = this.loadShader(source,
+		this.VertexShader_location = this.loadShader(source,
 				GLES20.GL_VERTEX_SHADER);
 
 	}
@@ -179,7 +138,7 @@ public class Shader_simple {
 	 * @return
 	 */
 	public boolean loadShaders(String vertexCode, String fragmentCode) {
-		if (mAdressOf_GLSLProgram == 0) {
+		if (mGLSLProgram_location == 0) {
 			Log.e(this.getClass().getName(), "No GLSL Program created!");
 			return false;
 		}
@@ -188,13 +147,13 @@ public class Shader_simple {
 		this.setVertexShader(vertexCode);
 
 		// if one of shader cannot be read return false
-		if (mAdressOf_VertexShader == 0 || mAdressOf_FragmentShader == 0) {
+		if (VertexShader_location == 0 || FragmentShader_location == 0) {
 			Log.e(this.getClass().getName(), "Shader doesn' compile");
 			return false;
 		}
 
-		GLES20.glAttachShader(mAdressOf_GLSLProgram, mAdressOf_VertexShader);
-		GLES20.glAttachShader(mAdressOf_GLSLProgram, mAdressOf_FragmentShader);
+		GLES20.glAttachShader(mGLSLProgram_location, VertexShader_location);
+		GLES20.glAttachShader(mGLSLProgram_location, FragmentShader_location);
 		link();
 		return true;
 	}
@@ -228,26 +187,27 @@ public class Shader_simple {
 		return shader;
 	}
 
+	// *******************************************************************
 	public boolean link() {
-		if (mAdressOf_GLSLProgram == 0) {
+		if (mGLSLProgram_location == 0) {
 			Log.e(this.getClass().getName(),
 					"Please create a GL program before Link shaders!");
 			return false;
 		}
 
-		GLES20.glLinkProgram(mAdressOf_GLSLProgram);
+		GLES20.glLinkProgram(mGLSLProgram_location);
 
 		int[] linkStatus = new int[1];
 
-		GLES20.glGetProgramiv(mAdressOf_GLSLProgram, GLES20.GL_LINK_STATUS,
+		GLES20.glGetProgramiv(mGLSLProgram_location, GLES20.GL_LINK_STATUS,
 				linkStatus, 0);
 
 		if (linkStatus[0] != GLES20.GL_TRUE) {
 			Log.e(this.getClass().getName(), "Could not link program: ");
 			Log.e(this.getClass().getName(),
-					"logs:" + GLES20.glGetProgramInfoLog(mAdressOf_GLSLProgram));
-			GLES20.glDeleteProgram(mAdressOf_GLSLProgram);
-			mAdressOf_GLSLProgram = 0;
+					"logs:" + GLES20.glGetProgramInfoLog(mGLSLProgram_location));
+			GLES20.glDeleteProgram(mGLSLProgram_location);
+			mGLSLProgram_location = 0;
 			return false;
 		}
 
@@ -255,74 +215,37 @@ public class Shader_simple {
 		return true;
 	}
 
-	public void toto(int i) {
-
-		GLES20.glEnableVertexAttribArray(i);
-	}
-
+	// *******************************************************************
+	// Attention : il ne faut pas rendre enable un attribut non valorisé
+	// sinon c'est ecran noir !
+	
 	public void enableShaderVar() {
-		// si l'adresse mémoire de l'objet désigné par mAdressOf_VertexPosition
-		// shader.enableShaderVar(); // n'est pas vide
-
-		// GLES20.glEnableVertexAttribArray(mAdressOf_VertexPosition);
-
-		for (String name : this.attribListNames) {
-			String temps = name;
-
-			int memoryAdress = this.getAdressOfAttrib(temps);
-			if (memoryAdress != -1) {
-				GLES20.glEnableVertexAttribArray(this.getAdressOfAttrib(temps));
-				Log.i("shader.enableShaderVar()", "Enable attrib " + name
-						+ " @ " + this.attribCatlg.get(temps));
-				if (GLES20.glGetError() != GLES20.GL_NO_ERROR) {
-					Log.i("shader.enableShaderVar()",
-							"Fail to enable attrib " + name + "@"
-
-							+ String.valueOf(memoryAdress) + " RC:"
-									+ String.valueOf(GLES20.glGetError()));
-				}
-			}
-
-		}
-
-		for (String name : this.uniformListNames) {
-			String temps = name;
-
-			int memoryAdress = this.getAdressOfUniform(temps);
-			if (memoryAdress != -1) {
-				GLES20.glEnableVertexAttribArray(memoryAdress);
-				Log.i("shader.enableShaderVar()", "Enable Uniform " + name
-						+ " @ " + this.uniformCatlg.get(temps));
-				if (GLES20.glGetError() != GLES20.GL_NO_ERROR) {
-					Log.i("mdebug", "Fail to enable Uniform " + name + "@"
-							+ String.valueOf(memoryAdress) + " RC:" + " "
-							+ String.valueOf(GLES20.glGetError()));
-
-				}
-			}
-
-		}
+		GLES20.glEnableVertexAttribArray(this.attrib_vertex_coord_location);
+		//GLES20.glEnableVertexAttribArray(this.attrib_color_location);
+		GLES20.glEnableVertexAttribArray(this.attrib_texture_coord_location);
+		
+		///les uniforms ne sont pas attrib !!
+		//GLES20.glEnableVertexAttribArray(this.uniform_mvp_location);
+		//GLES20.glEnableVertexAttribArray(this.uniform_texture_location);
 	}
 
+	// **************************************************************************
 	public void disableShaderVar() {
-		// si l'adresse mémoire de l'objet désigné par mAdressOf_VertexPosition
-		// n'est pas vide
+		GLES20.glDisableVertexAttribArray(this.attrib_vertex_coord_location);
+		GLES20.glDisableVertexAttribArray(this.attrib_color_location);
+		GLES20.glDisableVertexAttribArray(this.attrib_texture_coord_location);
+		GLES20.glDisableVertexAttribArray(this.uniform_mvp_location);
+		GLES20.glDisableVertexAttribArray(this.uniform_texture_location);
 
-		for (String name : this.attribListNames) {
-			int memoryAdress = this.attribCatlg.get(name);
-			if (memoryAdress != -1) {
-				GLES20.glDisableVertexAttribArray(memoryAdress);
-			}
-
-		}
-
-		for (String name : this.uniformListNames) {
-			int memoryAdress = uniformCatlg.get(name);
-			if (memoryAdress != -1) {
-				GLES20.glDisableVertexAttribArray(memoryAdress);
-			}
-
-		}
 	}
 
+
+
+public void alimVertices(FloatBuffer fb){
+	
+	GLES20.glVertexAttribPointer(this.attrib_vertex_coord_location, 3,
+			GLES20.GL_FLOAT, false, Vertex.Vertex_COORD_SIZE_BYTES,fb);
+			
+
+}
 }

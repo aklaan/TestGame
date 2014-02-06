@@ -24,26 +24,30 @@ public class ShaderProvider {
 	public Context glContext;
 	public ArrayList<Shader> shaderList;
 	public HashMap<String, Integer> catalogShader;
-	public Shader mCurrentActiveShader ;
-	
-	//déclaration des attributs du shader : default
+	public Shader mCurrentActiveShader;
+
+	// déclaration des attributs du shader : default
 	public final String DEFAULT_VSH_ATTRIB_VERTEX_COORD = "aPosition";
 	public final String DEFAULT_VSH_ATTRIB_COLOR = "aColor";
-	public final String DEFAULT_VSH_ATTRIB_TEXTURE_COORD= "aTexCoord";
-	
-	public final String DEFAULT_VSH_UNIFORM_MVP= "uMvp";
-	public final String DEFAULT_FSH_UNIFORM_TEXTURE= "tex0";
+	public final String DEFAULT_VSH_ATTRIB_TEXTURE_COORD = "aTexCoord";
+
+	public final String DEFAULT_VSH_UNIFORM_MVP = "uMvp";
+	public final String DEFAULT_FSH_UNIFORM_TEXTURE = "tex0";
+
 	/***
 	 * 
 	 * @param activity
 	 */
 	public ShaderProvider(Activity activity) {
 		this.mActivity = activity;
-		
-		catalogShader = new HashMap<String, Integer>() ;
-		shaderList = new ArrayList<Shader>() ;
-		
-		this.add(makeDefaultShader());
+
+		catalogShader = new HashMap<String, Integer>();
+		shaderList = new ArrayList<Shader>();
+
+		Shader_simple shader_simple = new Shader_simple();
+		shader_simple.make();
+		// this.add(makeDefaultShader());
+		this.add(shader_simple);
 	}
 
 	/***
@@ -60,89 +64,42 @@ public class ShaderProvider {
 	public Shader getShaderByName(String shaderName) {
 		Shader result = null;
 		if (catalogShader.get(shaderName) == null) {
-			Log.e(this.getClass().getName(), "Shader unknow on Catalog");
+			Log.e(this.getClass().getName(), "Shader " + shaderName +" unknow on Catalog");
 		} else {
-			result = shaderList.get(catalogShader
-					.get(shaderName) - 1);
+			result = shaderList.get(catalogShader.get(shaderName) - 1);
 		}
 		return result;
 	}
 
-	private Shader makeDefaultShader() {
-		Shader defaultShader = new Shader();
-		// HashMap<String, String> map;
-		// map = new HashMap<String, String>();
-		defaultShader.mName = "default";
-		defaultShader.attribListNames.add(this.DEFAULT_VSH_ATTRIB_VERTEX_COORD);
-		defaultShader.attribListNames.add(this.DEFAULT_VSH_ATTRIB_COLOR);
-		defaultShader.attribListNames.add(this.DEFAULT_VSH_ATTRIB_TEXTURE_COORD);
-
-		defaultShader.uniformListNames.add(this.DEFAULT_VSH_UNIFORM_MVP);
-		defaultShader.uniformListNames.add(this.DEFAULT_FSH_UNIFORM_TEXTURE);
-
-		InputStream iStream = null;
-		
-		try {
-
-			iStream = this.mActivity.getAssets().open(
-					mActivity.getString(R.string.defaultshader_vertex_source));
-
-			String vertexCode;
-			vertexCode = Util.readStringInput(iStream);
-			
-			iStream = null;
-			iStream = this.mActivity.getAssets()
-					.open(mActivity
-							.getString(R.string.defaultshader_fragment_source));
-
-			String fragmentCode;
-			fragmentCode = Util.readStringInput(iStream);
-
-			defaultShader.loadShaders(vertexCode, fragmentCode);
-
-		} catch (IOException e) {
-			Log.e("Testgame", "Shader simple_Shader cannot be read");
-
-		}
-
-		//defaultShader.link();
-		defaultShader.initAttribLocation();
-		defaultShader.initUniformLocation();
-
-		return defaultShader;
-	}
-
+	
 	public void use(Shader shader) {
-		
-		GLES20.glUseProgram(shader.mAdressOf_GLSLProgram);	
+
 		// use program
-		if (this.mCurrentActiveShader != shader){
+		if (this.mCurrentActiveShader != shader) {
+
+			GLES20.glUseProgram(shader.mGLSLProgram_location);
 			this.mCurrentActiveShader = shader;
-		
-			GLES20.glUseProgram(shader.mAdressOf_GLSLProgram);	
-		
-		Log.i("use", shader.mName + "@"
-				+ String.valueOf(shader.mAdressOf_GLSLProgram)
-				+" errcode : "
-				+ String.valueOf(GLES20.glGetError()));
-		}
-		
-  /**
-		if (shader.mName == "default") {
-			if (shader.getAdressOfUniform(this.DEFAULT_FSH_UNIFORM_TEXTURE) != -1) {
-				
-				GLES20.glEnable(GLES20.GL_TEXTURE_2D);
-				GLES20.glBindTexture(GLES20.GL_TEXTURE_2D, GLES20Renderer.mTex0);
-				GLES20.glActiveTexture(GLES20.GL_TEXTURE0);
-
-				// on alimente la donnée UNIFORM mAdressOf_Texture0 avc un
-				// integer 0
-				GLES20.glUniform1i(shader.getAdressOfUniform(this.DEFAULT_FSH_UNIFORM_TEXTURE), 0);
-			}
-
+			Log.i("use",
+					shader.mName + "@"
+							+ String.valueOf(shader.mGLSLProgram_location)
+							+ " errcode : "
+							+ String.valueOf(GLES20.glGetError()));
 		}
 
-	*/
+		/**
+		 * if (shader.mName == "default") { if
+		 * (shader.getAdressOfUniform(this.DEFAULT_FSH_UNIFORM_TEXTURE) != -1) {
+		 * 
+		 * GLES20.glEnable(GLES20.GL_TEXTURE_2D);
+		 * GLES20.glBindTexture(GLES20.GL_TEXTURE_2D, GLES20Renderer.mTex0);
+		 * GLES20.glActiveTexture(GLES20.GL_TEXTURE0);
+		 * 
+		 * // on alimente la donnée UNIFORM mAdressOf_Texture0 avc un // integer
+		 * 0 GLES20.glUniform1i(shader.getAdressOfUniform(this.
+		 * DEFAULT_FSH_UNIFORM_TEXTURE), 0); }
+		 * 
+		 * }
+		 */
 	}
 
 }

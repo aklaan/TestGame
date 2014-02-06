@@ -92,9 +92,9 @@ public class GLES20Renderer implements GLSurfaceView.Renderer {
 
 //		use();
 
-		 Shader mShader = mShaderProvider.getShaderByName("default");
+	//	 Shader mShader = mShaderProvider.getShaderByName("default");
 		
-			 mShaderProvider.use(mShader);
+		//	 mShaderProvider.use(mShader);
 		
 	}
 
