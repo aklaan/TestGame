@@ -6,6 +6,9 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 import com.example.testgame.R;
+import com.example.testgame.gameobjects.ProgramShader_grille;
+import com.example.testgame.gameobjects.ProgramShader_simple;
+
 import android.app.Activity;
 import android.content.Context;
 import android.opengl.GLES20;
@@ -17,14 +20,14 @@ import android.util.Log;
  * @author NC10
  * 
  */
-public class ShaderProvider {
+public class ProgramShaderProvider {
 
 	// ! activity
 	public Activity mActivity;
 	public Context glContext;
-	public ArrayList<Shader> shaderList;
+	public ArrayList<ProgramShader> shaderList;
 	public HashMap<String, Integer> catalogShader;
-	public Shader mCurrentActiveShader;
+	public ProgramShader mCurrentActiveShader;
 
 	// déclaration des attributs du shader : default
 	public final String DEFAULT_VSH_ATTRIB_VERTEX_COORD = "aPosition";
@@ -38,31 +41,32 @@ public class ShaderProvider {
 	 * 
 	 * @param activity
 	 */
-	public ShaderProvider(Activity activity) {
+	public ProgramShaderProvider(Activity activity) {
 		this.mActivity = activity;
-
+		this.mCurrentActiveShader=null;
+		
 		catalogShader = new HashMap<String, Integer>();
-		shaderList = new ArrayList<Shader>();
+		shaderList = new ArrayList<ProgramShader>();
 
-		Shader_simple shader_simple = new Shader_simple();
-		shader_simple.make();
-		// this.add(makeDefaultShader());
-		this.add(shader_simple);
+	
+		
+		
+	
 	}
 
 	/***
  * 
  */
 
-	public void add(Shader shader) {
+	public void add(ProgramShader shader) {
 
 		int newindex = catalogShader.size() + 1;
 		catalogShader.put(shader.mName, newindex);
 		shaderList.add(shader);
 	}
 
-	public Shader getShaderByName(String shaderName) {
-		Shader result = null;
+	public ProgramShader getShaderByName(String shaderName) {
+		ProgramShader result = null;
 		if (catalogShader.get(shaderName) == null) {
 			Log.e(this.getClass().getName(), "Shader " + shaderName +" unknow on Catalog");
 		} else {
@@ -72,18 +76,16 @@ public class ShaderProvider {
 	}
 
 	
-	public void use(Shader shader) {
+	
+	
+	public void use(ProgramShader shader) {
 
 		// use program
-		if (this.mCurrentActiveShader != shader) {
+		if (this.mCurrentActiveShader != shader || this.mCurrentActiveShader ==null) {
 
 			GLES20.glUseProgram(shader.mGLSLProgram_location);
 			this.mCurrentActiveShader = shader;
-			Log.i("use",
-					shader.mName + "@"
-							+ String.valueOf(shader.mGLSLProgram_location)
-							+ " errcode : "
-							+ String.valueOf(GLES20.glGetError()));
+			
 		}
 
 		/**

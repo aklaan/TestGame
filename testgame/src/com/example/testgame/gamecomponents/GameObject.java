@@ -6,7 +6,7 @@ import java.nio.FloatBuffer;
 import java.nio.ShortBuffer;
 import java.util.ArrayList;
 
-import com.example.testgame.GLES20Renderer;
+import com.example.testgame.GLES20RendererScene01;
 import com.example.testgame.R;
 
 import android.content.Context;
@@ -20,7 +20,7 @@ public class GameObject {
 	public Texture mTexture;
 	public Boolean hasTexture;
 	public Boolean isVisible;
-	public Shader mShader;
+	//public BasicShader mShader;
 
 	// top permettant de savoir si l'objet est statique ou qu'il
 	// a la possibilité d'être en mouvement. ceci va servir
@@ -207,7 +207,7 @@ public class GameObject {
 
 	}
 
-	public void draw(GLES20Renderer renderer) {
+	public void draw(GLES20RendererScene01 renderer) {
 
 	}
 

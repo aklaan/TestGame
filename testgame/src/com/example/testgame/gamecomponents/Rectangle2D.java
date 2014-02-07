@@ -3,7 +3,9 @@ package com.example.testgame.gamecomponents;
 import android.opengl.GLES20;
 import android.opengl.Matrix;
 
-import com.example.testgame.GLES20Renderer;
+import com.example.testgame.GLES20RendererScene01;
+import com.example.testgame.gameobjects.ProgramShader_grille;
+import com.example.testgame.gameobjects.ProgramShader_simple;
 
 public class Rectangle2D extends GameObject {
 
@@ -63,9 +65,30 @@ public class Rectangle2D extends GameObject {
 	}
 
 	@Override
-	public void draw (GLES20Renderer renderer) {
+	public void draw (GLES20RendererScene01 renderer) {
 
-		renderer.mProgramme1.enableVertexAttribArray(this);
+		ProgramShader_grille sh = (ProgramShader_grille) renderer.mProgramShaderProvider
+				.getShaderByName("grille");
+		renderer.mProgramShaderProvider.use(sh);
+
+		// on se positionne au debut du Buffer des indices
+		// qui indiquent dans quel ordre les vertex doivent être dessinés
+		this.getIndices().position(0);
+
+		// on charge les coordonnées des vertices
+		sh.setVerticesCoord(this.getVertices());
+
+		// on charge les coordonées de texture
+		this.getVertices().position(0);
+		sh.setTextureCoord(this.getTextCoord());
+
+		// if (sh.attrib_color_location != -1) {
+		// this.getVertices().position(0);
+		// GLES20.glVertexAttribPointer(sh.attrib_color_location, 4,
+		// GLES20.GL_FLOAT, false, Vertex.Vertex_TEXT_SIZE_BYTES, color);
+
+		sh.enableShaderVar();
+		
 		
 		float[] mMvp = new float[16];
 		// équivalent du PUSH
@@ -80,7 +103,7 @@ public class Rectangle2D extends GameObject {
 		// on alimente la donnée UNIFORM mAdressOf_Mvp du programme OpenGL
 		// avec
 		// une matrice de 4 flotant.
-		GLES20.glUniformMatrix4fv(renderer.mProgramme1.mAdressOf_Mvp, 1, false,
+		GLES20.glUniformMatrix4fv(sh.uniform_mvp_location, 1, false,
 				mMvp, 0);
 
 		// on se positionne au debut du Buffer des indices
@@ -91,10 +114,10 @@ public class Rectangle2D extends GameObject {
 		GLES20.glDrawElements(drawMode, this.getIndices().capacity(),
 				GLES20.GL_UNSIGNED_SHORT, this.getIndices());
 
-		renderer.mProgramme1.disableVertexAttribArray();
+		//renderer.mProgramme1.disableVertexAttribArray();
 		// équivalent du POP
 		renderer.mModelView = this.mBackupModelView;
-		renderer.mProgramme1.disableVertexAttribArray();
+//		renderer.mProgramme1.disableVertexAttribArray();
 	
 	}
 

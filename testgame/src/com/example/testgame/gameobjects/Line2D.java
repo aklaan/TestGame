@@ -3,7 +3,7 @@ package com.example.testgame.gameobjects;
 import android.opengl.GLES20;
 import android.opengl.Matrix;
 
-import com.example.testgame.GLES20Renderer;
+import com.example.testgame.GLES20RendererScene01;
 import com.example.testgame.gamecomponents.GameObject;
 import com.example.testgame.gamecomponents.Vertex;
 

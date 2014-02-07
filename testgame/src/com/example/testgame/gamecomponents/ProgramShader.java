@@ -1,29 +1,58 @@
 package com.example.testgame.gamecomponents;
 
 import java.io.IOException;
+import java.nio.FloatBuffer;
 import java.util.ArrayList;
 import java.util.HashMap;
 
 import android.opengl.GLES20;
 import android.util.Log;
 
-public class Shader {
+public class ProgramShader {
 
 	public String mName;
 
 	// ! GLES20 Program
-	// ! GLES20 Program
 	public int mGLSLProgram_location;
+
 	// ! Vertex shader
+	public String vertexShaderSource;
 	public int VertexShader_location;
+
 	// Fragment shader
+	public String fragmentShaderSource;
 	public int FragmentShader_location;
 
+	// déclaration des attributs spécifiques au shader
+	public String attrib_vertex_coord_name;
+	public int attrib_vertex_coord_location;
 
-	public Shader() {
+	public String attrib_color_name;
+	public int attrib_color_location;
+
+	public String attrib_texture_coord_name;
+	public int attrib_texture_coord_location;
+
+	public String uniform_mvp_name;
+	public int uniform_mvp_location;
+
+	public String uniform_texture_buffer_name;
+	public int uniform_texture_location;
+
+	public ProgramShader() {
 		mGLSLProgram_location = 0;
 		VertexShader_location = 0;
 		FragmentShader_location = 0;
+		this.attrib_vertex_coord_location = -1;
+		this.attrib_color_location = -1;
+		this.attrib_texture_coord_location = -1;
+		this.uniform_mvp_location = -1;
+		this.uniform_texture_location = -1;
+	}
+
+	public void make() {
+		mGLSLProgram_location = GLES20.glCreateProgram();
+		this.loadShaders(vertexShaderSource, fragmentShaderSource);
 	}
 
 	public void delete() {
@@ -41,23 +70,6 @@ public class Shader {
 		}
 	}
 
-	
-	/**
-	 * 
-	 * @param source
-	 */
-	public void setFragmentShader(String source) {
-		this.FragmentShader_location = this.loadShader(source,
-				GLES20.GL_FRAGMENT_SHADER);
-
-	}
-
-	public void setVertexShader(String source) {
-		this.VertexShader_location = this.loadShader(source,
-				GLES20.GL_VERTEX_SHADER);
-
-	}
-
 	/**
 	 * 
 	 * @param vertexFilename
@@ -70,17 +82,23 @@ public class Shader {
 			return false;
 		}
 
-		this.setFragmentShader(fragmentCode);
-		this.setVertexShader(vertexCode);
+		this.FragmentShader_location = this.loadShader(
+				this.fragmentShaderSource, GLES20.GL_FRAGMENT_SHADER);
+
+		this.VertexShader_location = this.loadShader(this.vertexShaderSource,
+				GLES20.GL_VERTEX_SHADER);
 
 		// if one of shader cannot be read return false
-		if (this.FragmentShader_location == 0 || this.VertexShader_location == 0) {
+		if (this.FragmentShader_location == 0
+				|| this.VertexShader_location == 0) {
 			Log.e(this.getClass().getName(), "Shader doesn' compile");
 			return false;
 		}
 
-		GLES20.glAttachShader(this.mGLSLProgram_location, this.VertexShader_location);
-		GLES20.glAttachShader(this.mGLSLProgram_location,this.FragmentShader_location);
+		GLES20.glAttachShader(this.mGLSLProgram_location,
+				this.VertexShader_location);
+		GLES20.glAttachShader(this.mGLSLProgram_location,
+				this.FragmentShader_location);
 		link();
 		return true;
 	}
@@ -125,13 +143,14 @@ public class Shader {
 
 		int[] linkStatus = new int[1];
 
-		GLES20.glGetProgramiv(this.mGLSLProgram_location, GLES20.GL_LINK_STATUS,
-				linkStatus, 0);
+		GLES20.glGetProgramiv(this.mGLSLProgram_location,
+				GLES20.GL_LINK_STATUS, linkStatus, 0);
 
 		if (linkStatus[0] != GLES20.GL_TRUE) {
 			Log.e(this.getClass().getName(), "Could not link program: ");
 			Log.e(this.getClass().getName(),
-					"logs:" + GLES20.glGetProgramInfoLog(this.mGLSLProgram_location));
+					"logs:"
+							+ GLES20.glGetProgramInfoLog(this.mGLSLProgram_location));
 			GLES20.glDeleteProgram(this.mGLSLProgram_location);
 			this.mGLSLProgram_location = 0;
 			return false;
@@ -139,6 +158,18 @@ public class Shader {
 
 		Log.i("Shader.link()", "Shader linkded");
 		return true;
+	}
+
+	public void setVerticesCoord(FloatBuffer fb) {
+		GLES20.glVertexAttribPointer(this.attrib_vertex_coord_location, 3,
+				GLES20.GL_FLOAT, false, Vertex.Vertex_COORD_SIZE_BYTES, fb);
+	
+	}
+
+	public void setTextureCoord(FloatBuffer fb) {
+		GLES20.glVertexAttribPointer(this.attrib_texture_coord_location, 2,
+				GLES20.GL_FLOAT, false, Vertex.Vertex_TEXT_SIZE_BYTES, fb);
+	
 	}
 
 }

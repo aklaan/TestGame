@@ -2,7 +2,7 @@ package com.example.testgame.gamecomponents;
 
 import java.util.ArrayList;
 
-import com.example.testgame.GLES20Renderer;
+import com.example.testgame.GLES20RendererScene01;
 import com.example.testgame.MySurfaceView;
 
 import android.app.Activity;
@@ -21,15 +21,12 @@ public class OpenGLActivity extends Activity {
 	public MySurfaceView mGLSurfaceView;
 	public BitmapProvider mBitmapProvider;
 
+
 	
-	public ArrayList<GameObject> mGameObjectList;
 	private float mXScreenLimit;
 	private float mYScreenLimit;
 	private float mZoomFactor;
 
-	
-	
-	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -46,17 +43,19 @@ public class OpenGLActivity extends Activity {
 		// We don't use Layout. But you can.
 		// create an OpenGLView
 		mGLSurfaceView = new MySurfaceView(this);
-	
+
 		mGLSurfaceView.setDebugFlags(GLSurfaceView.DEBUG_CHECK_GL_ERROR);
 		mGLSurfaceView.setEGLContextClientVersion(2);
-		mGLSurfaceView.setRenderer(new GLES20Renderer(this));
-		
+	//	mGLSurfaceView.setRenderer(new GLES20RendererScene01(this));
+
 		setContentView(mGLSurfaceView);
 
-		
+		//le bitmap provider peu servir pour plusieurs scene
+		//on le remonte donc au plus haut.
 		this.mBitmapProvider = new BitmapProvider(this);
-		mGameObjectList = new ArrayList<GameObject>();
-		init();
+
+
+
 	}
 
 	@Override
@@ -96,14 +95,7 @@ public class OpenGLActivity extends Activity {
 		alert.show();
 	}
 
-	/**
-     * 
-     */
-	public void init() {
 
-		/* mettre ce qu'il faut faire pour inialiser le jeux */
-
-	}
 
 	public float getXScreenLimit() {
 		return mXScreenLimit;
@@ -128,7 +120,7 @@ public class OpenGLActivity extends Activity {
 	public void setZoomFactor(float newFactor) {
 
 		if (newFactor != 0) {
-			this.mZoomFactor = mZoomFactor;
+			this.mZoomFactor = newFactor;
 		}
 
 	}

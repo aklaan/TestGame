@@ -9,8 +9,8 @@ public class PetitRobot extends Rectangle2D {
 	public PetitRobot() {
 
 		super();
-this.setTagName("rotobt");
-	this.isStatic=false;		
+		this.setTagName("robot");
+		this.isStatic=false;		
 	}
 
 	@Override
