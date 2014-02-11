@@ -20,28 +20,34 @@ public class GameObject {
 	public Texture mTexture;
 	public Boolean hasTexture;
 	public Boolean isVisible;
-	//public BasicShader mShader;
 
 	// top permettant de savoir si l'objet est statique ou qu'il
 	// a la possibilité d'être en mouvement. ceci va servir
 	// pour le calcul des collisions
 	public Boolean isStatic = true;
-
+	public Boolean canCollide = false;
 	// coordonnées du centre de l'objet
 	public float X = 0;
 	public float Y = 0;
+
 	public boolean rotation = false;
+
 	public float rotationAxisX = 0.f;
 	public float rotationAxisY = 0.f;
 	public float rotationAngl = 0.f; // en radian
-	public ArrayList<GameObject> mCollideWithList;
+
+	public CollisionBox mCollisionBox;
+	// tableau des objets avec lesquel le gameobject rentre en collision
+	public ArrayList<CollisionBox> mCollideWithList;
 
 	public float[] mRotationMatrix = new float[16];
 	public float[] mBackupModelView = new float[16];
 	public float[] mTransformUpdateView = new float[16];
 
 	public static final int FLOAT_SIZE = 4;
+
 	public int drawMode = GLES20.GL_TRIANGLES;
+
 	public float angleRAD = 0.0f;
 	// on indique qu'il faut 4 byte pour repésenter un float
 	// 00000000 00000000 00000000 00000000
@@ -71,7 +77,21 @@ public class GameObject {
 	public int mTextureHeight;
 
 	// constructeur
-	public GameObject(int nbVertex, int nbIndex) {
+	public GameObject() {
+		
+		hasTexture = false;
+		mTagName = "";
+		isVisible = true;
+		Matrix.setIdentityM(this.mRotationMatrix, 0);
+
+		Matrix.setIdentityM(this.mTransformUpdateView, 0);
+
+		this.mCollideWithList = new ArrayList<CollisionBox>();
+
+	}
+
+	
+	public void initBuffers(int nbVertex, int nbIndex) {
 		mVertices = ByteBuffer.allocateDirect(nbVertex * 3 * FLOAT_SIZE)
 				.order(ByteOrder.nativeOrder()).asFloatBuffer();
 		mIndices = ByteBuffer.allocateDirect(nbIndex * SHORT_SIZE)
@@ -79,17 +99,19 @@ public class GameObject {
 		mTextCoord = ByteBuffer.allocateDirect(nbVertex * 2 * FLOAT_SIZE)
 				.order(ByteOrder.nativeOrder()).asFloatBuffer();
 
-		hasTexture = false;
-		mTagName = "";
-		isVisible = true;
-		Matrix.setIdentityM(this.mRotationMatrix, 0);
-
-		Matrix.setIdentityM(this.mTransformUpdateView, 0);
 	
-		this.mCollideWithList = new ArrayList<GameObject>();
-
+	}
+	public void enableColission() {
+		this.mCollisionBox = new CollisionBox(this);
+		this.canCollide = true;
 	}
 
+	public void disableColission() {
+		this.mCollisionBox = null;
+		this.canCollide = false;
+	}
+
+	
 	// setter vertices
 	public void putVertex(int index, Vertex vertex) {
 		// la position physique en mémoire des bytes qui représentent le vertex
@@ -175,10 +197,10 @@ public class GameObject {
 	 * public void setHeight(float height) { this.height = height;
 	 * updateModelMatrix(); }
 	 */
-	public void setCoord(int x, int y) {
+	public void setCoord(float x, float y) {
 		this.X = x;
 		this.Y = y;
-		 updateModelMatrix();
+		updateModelMatrix();
 
 	}
 
@@ -199,7 +221,7 @@ public class GameObject {
 		// String.valueOf(width)+" / height="+String.valueOf(height));
 
 		// this.scale(width, height);
-		 //this.translate(X,Y);
+		// this.translate(X,Y);
 	}
 
 	public void onUpdate(OpenGLActivity openGLActivity) {
@@ -226,6 +248,5 @@ public class GameObject {
 				wrkRotation, 0);
 
 	}
-
 
 }

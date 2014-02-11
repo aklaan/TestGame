@@ -12,11 +12,13 @@ import javax.microedition.khronos.egl.EGLConfig;
 import javax.microedition.khronos.opengles.GL10;
 
 import com.example.testgame.gamecomponents.BitmapProvider;
+import com.example.testgame.gamecomponents.CollisionControler;
 import com.example.testgame.gamecomponents.GameObject;
 import com.example.testgame.gamecomponents.OpenGLActivity;
 import com.example.testgame.gamecomponents.ProgramShaderProvider;
 import com.example.testgame.gamecomponents.Rectangle2D;
 import com.example.testgame.gameobjects.PetitRobot;
+import com.example.testgame.gameobjects.ProgramShader_forLines;
 import com.example.testgame.gameobjects.ProgramShader_grille;
 import com.example.testgame.gameobjects.ProgramShader_simple;
 import com.example.testgame.gameobjects.Starship;
@@ -30,7 +32,7 @@ public class GLES20RendererScene01 implements GLSurfaceView.Renderer {
 
 	public static int mTex0;
 	public OpenGLActivity mActivity;
-	//public DefaultProgramShader mProgramme1;
+	// public DefaultProgramShader mProgramme1;
 	public ProgramShaderProvider mProgramShaderProvider;
 	public ArrayList<GameObject> mGameObjectList;
 	// ! Matrix Model View Projection
@@ -45,22 +47,25 @@ public class GLES20RendererScene01 implements GLSurfaceView.Renderer {
 	// public ShaderProvider mShaderProvider;
 
 	public GLES20RendererScene01(OpenGLActivity activity) {
-		mActivity =  activity;
+		mActivity = activity;
 
 	}
 
 	// @Override
 	public void onSurfaceCreated(GL10 gl2, EGLConfig eglConfig) {
 
-		mGameObjectList = new ArrayList<GameObject>();
+		// on charge les textures necessaires à la scène
 		loadTextures();
-		
-		//on ne peux pas créer de programe Shader en dehors du contexte
-		//opengl. donc le provider est à recréer à chaque load de la scène
+
+		// on ne peux pas créer de programe Shader en dehors du contexte
+		// opengl. donc le provider est à recréer à chaque load de la scène
 		this.mProgramShaderProvider = new ProgramShaderProvider(mActivity);
 		initProgramShader();
 
-		addGameObjectsToScene();
+		// on initialise la liste des objets qui serront contenus dans
+		// la scène.
+		mGameObjectList = new ArrayList<GameObject>();
+		loadGameObjects();
 
 		// on active le texturing 2D
 		GLES20.glEnable(GLES20.GL_TEXTURE_2D);
@@ -88,12 +93,6 @@ public class GLES20RendererScene01 implements GLSurfaceView.Renderer {
 
 		GLES20.glTexParameteri(GLES20.GL_TEXTURE_2D, GLES20.GL_TEXTURE_WRAP_T,
 				GLES20.GL_CLAMP_TO_EDGE);
-
-		// use();
-
-		// Shader mShader = mShaderProvider.getShaderByName("default");
-
-		// mShaderProvider.use(mShader);
 
 	}
 
@@ -125,30 +124,34 @@ public class GLES20RendererScene01 implements GLSurfaceView.Renderer {
 
 	// @Override
 	public void onDrawFrame(GL10 gl) {
-		// mTimer.addMark();
-		// mTimer.logFPS(); // on veut mesurer les fps
-
+		// on commence par effacer l'écran en le remplissant de la
+		// couleur souhaitée et on vide le buffer.
 		GLES20.glClearColor(0.3f, 0.3f, 0.3f, 1.0f);
 		GLES20.glClear(GLES20.GL_COLOR_BUFFER_BIT);
 
-		// ici on peu demander à dessiner
-		// en mode points GL_POINTS ,GL_LINES, GL_TRIANGLES
-
-		// CollisionControler.checkAllCollisions(mGameObjectList);
+		//on check les colissions entre tous les éléments de la scène
+		CollisionControler.checkAllCollisions(mGameObjectList);
 		// Matrix.setIdentityM(this.mModelView, 0);
 
 		for (GameObject gameObject : this.mGameObjectList) {
 			gameObject.onUpdate(mActivity);
 
-			// this.use();
+			// si l'objet doit être visible, on va
+			// tenter de le dessiner.
 			if (gameObject.isVisible) {
 
+				// si l'objet possède une texture, on la place dans l'unité
+				// de texture
 				if (gameObject.hasTexture) {
 					mActivity.mBitmapProvider.putTextureToGLUnit(
 							gameObject.mTexture, 0);
 				}
 
-								gameObject.draw(this);
+				gameObject.draw(this);
+
+				if (gameObject.canCollide){
+					gameObject.mCollisionBox.draw(this);
+				}
 				// SystemClock.sleep(2000);
 
 			}
@@ -157,97 +160,101 @@ public class GLES20RendererScene01 implements GLSurfaceView.Renderer {
 
 	}
 
+	public void loadGameObjects() {
+		Rectangle2D ligne1 = new Rectangle2D(Enums.drawMode.FILL);
+		ligne1.setCoord(0, 0);
+		ligne1.setHeight(500);
+		ligne1.setWidth(2);
+		ligne1.setTagName("ligne1");
+		this.mActivity.mBitmapProvider.assignTexture(
+				this.mActivity.getString(R.string.textureRed), ligne1);
 
+		this.mGameObjectList.add(ligne1);
 
-public void addGameObjectsToScene(){
-	Rectangle2D ligne1 = new Rectangle2D();
-	ligne1.setCoord(0, 0);
-	ligne1.setHeight(500);
-	ligne1.setWidth(2);
-	ligne1.setTagName("ligne1");
-this.mActivity.mBitmapProvider.assignTexture(
-		this.mActivity.getString(R.string.textureRed), ligne1);
+		Rectangle2D ligne2 = new Rectangle2D(Enums.drawMode.FILL);
+		ligne2.setCoord(0, 0);
+		ligne2.setHeight(2);
+		ligne2.setWidth(1000);
+		ligne2.setTagName("ligne2");
+		this.mActivity.mBitmapProvider.assignTexture(
+				this.mActivity.getString(R.string.textureRed), ligne2);
 
-this.mGameObjectList.add(ligne1);
+		mGameObjectList.add(ligne2);
 
-Rectangle2D ligne2 = new Rectangle2D();
-ligne2.setCoord(0, 0);
-ligne2.setHeight(2);
-ligne2.setWidth(1000);
-ligne2.setTagName("ligne2");
-this.mActivity.mBitmapProvider.assignTexture(this.mActivity.getString(R.string.textureRed),
-		ligne2);
+		Rectangle2D ligne3 = new Rectangle2D(Enums.drawMode.FILL);
+		ligne3.setCoord(0, 200);
+		ligne3.setHeight(2);
+		ligne3.setWidth(1000);
+		ligne3.setTagName("ligne3");
 
-mGameObjectList.add(ligne2);
+		this.mActivity.mBitmapProvider.assignTexture(
+				this.mActivity.getString(R.string.textureRed), ligne3);
 
-Rectangle2D ligne3 = new Rectangle2D();
-ligne3.setCoord(0, 200);
-ligne3.setHeight(2);
-ligne3.setWidth(1000);
-ligne3.setTagName("ligne3");
+		// mGameObjectList.add(ligne3);
 
-this.mActivity.mBitmapProvider.assignTexture(this.mActivity.getString(R.string.textureRed),
-		ligne3);
+		Starship mStarship = new Starship();
 
-// mGameObjectList.add(ligne3);
+		mStarship.setHeight(20);
+		mStarship.setWidth(100);
+		mStarship.angleRAD = 0.0f;
+		mStarship.setTagName("starship1");
+		mStarship.enableColission();
+		this.mActivity.mBitmapProvider.assignTexture(
+				this.mActivity.getString(R.string.boulerouge), mStarship);
 
-Starship mStarship = new Starship();
+		mGameObjectList.add(mStarship);
 
-mStarship.setHeight(20);
-mStarship.setWidth(100);
-mStarship.angleRAD = 0.0f;
-mStarship.setTagName("starship1");
+		Starship mStarship2 = new Starship();
 
-this.mActivity.mBitmapProvider.assignTexture(this.mActivity.getString(R.string.boulerouge),
-		mStarship);
+		mStarship2.setHeight(50);
+		mStarship2.setWidth(50);
+		this.mActivity.mBitmapProvider.assignTexture(
+				this.mActivity.getString(R.string.boulerouge), mStarship2);
+		mStarship2.setTagName("starship2");
+		mStarship2.cible = mStarship;
+		mStarship2.angleRAD = 45.0f;
+		mGameObjectList.add(mStarship2);
 
-mGameObjectList.add(mStarship);
+		PetitRobot mPetitRobot = new PetitRobot();
+		mPetitRobot.setCoord(50, 0);
+		mPetitRobot.setHeight(50);
+		mPetitRobot.setWidth(50);
 
-Starship mStarship2 = new Starship();
+		this.mActivity.mBitmapProvider.assignTexture(
+				this.mActivity.getString(R.string.textureRobot), mPetitRobot);
 
-mStarship2.setHeight(50);
-mStarship2.setWidth(50);
-this.mActivity.mBitmapProvider.assignTexture(this.mActivity.getString(R.string.boulerouge),
-		mStarship2);
-mStarship2.setTagName("starship2");
-mStarship2.cible = mStarship;
-mStarship2.angleRAD = 45.0f;
-mGameObjectList.add(mStarship2);
+		mGameObjectList.add(mPetitRobot);
 
-PetitRobot mPetitRobot = new PetitRobot();
-mPetitRobot.setCoord(50, 0);
-mPetitRobot.setHeight(50);
-mPetitRobot.setWidth(50);
+		mStarship.cible = mPetitRobot;
 
-this.mActivity.mBitmapProvider.assignTexture(
-		this.mActivity.getString(R.string.textureRobot), mPetitRobot);
+	}
 
-mGameObjectList.add(mPetitRobot);
+	public void initProgramShader() {
+		ProgramShader_grille shader_grille = new ProgramShader_grille();
+		shader_grille.make();
+		this.mProgramShaderProvider.add(shader_grille);
 
-mStarship.cible = mPetitRobot;
+		ProgramShader_simple shader_simple = new ProgramShader_simple();
+		shader_simple.make();
+		this.mProgramShaderProvider.add(shader_simple);
 
-}
+		ProgramShader_forLines shader_forLines = new ProgramShader_forLines();
+		shader_forLines.make();
+		this.mProgramShaderProvider.add(shader_forLines);
+		
+	}
 
+	public void loadTextures() {
 
+		this.mActivity.mBitmapProvider.add(this.mActivity
+				.getString(R.string.textureStarship));
+		this.mActivity.mBitmapProvider.add(this.mActivity
+				.getString(R.string.textureRobot));
+		this.mActivity.mBitmapProvider.add(this.mActivity
+				.getString(R.string.textureRed));
+		this.mActivity.mBitmapProvider.add(this.mActivity
+				.getString(R.string.boulerouge));
 
-public void initProgramShader() {
-	ProgramShader_grille shader_grille = new ProgramShader_grille();
-	shader_grille.make();
-	this.mProgramShaderProvider.add(shader_grille);
-
-	ProgramShader_simple shader_simple = new ProgramShader_simple();
-	shader_simple.make();
-	this.mProgramShaderProvider.add(shader_simple);
-
-}
-public void loadTextures() {
-	
-	this.mActivity.mBitmapProvider.add(this.mActivity.getString(R.string.textureStarship));
-	this.mActivity.mBitmapProvider.add(this.mActivity.getString(R.string.textureRobot));
-	this.mActivity.mBitmapProvider.add(this.mActivity.getString(R.string.textureRed));
-	this.mActivity.mBitmapProvider.add(this.mActivity.getString(R.string.boulerouge));
-
-}
-
+	}
 
 }

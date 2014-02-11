@@ -15,7 +15,7 @@ import android.opengl.GLES20;
 import android.util.Log;
 
 /**
- * leshader provader va compiler les shader et stocker leur adresse mémoire
+ * le shader provider va référencer les program Shader a utiliser 
  * 
  * @author NC10
  * 
@@ -82,7 +82,10 @@ public class ProgramShaderProvider {
 
 		// use program
 		if (this.mCurrentActiveShader != shader || this.mCurrentActiveShader ==null) {
-
+			
+			if (this.mCurrentActiveShader !=null){
+				this.mCurrentActiveShader.disableShaderVar();
+			}
 			GLES20.glUseProgram(shader.mGLSLProgram_location);
 			this.mCurrentActiveShader = shader;
 			

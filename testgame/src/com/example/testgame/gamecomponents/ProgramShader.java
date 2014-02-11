@@ -163,13 +163,20 @@ public class ProgramShader {
 	public void setVerticesCoord(FloatBuffer fb) {
 		GLES20.glVertexAttribPointer(this.attrib_vertex_coord_location, 3,
 				GLES20.GL_FLOAT, false, Vertex.Vertex_COORD_SIZE_BYTES, fb);
-	
+
 	}
 
 	public void setTextureCoord(FloatBuffer fb) {
 		GLES20.glVertexAttribPointer(this.attrib_texture_coord_location, 2,
 				GLES20.GL_FLOAT, false, Vertex.Vertex_TEXT_SIZE_BYTES, fb);
-	
+
 	}
 
+	public void enableShaderVar() {
+
+	}
+
+	public void disableShaderVar() {
+
+	}
 }

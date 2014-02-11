@@ -4,6 +4,7 @@ import android.opengl.GLES20;
 import android.opengl.Matrix;
 import android.util.Log;
 
+import com.example.testgame.Enums;
 import com.example.testgame.GLES20RendererScene01;
 import com.example.testgame.gamecomponents.GameObject;
 import com.example.testgame.gamecomponents.OpenGLActivity;
@@ -15,7 +16,8 @@ public class Starship extends Rectangle2D {
 	public GameObject cible;
 
 	public Starship() {
-		super();
+		super(Enums.drawMode.FILL);
+			
 		this.setTagName("starship");
 		this.isStatic = false;
 
@@ -104,6 +106,9 @@ public class Starship extends Rectangle2D {
 
 		this.X = renderer.mModelView[12];
 		this.Y = renderer.mModelView[13];
+		
+		if (this.canCollide){this.mCollisionBox.update();}
+		
 
 		// on alimente la donnée UNIFORM mAdressOf_Mvp du programme OpenGL
 		// avec

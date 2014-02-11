@@ -12,24 +12,33 @@ public class CollisionControler {
 
 		for (GameObject gameObject : mGameObjectList) {
 
-			if (gameObject.isStatic == false) {
+			// on ne contrôle les colisions que pour les objets
+			// en mouvement
+			if (gameObject.isStatic == false && gameObject.canCollide) {
 				gameObject.mCollideWithList.clear();
 				for (GameObject go : mGameObjectList) {
-					if (checkCollision(go, gameObject)) {
+					if (go != gameObject && go.canCollide) {
 
-						gameObject.mCollideWithList.add(go);
-					}
+						
 
+							if (checkCollision(go.mCollisionBox,
+									gameObject.mCollisionBox)) {
+
+								gameObject.mCollideWithList
+										.add(go.mCollisionBox);
+							}
+
+						}
+					
 				}
 			}
 
 		}
 	}
 
-	static boolean checkCollision(GameObject a, GameObject b) {
-/**
-		if (a == b 
-				|| (a.getCoordX() >= b.getCoordX() + b.getWidth()) // trop à
+	static boolean checkCollision(CollisionBox a, CollisionBox b) {
+
+		if (a == b || (a.getCoordX() >= b.getCoordX() + b.getWidth()) // trop à
 																		// droite
 				|| (a.getCoordX() + a.getWidth() <= b.getCoordX()) // trop à
 																	// gauche
@@ -39,7 +48,7 @@ public class CollisionControler {
 		) // haut
 			return false;
 		else
-*/			return true;
+			return true;
 	}
 
 }
