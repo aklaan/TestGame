@@ -119,7 +119,7 @@ public class DefaultProgramShader {
 			// on va chercher le FloatBuffer où sont stocké les coordonnées des
 			// sommets
 			// on se positionne au début du Buffer
-			mGameObject.getVertices().position(0);
+			mGameObject.getFbVertices().rewind();
 
 			// on souhaite passer à opengl un tableaux de coordonnées pour
 			// alimenter la aPosition des vertex.
@@ -133,7 +133,7 @@ public class DefaultProgramShader {
 			// longeur P3FT2FR4FVertex_SIZE_BYTES, opengl cree un nouvel index.
 			GLES20.glVertexAttribPointer(mAdressOf_VertexPosition, 3,
 					GLES20.GL_FLOAT, false, Vertex.Vertex_COORD_SIZE_BYTES,
-					mGameObject.getVertices());
+					mGameObject.getFbVertices());
 
 			// on rend l'utilisation de mAdressOf_VertexPosition (càd aPosition)
 			// possible par le moteur de rendu
@@ -143,7 +143,7 @@ public class DefaultProgramShader {
 
 			GLES20.glEnableVertexAttribArray(mAdressOf_VertexPosition);
 
-			mGameObject.getVertices().position(0);
+			mGameObject.getFbVertices().position(0);
 			GLES20.glVertexAttribPointer(mAdressOf_TextCoord, 2,
 					GLES20.GL_FLOAT, false, Vertex.Vertex_TEXT_SIZE_BYTES,
 					mGameObject.getTextCoord());

@@ -41,7 +41,7 @@ public class GameObject {
 	public ArrayList<CollisionBox> mCollideWithList;
 
 	public float[] mRotationMatrix = new float[16];
-	public float[] mBackupModelView = new float[16];
+	public float[] mModelView = new float[16];
 	public float[] mTransformUpdateView = new float[16];
 
 	public static final int FLOAT_SIZE = 4;
@@ -64,7 +64,9 @@ public class GameObject {
 	// soit : 00000000 00000000
 
 	// ! Vertices
-	public FloatBuffer mVertices; // définition d'un tableau de flotants
+	public FloatBuffer mFbVertices; // définition d'un tableau de flotants
+
+	public ArrayList<Vertex> mVertices; // définition d'un tableau de flotants
 
 	// ! indices
 	private ShortBuffer mIndices;
@@ -78,7 +80,7 @@ public class GameObject {
 
 	// constructeur
 	public GameObject() {
-		
+
 		hasTexture = false;
 		mTagName = "";
 		isVisible = true;
@@ -87,20 +89,22 @@ public class GameObject {
 		Matrix.setIdentityM(this.mTransformUpdateView, 0);
 
 		this.mCollideWithList = new ArrayList<CollisionBox>();
-
+		this.mVertices = new ArrayList<Vertex>();
 	}
 
-	
-	public void initBuffers(int nbVertex, int nbIndex) {
-		mVertices = ByteBuffer.allocateDirect(nbVertex * 3 * FLOAT_SIZE)
+	public void initBuffers(int nbIndex) {
+		int nbVertex = mVertices.size();
+
+		mFbVertices = ByteBuffer.allocateDirect(nbVertex * 3 * FLOAT_SIZE)
 				.order(ByteOrder.nativeOrder()).asFloatBuffer();
+
 		mIndices = ByteBuffer.allocateDirect(nbIndex * SHORT_SIZE)
 				.order(ByteOrder.nativeOrder()).asShortBuffer();
 		mTextCoord = ByteBuffer.allocateDirect(nbVertex * 2 * FLOAT_SIZE)
 				.order(ByteOrder.nativeOrder()).asFloatBuffer();
 
-	
 	}
+
 	public void enableColission() {
 		this.mCollisionBox = new CollisionBox(this);
 		this.canCollide = true;
@@ -111,23 +115,22 @@ public class GameObject {
 		this.canCollide = false;
 	}
 
-	
 	// setter vertices
 	public void putVertex(int index, Vertex vertex) {
 		// la position physique en mémoire des bytes qui représentent le vertex
 		// c'est la taille d'un vertex en bytes x l'index
-		mVertices.position(0);
+		mFbVertices.rewind();
 		// ici on se positionne dans le buffer à l'endroit où l'on va ecrire le
 		// prochain vertex
-		mVertices.position(Vertex.Vertex_COORD_SIZE * index);
-		mVertices.put(vertex.x).put(vertex.y).put(vertex.z);
+		mFbVertices.position(Vertex.Vertex_COORD_SIZE * index);
+		mFbVertices.put(vertex.x).put(vertex.y).put(vertex.z);
 		// on se repositionne en 0 , prêt pour la relecture
-		mVertices.position(0);
+		mFbVertices.rewind();
 
 		mTextCoord.position(Vertex.Vertex_TEXT_SIZE * index);
 		mTextCoord.put(vertex.u).put(vertex.v);
 		// on se repositionne en 0 , prêt pour la relecture
-		mTextCoord.position(0);
+		mTextCoord.rewind();
 
 	}
 
@@ -155,8 +158,13 @@ public class GameObject {
 	}
 
 	// getter vertices
-	public FloatBuffer getVertices() {
-		return mVertices;
+	public FloatBuffer getFbVertices() {
+
+		for (int i = 0; i < this.mVertices.size(); i++) {
+			this.putVertex(i, this.mVertices.get(i));
+		}
+
+		return mFbVertices;
 	}
 
 	// getter TextCoord

@@ -8,39 +8,43 @@ import com.example.testgame.GLES20RendererScene01;
 import com.example.testgame.gameobjects.ProgramShader_grille;
 import com.example.testgame.gameobjects.ProgramShader_simple;
 
-
-
 public class Rectangle2D extends GameObject {
 
 	static final int NB_RECTANGLE_VERTEX = 4;
 	private float width = 1;
 	private float height = 1;
 
-		
 	public Rectangle2D(Enums.drawMode mode) {
 		super();
 
+		this.mVertices.add(new Vertex(-1f, 1f, 0f, 0f, 0f));
+		this.mVertices.add(new Vertex(-1f, -1f, 0f, 0f, 1f));
+		this.mVertices.add(new Vertex(1f, -1f, 0f, 1f, 1f));
+		this.mVertices.add(new Vertex(1f, 1f, 0, 1f, 0f));
+
 		switch (mode) {
+		// on dessine que les lignes de contour
 		case EMPTY:
 
-			this.initBuffers(NB_RECTANGLE_VERTEX, 8);
+			this.initBuffers(8);
 			this.putIndice(0, 0);
 			this.putIndice(1, 1);
-			
+
 			this.putIndice(2, 1);
 			this.putIndice(3, 2);
 
 			this.putIndice(4, 2);
 			this.putIndice(5, 3);
-			
+
 			this.putIndice(6, 3);
 			this.putIndice(7, 0);
 
-		break;
+			break;
+		// on dessine des triangles plein
 		case FILL:
 
-			this.initBuffers(NB_RECTANGLE_VERTEX, 6);
-		
+			this.initBuffers(6);
+
 			// on indique l'ordre dans lequel on doit affichier les vertex
 			// pour dessiner les 2 triangles qui vont former le carré.
 			this.putIndice(0, 0);
@@ -50,7 +54,7 @@ public class Rectangle2D extends GameObject {
 			this.putIndice(3, 0);
 			this.putIndice(4, 2);
 			this.putIndice(5, 3);
-		break;
+			break;
 		}
 
 		// par défaut un rectangle a la forme d'un carré
@@ -58,13 +62,12 @@ public class Rectangle2D extends GameObject {
 		// les 3 premiers chiffre sont les coordonées X,Y,Z
 		// les 2 derniers U et W
 
-		this.putVertex(0, new Vertex(-1f, 1f, 0f, 0f, 0f));
-		this.putVertex(1, new Vertex(-1f, -1f, 0f, 0f, 1f));
-		this.putVertex(2, new Vertex(1f, -1f, 0f, 1f, 1f));
-		this.putVertex(3, new Vertex(1f, 1f, 0, 1f, 0f));
+		/**
+		 * this.putVertex(0, new Vertex(-1f, 1f, 0f, 0f, 0f)); this.putVertex(1,
+		 * new Vertex(-1f, -1f, 0f, 0f, 1f)); this.putVertex(2, new Vertex(1f,
+		 * -1f, 0f, 1f, 1f)); this.putVertex(3, new Vertex(1f, 1f, 0, 1f, 0f));
+		 */
 
-		
-		
 	}
 
 	public void onUpdate(OpenGLActivity openGLActivity) {
@@ -98,13 +101,22 @@ public class Rectangle2D extends GameObject {
 
 	private void updateVertices() {
 
-		float w = (float) width / 1;
+		float w = (float) width /1;
 		float h = (float) height / 1;
 
-		this.putVertex(0, new Vertex(-w, h, 0, 0, 0));
-		this.putVertex(1, new Vertex(-w, -h, 0, 0, 1));
-		this.putVertex(2, new Vertex(w, -h, 0, 1, 1));
-		this.putVertex(3, new Vertex(w, h, 0, 1, 0));
+		
+		this.mVertices.get(0).x = -w;
+		this.mVertices.get(0).y = h;
+		
+		this.mVertices.get(1).x = -w;
+		this.mVertices.get(1).y = -h;
+		
+		this.mVertices.get(2).x = w;
+		this.mVertices.get(2).y = -h;
+		
+		this.mVertices.get(3).x = w;
+		this.mVertices.get(3).y = h;
+		
 	}
 
 	@Override
@@ -116,13 +128,14 @@ public class Rectangle2D extends GameObject {
 
 		// on se positionne au debut du Buffer des indices
 		// qui indiquent dans quel ordre les vertex doivent être dessinés
-		this.getIndices().position(0);
+		this.getIndices().rewind();
 
 		// on charge les coordonnées des vertices
-		sh.setVerticesCoord(this.getVertices());
-
+		sh.setVerticesCoord(this.getFbVertices());
+		this.getFbVertices().rewind();
+		
 		// on charge les coordonées de texture
-		this.getVertices().position(0);
+		
 		sh.setTextureCoord(this.getTextCoord());
 
 		// if (sh.attrib_color_location != -1) {
@@ -134,29 +147,40 @@ public class Rectangle2D extends GameObject {
 
 		float[] mMvp = new float[16];
 		// équivalent du PUSH
-		this.mBackupModelView = renderer.mModelView.clone();
+		
+		
+		// ici on est dans le cas où on souhaite dessiner qu'un seul objet
+		// récupérer la modelview au niveau de la scène n'a pas d'interet
+		// en revanche si notre objet est composé de plusieurs forme
+		// il faut pouvoir éventuellement mémoriser la model view
+		// pour pourvoir la réapliquer a des formes.
+		
+		// ici je commence à dessiner un nouvel objet
+		// je repart donc de zéro 
+		this.mModelView = renderer.mModelView.clone();
 
-		Matrix.setIdentityM(renderer.mModelView, 0);
+		Matrix.setIdentityM(this.mModelView, 0);
 
-		Matrix.translateM(renderer.mModelView, 0, X, Y, 0);
+		Matrix.translateM(this.mModelView, 0, X, Y, 0);
 
 		Matrix.multiplyMM(mMvp, 0, renderer.mProjectionView, 0,
-				renderer.mModelView, 0);
-		// on alimente la donnée UNIFORM mAdressOf_Mvp du programme OpenGL
+				this.mModelView, 0);
+		
+		// On alimente la donnée UNIFORM mAdressOf_Mvp du programme OpenGL
 		// avec
 		// une matrice de 4 flotant.
 		GLES20.glUniformMatrix4fv(sh.uniform_mvp_location, 1, false, mMvp, 0);
 
 		// on se positionne au debut du Buffer des indices
 		// qui indiquent dans quel ordre les vertex doivent être dessinés
-		this.getIndices().position(0);
+		this.getIndices().rewind();
 
 		GLES20.glDrawElements(drawMode, this.getIndices().capacity(),
 				GLES20.GL_UNSIGNED_SHORT, this.getIndices());
 
 		// renderer.mProgramme1.disableVertexAttribArray();
 		// équivalent du POP
-		renderer.mModelView = this.mBackupModelView;
+		//renderer.mModelView = this.mBackupModelView;
 		// renderer.mProgramme1.disableVertexAttribArray();
 
 	}

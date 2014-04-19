@@ -17,6 +17,7 @@ import com.example.testgame.gamecomponents.GameObject;
 import com.example.testgame.gamecomponents.OpenGLActivity;
 import com.example.testgame.gamecomponents.ProgramShaderProvider;
 import com.example.testgame.gamecomponents.Rectangle2D;
+import com.example.testgame.gamecomponents.SAT;
 import com.example.testgame.gameobjects.PetitRobot;
 import com.example.testgame.gameobjects.ProgramShader_forLines;
 import com.example.testgame.gameobjects.ProgramShader_grille;
@@ -35,8 +36,9 @@ public class GLES20RendererScene01 implements GLSurfaceView.Renderer {
 	// public DefaultProgramShader mProgramme1;
 	public ProgramShaderProvider mProgramShaderProvider;
 	public ArrayList<GameObject> mGameObjectList;
+	
 	// ! Matrix Model View Projection
-	public float[] mMvp = new float[16];
+	public float[] mCurrentMvp = new float[16];
 
 	// ! matrice de transformation des objets
 	public float[] mModelView = new float[16];
@@ -126,7 +128,7 @@ public class GLES20RendererScene01 implements GLSurfaceView.Renderer {
 	public void onDrawFrame(GL10 gl) {
 		// on commence par effacer l'écran en le remplissant de la
 		// couleur souhaitée et on vide le buffer.
-		GLES20.glClearColor(0.3f, 0.3f, 0.3f, 1.0f);
+		GLES20.glClearColor(0.5f, 0.5f, 0.5f, 1.0f);
 		GLES20.glClear(GLES20.GL_COLOR_BUFFER_BIT);
 
 		//on check les colissions entre tous les éléments de la scène
@@ -149,9 +151,7 @@ public class GLES20RendererScene01 implements GLSurfaceView.Renderer {
 
 				gameObject.draw(this);
 
-				if (gameObject.canCollide){
-					gameObject.mCollisionBox.draw(this);
-				}
+			
 				// SystemClock.sleep(2000);
 
 			}
@@ -194,7 +194,7 @@ public class GLES20RendererScene01 implements GLSurfaceView.Renderer {
 
 		Starship mStarship = new Starship();
 
-		mStarship.setHeight(20);
+		mStarship.setHeight(50);
 		mStarship.setWidth(100);
 		mStarship.angleRAD = 0.0f;
 		mStarship.setTagName("starship1");
@@ -213,7 +213,7 @@ public class GLES20RendererScene01 implements GLSurfaceView.Renderer {
 		mStarship2.setTagName("starship2");
 		mStarship2.cible = mStarship;
 		mStarship2.angleRAD = 45.0f;
-		mGameObjectList.add(mStarship2);
+	//	mGameObjectList.add(mStarship2);
 
 		PetitRobot mPetitRobot = new PetitRobot();
 		mPetitRobot.setCoord(50, 0);
@@ -223,8 +223,11 @@ public class GLES20RendererScene01 implements GLSurfaceView.Renderer {
 		this.mActivity.mBitmapProvider.assignTexture(
 				this.mActivity.getString(R.string.textureRobot), mPetitRobot);
 
-		mGameObjectList.add(mPetitRobot);
+//		mGameObjectList.add(mPetitRobot);
 
+		SAT.getVertices(mPetitRobot);
+		
+		
 		mStarship.cible = mPetitRobot;
 
 	}
