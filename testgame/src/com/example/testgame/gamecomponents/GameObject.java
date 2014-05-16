@@ -257,4 +257,51 @@ public class GameObject {
 
 	}
 
+
+	public ArrayList<Vertex> applyModelView(float[] modelView){
+		
+		// on récupère les vertices de l'objet 
+		//et on calcule leur coordonées dans le monde 		
+		float[] oldVerticesCoord = new float[4];
+		float[] newVerticesCoord = new float[4];
+
+		ArrayList<Vertex> mModelViewVertices; // définition d'un tableau de flotants
+		mModelViewVertices = new ArrayList<Vertex>();
+		
+		// je suis obligé de passer par un vecteur 4 pour la multiplication
+
+		for (int i = 0; i < this.mVertices.size(); i++) {
+			oldVerticesCoord[0] = this.mVertices.get(i).x; // x
+			oldVerticesCoord[1] = this.mVertices.get(i).y; // y
+			oldVerticesCoord[2] = this.mVertices.get(i).z; // z
+			oldVerticesCoord[3] = 1.f;
+
+
+			Matrix.multiplyMV(newVerticesCoord, 0, modelView, 0, oldVerticesCoord,
+					0);
+			mModelViewVertices.add(new Vertex(newVerticesCoord[0],newVerticesCoord[1],0));
+			
+		
+		
+		}
+		
+		return mModelViewVertices;
+		
+		
+		
+	}
+
+	public Vertex getCenterVertex(float[] modelView){
+		
+		
+		float[] origin = {0,0,0,1};
+		float[] neworigin = new float[4];
+		
+		
+			Matrix.multiplyMV(neworigin, 0, modelView, 0, origin,0);
+			return new Vertex(neworigin[0],neworigin[1],0);
+			
+		
+	}
+
 }

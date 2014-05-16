@@ -26,11 +26,15 @@ public class Starship extends Rectangle2D {
 	@Override
 	public void onUpdate(OpenGLActivity activity) {
 
+		//on incrémente l'angle de rotation a chaque images 
+				angleRAD = angleRAD + 0.05F;
+
 		if (activity.mGLSurfaceView.touched) {
-			this.angleRAD += Math.PI;
+			this.angleRAD += 0.05f;
 
 		}
 
+		//test des colisions
 		for (GameObject go : this.mCollideWithList) {
 			Log.i("starship", "i'm collide with : " + go.getTagName());
 
@@ -57,35 +61,49 @@ public class Starship extends Rectangle2D {
 		sh.enableShaderVar();
 
 		// équivalent du PUSH
-		this.mModelView = renderer.mModelView.clone();
+	//	this.mModelView = renderer.mModelView.clone();
+		
 		float[] mMvp = new float[16];
 		float[] wrkmodelView = new float[16];
 
+		//on initialise la matrice de transformation modele
 		Matrix.setIdentityM(this.mModelView, 0);
+		
+		//on initialise la matrice temporaire
 		wrkmodelView = this.mModelView.clone();
 
-		// on applique la transfo commandée en update
+		//on replace le centre de l'objet au coordonées souhaitées
+		Matrix.translateM(wrkmodelView, 0, X, Y, 0);
+		
+		//on calcule une matrice de rotation
 		Matrix.setRotateEulerM(mRotationMatrix, 0, 0, 0, angleRAD + 10.0f);
 
-		Matrix.multiplyMM(this.mModelView, 0, wrkmodelView, 0,
-				this.mRotationMatrix, 0);
+	
+		//on calcule la nouvelle matrice de transformation modele
+		//qui tiens compte de la translation puis de la rotation.
+			Matrix.multiplyMM(this.mModelView, 0, wrkmodelView, 0,
+					this.mRotationMatrix, 0);
 
-		// Matrix.translateM(mModelView, 0, X, Y, 0);
-		// Matrix.setRotateEulerM(mRotationMatrix, 0, 0, 0, angleRAD);
+			
+			
+		//mise à jour du centre de la forme
+			this.X = this.getCenterVertex(cible.mModelView).x;
+			this.Y = this.getCenterVertex(cible.mModelView).y;
 
-		// wrkmodelView = mModelView.clone();
-		// Matrix.multiplyMM(mModelView, 0, wrkmodelView, 0,
-		// this.mRotationMatrix, 0);
-
-		angleRAD = angleRAD + 0.05F;
-
-		if (this.cible != null) {
+			
+		//ici on souhaite effectuer une translation 
+		// de l'objet de tel manière qu'il décrive un cercle 
+		//autour de la cible
+			
+		  if (this.cible != null) {
+		    this.X = this.getCenterVertex(cible.mModelView).x;
+   			this.Y = this.getCenterVertex(cible.mModelView).y;
 
 			Matrix.translateM(this.mModelView, 0,
-					(float) (cible.X - (float) this.mModelView[12] + (Math
-							.cos(angleRAD) * 50.0f)),
-					(float) (cible.Y - (float) this.mModelView[13] + (Math
-							.sin(angleRAD) * 50.0f)), 0);
+					(float) ((Math
+							.cos(this.angleRAD) * 50.0f)),
+					(float) ((Math
+							.sin(this.angleRAD) * 50.0f)), 0);
 
 		}
 
@@ -104,24 +122,7 @@ public class Starship extends Rectangle2D {
 		// Toutefois j'ai besoin des coordonées calculées pour le calcul des
 		// colisions...
 
-		float[] newVerticesCoord = new float[4];
-		float[] mtmpVerticesCoord = new float[4];
-
-		// je suis obligé de passer par un vecteur 4 pour la multiplication
-
-		for (int i = 0; i < this.mVertices.size(); i++) {
-			newVerticesCoord[0] = this.mVertices.get(i).x; // x
-			newVerticesCoord[1] = this.mVertices.get(i).y; // y
-			newVerticesCoord[2] = this.mVertices.get(i).z; // z
-			newVerticesCoord[3] = 1.f;
-
-			Matrix.multiplyMV(mtmpVerticesCoord, 0, mMvp, 0, newVerticesCoord,
-					0);
-
-			this.mVertices.get(i).x = mtmpVerticesCoord[0];
-			this.mVertices.get(i).y = mtmpVerticesCoord[1];
-		}
-
+	
 		// on se positionne au debut du Buffer des indices
 		// qui indiquent dans quel ordre les vertex doivent être dessinés
 		this.getIndices().rewind();
@@ -134,8 +135,8 @@ public class Starship extends Rectangle2D {
 		// "- Y:"+String.valueOf(this.Y) );
 
 		// on memorise les coordonées écran de l'objet
-		this.X = this.mModelView[12];
-		this.Y = this.mModelView[13];
+//		this.X = this.mModelView[12];
+//		this.Y = this.mModelView[13];
 
 		// on alimente la donnée UNIFORM mAdressOf_Mvp du programme OpenGL
 		// avec

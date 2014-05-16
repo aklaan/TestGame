@@ -128,7 +128,7 @@ public class GLES20RendererScene01 implements GLSurfaceView.Renderer {
 	public void onDrawFrame(GL10 gl) {
 		// on commence par effacer l'écran en le remplissant de la
 		// couleur souhaitée et on vide le buffer.
-		GLES20.glClearColor(0.5f, 0.5f, 0.5f, 1.0f);
+		GLES20.glClearColor(0.2f, 0.2f, 0.2f, 1.0f);
 		GLES20.glClear(GLES20.GL_COLOR_BUFFER_BIT);
 
 		//on check les colissions entre tous les éléments de la scène
@@ -171,6 +171,7 @@ public class GLES20RendererScene01 implements GLSurfaceView.Renderer {
 
 		this.mGameObjectList.add(ligne1);
 
+		//**********
 		Rectangle2D ligne2 = new Rectangle2D(Enums.drawMode.FILL);
 		ligne2.setCoord(0, 0);
 		ligne2.setHeight(2);
@@ -181,21 +182,12 @@ public class GLES20RendererScene01 implements GLSurfaceView.Renderer {
 
 		mGameObjectList.add(ligne2);
 
-		Rectangle2D ligne3 = new Rectangle2D(Enums.drawMode.FILL);
-		ligne3.setCoord(0, 200);
-		ligne3.setHeight(2);
-		ligne3.setWidth(1000);
-		ligne3.setTagName("ligne3");
-
-		this.mActivity.mBitmapProvider.assignTexture(
-				this.mActivity.getString(R.string.textureRed), ligne3);
-
-		// mGameObjectList.add(ligne3);
-
+		//******************
 		Starship mStarship = new Starship();
 
-		mStarship.setHeight(50);
-		mStarship.setWidth(100);
+		mStarship.setHeight(10);
+		mStarship.setWidth(10);
+		mStarship.setCoord(100, 100);
 		mStarship.angleRAD = 0.0f;
 		mStarship.setTagName("starship1");
 		mStarship.enableColission();
@@ -204,31 +196,36 @@ public class GLES20RendererScene01 implements GLSurfaceView.Renderer {
 
 		mGameObjectList.add(mStarship);
 
+		//***********************
 		Starship mStarship2 = new Starship();
-
-		mStarship2.setHeight(50);
-		mStarship2.setWidth(50);
+		mStarship2.setHeight(5);
+		mStarship2.setWidth(5);
+		mStarship2.enableColission();
 		this.mActivity.mBitmapProvider.assignTexture(
 				this.mActivity.getString(R.string.boulerouge), mStarship2);
 		mStarship2.setTagName("starship2");
 		mStarship2.cible = mStarship;
 		mStarship2.angleRAD = 45.0f;
-	//	mGameObjectList.add(mStarship2);
+		mGameObjectList.add(mStarship2);
 
+		//*********************************
 		PetitRobot mPetitRobot = new PetitRobot();
-		mPetitRobot.setCoord(50, 0);
-		mPetitRobot.setHeight(50);
-		mPetitRobot.setWidth(50);
+		mPetitRobot.setCoord(0, 0);
+		mPetitRobot.setHeight(10);
+		mPetitRobot.setWidth(10);
 
 		this.mActivity.mBitmapProvider.assignTexture(
 				this.mActivity.getString(R.string.textureRobot), mPetitRobot);
 
-//		mGameObjectList.add(mPetitRobot);
+		mGameObjectList.add(mPetitRobot);
 
-		SAT.getVertices(mPetitRobot);
+		SAT sat  =new SAT();
+		sat.getNormals(mPetitRobot);
 		
 		
 		mStarship.cible = mPetitRobot;
+
+		mStarship2.cible = mStarship;
 
 	}
 

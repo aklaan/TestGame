@@ -16,13 +16,13 @@ public class PetitRobot extends Rectangle2D {
 
 	@Override
 	public void onUpdate(OpenGLActivity activity){
-		float limit_y = activity.getYScreenLimit();
+		float limit_y = activity.getYScreenLimit()/2;
 		//Log.i("debug",String.valueOf(activity.mGLSurfaceView.getHeight()));
 		//Log.i("debug",String.valueOf(i));
 		
-		float inc = 0.f;
+		float inc = 1.f;
 		
-		if (this.getCoordY()>limit_y || this.getCoordY()<0){
+		if (this.getCoordY()>limit_y || this.getCoordY()<-limit_y){
 			sens = sens*-1;
 		}  
 		
