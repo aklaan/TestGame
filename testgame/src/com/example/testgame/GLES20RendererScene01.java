@@ -117,6 +117,14 @@ public class GLES20RendererScene01 implements GLSurfaceView.Renderer {
 				-10.f, 10.f);
 
 		// le (0,0) est en bas à gauche.
+		
+		Matrix.orthoM(mProjectionView, 0,
+				0 ,mActivity.getXScreenLimit() ,
+				0,mActivity.getYScreenLimit() ,
+				-10.f, 10.f);
+
+		
+		
 		/**
 		 * Matrix.orthoM(mProjectionView , 0 ,-0 , (width /
 		 * mActivity.getZoomFactor()) ,-0 , (height /
@@ -187,7 +195,7 @@ public class GLES20RendererScene01 implements GLSurfaceView.Renderer {
 
 		mStarship.setHeight(10);
 		mStarship.setWidth(10);
-		mStarship.setCoord(100, 100);
+		mStarship.setCoord(110, 90);
 		mStarship.angleRAD = 0.0f;
 		mStarship.setTagName("starship1");
 		mStarship.enableColission();
@@ -210,20 +218,19 @@ public class GLES20RendererScene01 implements GLSurfaceView.Renderer {
 
 		//*********************************
 		PetitRobot mPetitRobot = new PetitRobot();
-		mPetitRobot.setCoord(0, 0);
-		mPetitRobot.setHeight(10);
-		mPetitRobot.setWidth(10);
-
+		mPetitRobot.setCoord(50, 50);
+		mPetitRobot.setHeight(30);
+		mPetitRobot.setWidth(30);
+		mPetitRobot.enableColission();
 		this.mActivity.mBitmapProvider.assignTexture(
 				this.mActivity.getString(R.string.textureRobot), mPetitRobot);
 
 		mGameObjectList.add(mPetitRobot);
 
-		SAT sat  =new SAT();
-		sat.getNormals(mPetitRobot);
 		
 		
-		mStarship.cible = mPetitRobot;
+		
+		//mStarship.cible = mPetitRobot;
 
 		mStarship2.cible = mStarship;
 

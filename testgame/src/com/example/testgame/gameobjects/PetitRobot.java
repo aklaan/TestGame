@@ -1,6 +1,11 @@
+
+
 package com.example.testgame.gameobjects;
 
+import android.util.Log;
+
 import com.example.testgame.Enums;
+import com.example.testgame.gamecomponents.GameObject;
 import com.example.testgame.gamecomponents.OpenGLActivity;
 import com.example.testgame.gamecomponents.Rectangle2D;
 
@@ -20,7 +25,7 @@ public class PetitRobot extends Rectangle2D {
 		//Log.i("debug",String.valueOf(activity.mGLSurfaceView.getHeight()));
 		//Log.i("debug",String.valueOf(i));
 		
-		float inc = 1.f;
+		float inc = 0.f;
 		
 		if (this.getCoordY()>limit_y || this.getCoordY()<-limit_y){
 			sens = sens*-1;
@@ -29,6 +34,20 @@ public class PetitRobot extends Rectangle2D {
 		inc=inc * sens;
 		
 		this.Y = Y+inc;
+
+	
+		if (!this.mCollideWithList.isEmpty()){
+			this.setHeight(this.getHeight()+5.f);
+			if (this.getHeight() > 700){this.setHeight(0);}
+		}
+		//test des colisions
+				for (GameObject go : this.mCollideWithList) {
+					Log.i("petitrobot", "i'm collide with : " + go.getTagName());
+
+				}
+
+	
+	
 	}
 	
 }

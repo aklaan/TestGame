@@ -157,7 +157,7 @@ public class Rectangle2D extends GameObject {
 		
 		// ici je commence à dessiner un nouvel objet
 		// je repart donc de zéro 
-		this.mModelView = renderer.mModelView.clone();
+	//	this.mModelView = renderer.mModelView.clone();
 
 		Matrix.setIdentityM(this.mModelView, 0);
 
@@ -183,6 +183,13 @@ public class Rectangle2D extends GameObject {
 		//renderer.mModelView = this.mBackupModelView;
 		// renderer.mProgramme1.disableVertexAttribArray();
 
+		if (this.canCollide) {
+			this.mCollisionBox.update();
+			if (mCollisionBox.isVisible) {
+				this.mCollisionBox.draw(renderer);
+			}
+		}
+	
 	}
 
 }

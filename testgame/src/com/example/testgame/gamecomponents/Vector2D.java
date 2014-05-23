@@ -22,9 +22,14 @@ public class Vector2D {
 		y = b;
 
 	}
-	
-	public void normalise(){
-		
+
+	public void normalise() {
+
 	}
-	
+
+	public float dot(Vector2D vector) {
+		return (this.x * vector.x) + (this.y * vector.y);
+
+	}
+
 }

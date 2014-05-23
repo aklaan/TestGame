@@ -35,10 +35,11 @@ public class Starship extends Rectangle2D {
 		}
 
 		//test des colisions
+		if (!this.mCollideWithList.isEmpty()){
 		for (GameObject go : this.mCollideWithList) {
 			Log.i("starship", "i'm collide with : " + go.getTagName());
 
-		}
+		}}
 
 	}
 
@@ -76,7 +77,7 @@ public class Starship extends Rectangle2D {
 		Matrix.translateM(wrkmodelView, 0, X, Y, 0);
 		
 		//on calcule une matrice de rotation
-		Matrix.setRotateEulerM(mRotationMatrix, 0, 0, 0, angleRAD + 10.0f);
+		Matrix.setRotateEulerM(mRotationMatrix, 0, 0, 0, angleRAD + 0.0f);
 
 	
 		//on calcule la nouvelle matrice de transformation modele
@@ -87,8 +88,8 @@ public class Starship extends Rectangle2D {
 			
 			
 		//mise à jour du centre de la forme
-			this.X = this.getCenterVertex(cible.mModelView).x;
-			this.Y = this.getCenterVertex(cible.mModelView).y;
+			this.X = this.getCenterVertex(this.mModelView).x;
+			this.Y = this.getCenterVertex(this.mModelView).y;
 
 			
 		//ici on souhaite effectuer une translation 
@@ -101,9 +102,9 @@ public class Starship extends Rectangle2D {
 
 			Matrix.translateM(this.mModelView, 0,
 					(float) ((Math
-							.cos(this.angleRAD) * 50.0f)),
+							.cos(this.angleRAD) * 100.0f)),
 					(float) ((Math
-							.sin(this.angleRAD) * 50.0f)), 0);
+							.sin(this.angleRAD) * 100.0f)), 0);
 
 		}
 

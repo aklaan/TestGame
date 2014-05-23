@@ -22,12 +22,16 @@ public class CollisionBox extends Rectangle2D {
 		this.isVisible = true;
 		this.drawMode = GLES20.GL_LINES;
 		this.hasTexture = false;
-		this.offsetX = -0.2f;
-		this.offsetY = -0.2f;
+		this.offsetX = -0.10f;
+		this.offsetY = -0.10f;
 		this.parent = go;
 
 	}
 
+	public String getTagName(){
+	return this.parent.getTagName();
+		
+	}
 	public void update() {
 		// aller rechercher les points limite de la forme et en déduire
 		// un rectangle avec un retrait edgelimit
@@ -61,11 +65,11 @@ public class CollisionBox extends Rectangle2D {
 			 */
 		}
 
-		//gestion des offset
-		xmin+=xmin*offsetX; 
-		xmax+=xmax*offsetX;
-		ymin+=ymin*offsetY;
-		ymax+=ymax*offsetY;
+		//gestion des offset en taille
+		xmin+=offsetX; 
+		xmax+=offsetX;
+		ymin+=offsetY;
+		ymax+=offsetY;
 		this.mVertices.clear();
 		this.mVertices.add(new Vertex(xmin, ymax, 0));
 		this.mVertices.add(new Vertex(xmin, ymin, 0));
