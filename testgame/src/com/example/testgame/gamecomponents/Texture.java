@@ -7,5 +7,5 @@ public class Texture {
 	public int width;
 	public int height;
 	public ByteBuffer texture;
-	
+	public int textureNameID;
 }

@@ -1,36 +1,60 @@
 package com.example.testgame.gamecomponents;
 
+import com.example.testgame.animationStatus;
+
 import android.opengl.Matrix;
 import android.os.SystemClock;
+import android.util.Log;
 
 public class Animation {
 
 	float startTime;
-	public static enum playingMode {NONE,ONCE,REPEAT_N,LOOP};
-	public static enum animationStatus {PLAYING,STOPPED};
+	float offsetX;
+
+	public static enum playingMode {
+		NONE, ONCE, REPEAT_N, LOOP
+	};
+
 	GameObject parent;
-	
-	
+	public animationStatus status;
+
 	public Animation(GameObject parent) {
 		this.parent = parent;
+
 	}
 
 	public void start() {
-		startTime = SystemClock.currentThreadTimeMillis();
+		if (this.status != animationStatus.PLAYING) {
+			startTime = SystemClock.elapsedRealtime();
+
+			this.status = animationStatus.PLAYING;
+			offsetX = 1.9f;
+		}
 	}
 
 	public void stop() {
+		this.status = animationStatus.STOPPED;
+
 	}
 
-public void onPlay(){
-	// se déplacer vers la droite pendant 3 seconde
-float elapsedTime = SystemClock.currentThreadTimeMillis() - startTime;
-	if (elapsedTime < 3000){
-		Matrix.translateM(this.parent.mModelView,0,  1.f, 0, 0);
+	public void onPlay() {
+		// se déplacer vers la droite pendant 3 seconde
+		float elapsedTime = SystemClock.elapsedRealtime()- startTime;
+
+		if (elapsedTime < 1000) {
+			//offsetX += 0.5f;
+			this.parent.X+= offsetX;
+		} else {
+
+			if (elapsedTime >= 1000 && elapsedTime <= 2000) {
+				//offsetX -= 0.5f;
+				this.parent.X-= offsetX;
+			} else {
+				this.status = animationStatus.STOPPED;
+			}
+		}
+	
+	
 	}
-
-	// se déplacer vers la gauche pendant 3 seconde
-}
-
 
 }

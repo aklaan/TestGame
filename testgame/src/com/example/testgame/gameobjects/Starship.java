@@ -6,6 +6,9 @@ import android.util.Log;
 
 import com.example.testgame.Enums;
 import com.example.testgame.GLES20RendererScene01;
+import com.example.testgame.R;
+import com.example.testgame.animationStatus;
+import com.example.testgame.gamecomponents.Animation;
 import com.example.testgame.gamecomponents.GameObject;
 import com.example.testgame.gamecomponents.OpenGLActivity;
 import com.example.testgame.gamecomponents.Rectangle2D;
@@ -14,41 +17,108 @@ import com.example.testgame.gamecomponents.Vertex;
 public class Starship extends Rectangle2D {
 
 	public GameObject cible;
+	public Animation anim;
 
 	public Starship() {
 		super(Enums.drawMode.FILL);
 
 		this.setTagName("starship");
 		this.isStatic = false;
+		this.anim = new Animation(this);
+		Matrix.setIdentityM(this.mModelView, 0);
 
 	}
 
 	@Override
 	public void onUpdate(OpenGLActivity activity) {
 
-		//on incrémente l'angle de rotation a chaque images 
-				angleRAD = angleRAD + 0.05F;
+		int newTextureId = R.string.boulerouge;
 
+		// on incrémente l'angle de rotation a chaque images
+		// ici je souhaite que l'objet tourne sur lui même constament
+		angleRAD = angleRAD + 0.05F;
+
+		// action suplémentaire
 		if (activity.mGLSurfaceView.touched) {
-			this.angleRAD += 0.05f;
+			this.angleRAD += 0.5f;
+
+			if (this.getTagName() == "starship1") {
+				anim.start();
+			}
 
 		}
 
-		//test des colisions
-		if (!this.mCollideWithList.isEmpty()){
-		for (GameObject go : this.mCollideWithList) {
-			Log.i("starship", "i'm collide with : " + go.getTagName());
+		// traiter des colisions avec les autres objets
+		if (!this.mCollideWithList.isEmpty()) {
+			for (GameObject go : this.mCollideWithList) {
 
-		}}
+				// newTextureId = R.string.textureRobot;
+			}
+		}
+
+		// traiter des objets à écouter
+		if (!this.getGameObjectToListenList().isEmpty()) {
+			for (GameObject go : this.getGameObjectToListenList()) {
+
+				if (go.getTagName() == "starship2") {
+
+					if (!go.mCollideWithList.isEmpty()) {
+						for (GameObject collider : go.mCollideWithList) {
+
+							if (collider.getTagName() == "robot") {
+								newTextureId = R.string.textureRobot;
+							}
+
+						}
+
+					} else {
+						newTextureId = R.string.boulerouge;
+					}
+
+				}
+			}
+
+		}
+
+		if (anim.status == animationStatus.PLAYING) {
+			anim.onPlay();
+			newTextureId = R.string.textureRobot;
+		}
+
+		// ici on souhaite effectuer une translation
+		// de l'objet de tel manière qu'il décrive un cercle
+		// autour de la cible
+
+		if (this.cible != null) {
+
+			this.X = cible.X + (float) (Math.cos(this.angleRAD) * 50.0f);
+			this.Y = cible.Y + (float) (Math.sin(this.angleRAD) * 50.0f);
+
+		}
+
+		// a la fin des mises à jour on connais les nouvelles coordonées
+		// on peut calculer la matrice
+		this.updateModelView();
+
+		// gestion des modifications de la texture
+		if (this.mTexture.textureNameID != newTextureId) {
+			this.getScene()
+					.getBitmapProvider()
+					.assignTexture(
+							this.getScene().mActivity.getString(newTextureId),
+							this);
+
+			this.mTexture.textureNameID = newTextureId;
+		}
 
 	}
 
 	@Override
-	public void draw(GLES20RendererScene01 renderer) {
+	public void draw() {
 
-		ProgramShader_simple sh = (ProgramShader_simple) renderer.mProgramShaderProvider
-				.getShaderByName("simple");
-		renderer.mProgramShaderProvider.use(sh);
+		ProgramShader_simple sh = (ProgramShader_simple) this.getScene()
+				.getProgramShaderProvider().getShaderByName("simple");
+		this.getScene().getProgramShaderProvider().use(sh);
 
 		// on charge les coordonées de texture
 		this.getTextCoord().rewind();
@@ -62,57 +132,14 @@ public class Starship extends Rectangle2D {
 		sh.enableShaderVar();
 
 		// équivalent du PUSH
-	//	this.mModelView = renderer.mModelView.clone();
-		
+		// this.mModelView = renderer.mModelView.clone();
+
 		float[] mMvp = new float[16];
-		float[] wrkmodelView = new float[16];
-
-		//on initialise la matrice de transformation modele
-		Matrix.setIdentityM(this.mModelView, 0);
-		
-		//on initialise la matrice temporaire
-		wrkmodelView = this.mModelView.clone();
-
-		//on replace le centre de l'objet au coordonées souhaitées
-		Matrix.translateM(wrkmodelView, 0, X, Y, 0);
-		
-		//on calcule une matrice de rotation
-		Matrix.setRotateEulerM(mRotationMatrix, 0, 0, 0, angleRAD + 0.0f);
-
-	
-		//on calcule la nouvelle matrice de transformation modele
-		//qui tiens compte de la translation puis de la rotation.
-			Matrix.multiplyMM(this.mModelView, 0, wrkmodelView, 0,
-					this.mRotationMatrix, 0);
-
-			
-			
-		//mise à jour du centre de la forme
-			this.X = this.getCenterVertex(this.mModelView).x;
-			this.Y = this.getCenterVertex(this.mModelView).y;
-
-			
-		//ici on souhaite effectuer une translation 
-		// de l'objet de tel manière qu'il décrive un cercle 
-		//autour de la cible
-			
-		  if (this.cible != null) {
-		    this.X = this.getCenterVertex(cible.mModelView).x;
-   			this.Y = this.getCenterVertex(cible.mModelView).y;
-
-			Matrix.translateM(this.mModelView, 0,
-					(float) ((Math
-							.cos(this.angleRAD) * 100.0f)),
-					(float) ((Math
-							.sin(this.angleRAD) * 100.0f)), 0);
-
-		}
-
 		// Calcul de la Matrice Vue/Projection
 		// on récupère la matrice de projection valable à l'ensemble de la scène
 		// (vue de caméra)
 		// et la matrice de la forme (scale - rotate - translate)
-		Matrix.multiplyMM(mMvp, 0, renderer.mProjectionView, 0,
+		Matrix.multiplyMM(mMvp, 0, this.getScene().getProjectionView(), 0,
 				this.mModelView, 0);
 
 		// pour calculer les coordonées de l'objet à l'écran il faut récupérer
@@ -123,7 +150,6 @@ public class Starship extends Rectangle2D {
 		// Toutefois j'ai besoin des coordonées calculées pour le calcul des
 		// colisions...
 
-	
 		// on se positionne au debut du Buffer des indices
 		// qui indiquent dans quel ordre les vertex doivent être dessinés
 		this.getIndices().rewind();
@@ -131,13 +157,6 @@ public class Starship extends Rectangle2D {
 		// on charge les coordonnées des vertices
 		this.getFbVertices().rewind();
 		sh.setVerticesCoord(this.getFbVertices());
-
-		// Log.i("draw-"+this.getTagName(),"X:"+String.valueOf(this.X) +
-		// "- Y:"+String.valueOf(this.Y) );
-
-		// on memorise les coordonées écran de l'objet
-//		this.X = this.mModelView[12];
-//		this.Y = this.mModelView[13];
 
 		// on alimente la donnée UNIFORM mAdressOf_Mvp du programme OpenGL
 		// avec
@@ -169,7 +188,7 @@ public class Starship extends Rectangle2D {
 		if (this.canCollide) {
 			this.mCollisionBox.update();
 			if (mCollisionBox.isVisible) {
-				this.mCollisionBox.draw(renderer);
+				this.mCollisionBox.draw();
 			}
 		}
 		/**

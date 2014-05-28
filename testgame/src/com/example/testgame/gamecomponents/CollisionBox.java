@@ -32,6 +32,11 @@ public class CollisionBox extends Rectangle2D {
 	return this.parent.getTagName();
 		
 	}
+	public Scene getScene(){
+		return this.parent.mScene;
+	}
+	
+	
 	public void update() {
 		// aller rechercher les points limite de la forme et en déduire
 		// un rectangle avec un retrait edgelimit
@@ -86,11 +91,11 @@ public class CollisionBox extends Rectangle2D {
 	}
 
 	@Override
-	public void draw(GLES20RendererScene01 renderer) {
+	public void draw() {
 
-		ProgramShader_forLines sh = (ProgramShader_forLines) renderer.mProgramShaderProvider
+		ProgramShader_forLines sh = (ProgramShader_forLines) this.getScene().mProgramShaderProvider
 				.getShaderByName("forLines");
-		renderer.mProgramShaderProvider.use(sh);
+		this.getScene().mProgramShaderProvider.use(sh);
 
 		// on se positionne au debut du Buffer des indices
 		// qui indiquent dans quel ordre les vertex doivent être dessinés
@@ -113,7 +118,7 @@ public class CollisionBox extends Rectangle2D {
 		// avec
 		// une matrice de 4 flotant.
 		GLES20.glUniformMatrix4fv(sh.uniform_mvp_location, 1, false,
-				renderer.mProjectionView, 0);
+				this.getScene().mProjectionView, 0);
 
 		// on se positionne au debut du Buffer des indices
 		// qui indiquent dans quel ordre les vertex doivent être dessinés

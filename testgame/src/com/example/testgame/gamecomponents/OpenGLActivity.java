@@ -19,7 +19,7 @@ public class OpenGLActivity extends Activity {
 	public static float DEFAULT_ZOOM_FACTOR = 2.f;
 	// ! OpenGL SurfaceView
 	public MySurfaceView mGLSurfaceView;
-	public BitmapProvider mBitmapProvider;
+	
 
 
 	
@@ -50,10 +50,7 @@ public class OpenGLActivity extends Activity {
 
 		setContentView(mGLSurfaceView);
 
-		//le bitmap provider peu servir pour plusieurs scene
-		//on le remonte donc au plus haut.
-		this.mBitmapProvider = new BitmapProvider(this);
-
+		
 
 
 	}

@@ -79,6 +79,7 @@ public class BitmapProvider {
 			texture.width = bitmap.getWidth();
 			texture.height = bitmap.getHeight();
 			
+			
 			// on défini un buffer contenant tous les points de l'image
 			// il en a (longeur x hauteur)
 			// pour chaque point on a 4 bytes . 3 pour la couleur RVB et 1 pour

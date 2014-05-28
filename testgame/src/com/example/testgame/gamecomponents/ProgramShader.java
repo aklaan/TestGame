@@ -48,11 +48,22 @@ public class ProgramShader {
 		this.attrib_texture_coord_location = -1;
 		this.uniform_mvp_location = -1;
 		this.uniform_texture_location = -1;
+		this.initCode();
+		this.make();
 	}
 
 	public void make() {
 		mGLSLProgram_location = GLES20.glCreateProgram();
 		this.loadShaders(vertexShaderSource, fragmentShaderSource);
+		this.initLocations();
+	}
+
+	public void initLocations() {
+
+	}
+
+	public void initCode() {
+
 	}
 
 	public void delete() {
@@ -166,10 +177,6 @@ public class ProgramShader {
 
 	}
 
-
-
-	
-	
 	public void setTextureCoord(FloatBuffer fb) {
 		GLES20.glVertexAttribPointer(this.attrib_texture_coord_location, 2,
 				GLES20.GL_FLOAT, false, Vertex.Vertex_TEXT_SIZE_BYTES, fb);

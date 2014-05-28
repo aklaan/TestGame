@@ -42,7 +42,7 @@ public class PetitRobot extends Rectangle2D {
 		}
 		//test des colisions
 				for (GameObject go : this.mCollideWithList) {
-					Log.i("petitrobot", "i'm collide with : " + go.getTagName());
+					//Log.i("petitrobot", "i'm collide with : " + go.getTagName());
 
 				}
 

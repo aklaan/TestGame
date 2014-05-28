@@ -59,7 +59,7 @@ public class ProgramShaderProvider {
  */
 
 	public void add(ProgramShader shader) {
-
+shader.getClass().getName();
 		int newindex = catalogShader.size() + 1;
 		catalogShader.put(shader.mName, newindex);
 		shaderList.add(shader);

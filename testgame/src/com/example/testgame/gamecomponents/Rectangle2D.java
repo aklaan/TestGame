@@ -120,11 +120,11 @@ public class Rectangle2D extends GameObject {
 	}
 
 	@Override
-	public void draw(GLES20RendererScene01 renderer) {
+	public void draw() {
 
-		ProgramShader_grille sh = (ProgramShader_grille) renderer.mProgramShaderProvider
+		ProgramShader_grille sh = (ProgramShader_grille) this.getScene().getProgramShaderProvider()
 				.getShaderByName("grille");
-		renderer.mProgramShaderProvider.use(sh);
+		this.getScene().getProgramShaderProvider().use(sh);
 
 		// on se positionne au debut du Buffer des indices
 		// qui indiquent dans quel ordre les vertex doivent être dessinés
@@ -163,7 +163,7 @@ public class Rectangle2D extends GameObject {
 
 		Matrix.translateM(this.mModelView, 0, X, Y, 0);
 
-		Matrix.multiplyMM(mMvp, 0, renderer.mProjectionView, 0,
+		Matrix.multiplyMM(mMvp, 0, this.getScene().getProjectionView(), 0,
 				this.mModelView, 0);
 		
 		// On alimente la donnée UNIFORM mAdressOf_Mvp du programme OpenGL
@@ -186,7 +186,7 @@ public class Rectangle2D extends GameObject {
 		if (this.canCollide) {
 			this.mCollisionBox.update();
 			if (mCollisionBox.isVisible) {
-				this.mCollisionBox.draw(renderer);
+				this.mCollisionBox.draw();
 			}
 		}
 	

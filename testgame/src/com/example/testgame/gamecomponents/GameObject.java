@@ -20,6 +20,7 @@ public class GameObject {
 	public Texture mTexture;
 	public Boolean hasTexture;
 	public Boolean isVisible;
+	public Scene mScene;
 
 	// top permettant de savoir si l'objet est statique ou qu'il
 	// a la possibilité d'être en mouvement. ceci va servir
@@ -40,6 +41,9 @@ public class GameObject {
 	// tableau des objets avec lesquel le gameobject rentre en collision
 	public ArrayList<CollisionBox> mCollideWithList;
 
+	public ArrayList<GameObject> mGameObjectToListenList;
+	
+	
 	public float[] mRotationMatrix = new float[16];
 	public float[] mModelView = new float[16];
 	public float[] mTransformUpdateView = new float[16];
@@ -89,9 +93,18 @@ public class GameObject {
 		Matrix.setIdentityM(this.mTransformUpdateView, 0);
 
 		this.mCollideWithList = new ArrayList<CollisionBox>();
+		this.mGameObjectToListenList = new ArrayList<GameObject>();
+		
 		this.mVertices = new ArrayList<Vertex>();
 	}
 
+	
+	public ArrayList<GameObject> getGameObjectToListenList(){
+		return mGameObjectToListenList;
+	}
+	
+	
+	
 	public void initBuffers(int nbIndex) {
 		int nbVertex = mVertices.size();
 
@@ -157,6 +170,12 @@ public class GameObject {
 		mIndices.position(0);
 	}
 
+	
+	public Scene getScene(){
+		return this.mScene;
+	}
+	
+	
 	// getter vertices
 	public FloatBuffer getFbVertices() {
 
@@ -208,8 +227,7 @@ public class GameObject {
 	public void setCoord(float x, float y) {
 		this.X = x;
 		this.Y = y;
-		updateModelMatrix();
-
+	
 	}
 
 	public float getCoordX() {
@@ -222,52 +240,28 @@ public class GameObject {
 
 	}
 
-	private void updateModelMatrix() {
-		// Matrix.setIdentityM(mModelMatrix, 0);
-
-		// Log.i("debug","width = "+
-		// String.valueOf(width)+" / height="+String.valueOf(height));
-
-		// this.scale(width, height);
-		// this.translate(X,Y);
-	}
-
+	
 	public void onUpdate(OpenGLActivity openGLActivity) {
 		// TODO Auto-generated method stub
 
 	}
 
-	public void draw(GLES20RendererScene01 renderer) {
+	public void draw() {
 
 	}
 
-	public void turnArround(GameObject cible, float angle, float rayon) {
+	
+	public ArrayList<Vertex> applyModelView(float[] modelView) {
 
-		Matrix.setIdentityM(this.mTransformUpdateView, 0);
-		angleRAD += angle;
-		float[] wrkmodelView = new float[16];
-		float[] wrkRotation = new float[16];
-		Matrix.translateM(mTransformUpdateView, 0, cible.X, cible.Y, 0);
-		Matrix.translateM(mTransformUpdateView, 0, rayon, 0, 0);
-		Matrix.setRotateEulerM(wrkRotation, 0, 0, 0, angleRAD);
-
-		wrkmodelView = mTransformUpdateView.clone();
-		Matrix.multiplyMM(mTransformUpdateView, 0, wrkmodelView, 0,
-				wrkRotation, 0);
-
-	}
-
-
-	public ArrayList<Vertex> applyModelView(float[] modelView){
-		
-		// on récupère les vertices de l'objet 
-		//et on calcule leur coordonées dans le monde 		
+		// on récupère les vertices de l'objet
+		// et on calcule leur coordonées dans le monde
 		float[] oldVerticesCoord = new float[4];
 		float[] newVerticesCoord = new float[4];
 
-		ArrayList<Vertex> mModelViewVertices; // définition d'un tableau de flotants
+		ArrayList<Vertex> mModelViewVertices; // définition d'un tableau de
+												// flotants
 		mModelViewVertices = new ArrayList<Vertex>();
-		
+
 		// je suis obligé de passer par un vecteur 4 pour la multiplication
 
 		for (int i = 0; i < this.mVertices.size(); i++) {
@@ -276,32 +270,32 @@ public class GameObject {
 			oldVerticesCoord[2] = this.mVertices.get(i).z; // z
 			oldVerticesCoord[3] = 1.f;
 
+			Matrix.multiplyMV(newVerticesCoord, 0, modelView, 0,
+					oldVerticesCoord, 0);
+			mModelViewVertices.add(new Vertex(newVerticesCoord[0],
+					newVerticesCoord[1], 0));
 
-			Matrix.multiplyMV(newVerticesCoord, 0, modelView, 0, oldVerticesCoord,
-					0);
-			mModelViewVertices.add(new Vertex(newVerticesCoord[0],newVerticesCoord[1],0));
-			
-		
-		
 		}
-		
+
 		return mModelViewVertices;
-		
-		
-		
+
 	}
 
-	public Vertex getCenterVertex(float[] modelView){
-		
-		
-		float[] origin = {0,0,0,1};
-		float[] neworigin = new float[4];
-		
-		
-			Matrix.multiplyMV(neworigin, 0, modelView, 0, origin,0);
-			return new Vertex(neworigin[0],neworigin[1],0);
-			
-		
+	
+	//fabrique la nouvelle ModelView en fonction des modifications
+	//apportées.
+	public void updateModelView() {
+		float[] wrkModelView = new float[16];
+		float[] wrkRotationMatrix = new float[16];
+
+		Matrix.setIdentityM(wrkModelView, 0);
+
+		Matrix.translateM(wrkModelView, 0, this.X, this.Y, 0);
+
+		Matrix.setRotateEulerM(wrkRotationMatrix, 0, 0, 0, this.angleRAD);
+
+		Matrix.multiplyMM(this.mModelView, 0, wrkModelView, 0, wrkRotationMatrix, 0);
+
 	}
 
 }

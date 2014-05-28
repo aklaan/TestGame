@@ -28,6 +28,13 @@ public class ProgramShader_simple extends ProgramShader {
 	
 	public ProgramShader_simple() {
 		super();
+
+	}
+
+	
+	
+@Override	
+	public void initCode(){
 		this.mName = "simple";
 		this.attrib_vertex_coord_name= this.VSH_ATTRIB_VERTEX_COORD;
 		this.attrib_color_name = this.VSH_ATTRIB_COLOR;
@@ -68,13 +75,16 @@ public class ProgramShader_simple extends ProgramShader {
 				// cette commande doit toujours être la dernière du vertex shader.
 				+ "	gl_Position =  position;" + "}";
 		
+			
 	}
-
+	/**
+@Override	
 	public void make() {
 		super.make();
 		this.initLocations();
 	}
-
+*/
+@Override
 	public void initLocations() {
 		// les attribs
 		this.attrib_vertex_coord_location = GLES20.glGetAttribLocation(
