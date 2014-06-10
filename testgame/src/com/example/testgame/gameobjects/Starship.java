@@ -2,29 +2,27 @@ package com.example.testgame.gameobjects;
 
 import android.opengl.GLES20;
 import android.opengl.Matrix;
-import android.util.Log;
+import android.os.SystemClock;
 
 import com.example.testgame.Enums;
-import com.example.testgame.GLES20RendererScene01;
 import com.example.testgame.R;
-import com.example.testgame.animationStatus;
 import com.example.testgame.gamecomponents.Animation;
+import com.example.testgame.gamecomponents.AnimationRightLeftOnX;
 import com.example.testgame.gamecomponents.GameObject;
 import com.example.testgame.gamecomponents.OpenGLActivity;
 import com.example.testgame.gamecomponents.Rectangle2D;
-import com.example.testgame.gamecomponents.Vertex;
 
 public class Starship extends Rectangle2D {
 
 	public GameObject cible;
-	public Animation anim;
+	public float lastTouch;
 
 	public Starship() {
 		super(Enums.drawMode.FILL);
 
 		this.setTagName("starship");
 		this.isStatic = false;
-		this.anim = new Animation(this);
+
 		Matrix.setIdentityM(this.mModelView, 0);
 
 	}
@@ -40,15 +38,40 @@ public class Starship extends Rectangle2D {
 
 		// action suplémentaire
 		if (activity.mGLSurfaceView.touched) {
-			this.angleRAD += 0.5f;
 
-			if (this.getTagName() == "starship1") {
-				anim.start();
+			float elapsedTime = SystemClock.elapsedRealtime() - this.lastTouch;
+			// on attend une 1/4 de seconde avant de valider un autre touch
+			if (elapsedTime > 250) {
+				this.angleRAD += 0.5f;
+				this.lastTouch = SystemClock.elapsedRealtime();
+
+				if (this.getTagName() == "starship1") {
+					
+					//s'il y a une animation en cours, il faut attendre qu'elle
+					//soit terminée avant d'en démarrer une autre.
+					if (this.getAnimation() != null) {
+						if (this.getAnimation().status == Animation.AnimationStatus.STOPPED) {
+
+							this.setAnimation(new AnimationRightLeftOnX(this));
+							this.getAnimation().start();
+
+						}
+
+					} else {
+						this.setAnimation(new AnimationRightLeftOnX(this));
+						this.getAnimation().start();
+
+					}
+
+				}
+
 			}
-
 		}
 
+		
+		//-----------------------------------------
 		// traiter des colisions avec les autres objets
+		//---------------------------------------------------------
 		if (!this.mCollideWithList.isEmpty()) {
 			for (GameObject go : this.mCollideWithList) {
 
@@ -56,7 +79,9 @@ public class Starship extends Rectangle2D {
 			}
 		}
 
+		//-----------------------------------------
 		// traiter des objets à écouter
+		//--------------------------------------------------------
 		if (!this.getGameObjectToListenList().isEmpty()) {
 			for (GameObject go : this.getGameObjectToListenList()) {
 
@@ -79,28 +104,51 @@ public class Starship extends Rectangle2D {
 			}
 
 		}
+		
+		//-----------------------------------------
+		// traiter l'animation
+		//--------------------------------------------------------
+		if (this.getAnimation() != null) {
 
-		if (anim.status == animationStatus.PLAYING) {
-			anim.onPlay();
-			newTextureId = R.string.textureRobot;
+			if (this.getAnimation().status == Animation.AnimationStatus.PLAYING) {
+				this.getAnimation().play();
+				newTextureId = R.string.textureRobot;
+			}
+			if (this.getAnimation().status == Animation.AnimationStatus.STOPPED) {
+				this.setAnimation(null);
+
+			}
+
 		}
 
 		// ici on souhaite effectuer une translation
 		// de l'objet de tel manière qu'il décrive un cercle
 		// autour de la cible
-
-		if (this.cible != null) {
-
-			this.X = cible.X + (float) (Math.cos(this.angleRAD) * 50.0f);
-			this.Y = cible.Y + (float) (Math.sin(this.angleRAD) * 50.0f);
-
-		}
-
+		/**
+		 * if (this.cible != null) {
+		 * 
+		 * this.X = cible.X + (float) (Math.cos(this.angleRAD) * 50.0f); this.Y
+		 * = cible.Y + (float) (Math.sin(this.angleRAD) * 50.0f);
+		 * 
+		 * }
+		 */
 		// a la fin des mises à jour on connais les nouvelles coordonées
 		// on peut calculer la matrice
 		this.updateModelView();
 
-		// gestion des modifications de la texture
+		
+		//-----------------------------------------
+		//Mettre a jour la boite de colision
+		//------------------------------------------
+		if (this.canCollide) {
+			this.mCollisionBox.update();
+		
+		}
+		
+		
+		//-----------------------------------------------------
+		// Gestion des modifications de la texture
+		//------------------------------------------------------
 		if (this.mTexture.textureNameID != newTextureId) {
 			this.getScene()
 					.getBitmapProvider()
@@ -113,11 +161,15 @@ public class Starship extends Rectangle2D {
 
 	}
 
+	//----------------------------------------------
+	//Dessiner
+	//-----------------------------------------------
 	@Override
 	public void draw() {
 
 		ProgramShader_simple sh = (ProgramShader_simple) this.getScene()
 				.getProgramShaderProvider().getShaderByName("simple");
+		
 		this.getScene().getProgramShaderProvider().use(sh);
 
 		// on charge les coordonées de texture
@@ -135,6 +187,7 @@ public class Starship extends Rectangle2D {
 		// this.mModelView = renderer.mModelView.clone();
 
 		float[] mMvp = new float[16];
+		
 		// Calcul de la Matrice Vue/Projection
 		// on récupère la matrice de projection valable à l'ensemble de la scène
 		// (vue de caméra)
@@ -182,11 +235,10 @@ public class Starship extends Rectangle2D {
 		GLES20.glDrawElements(drawMode, this.getIndices().capacity(),
 				GLES20.GL_UNSIGNED_SHORT, this.getIndices());
 
-		// si la forme possède une boite de colision on met à jour les infos de
-		// position
-		// et si elle est visible on la dessine.
+		// si la forme possède une boite de colision et que l'on souhaite la voir
+		// a l'écran, on la dessine.
 		if (this.canCollide) {
-			this.mCollisionBox.update();
+			//this.mCollisionBox.update();
 			if (mCollisionBox.isVisible) {
 				this.mCollisionBox.draw();
 			}

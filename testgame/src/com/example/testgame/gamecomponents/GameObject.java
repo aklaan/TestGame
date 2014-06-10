@@ -42,8 +42,8 @@ public class GameObject {
 	public ArrayList<CollisionBox> mCollideWithList;
 
 	public ArrayList<GameObject> mGameObjectToListenList;
-	
-	
+	public Animation mAnimation;
+
 	public float[] mRotationMatrix = new float[16];
 	public float[] mModelView = new float[16];
 	public float[] mTransformUpdateView = new float[16];
@@ -94,17 +94,22 @@ public class GameObject {
 
 		this.mCollideWithList = new ArrayList<CollisionBox>();
 		this.mGameObjectToListenList = new ArrayList<GameObject>();
-		
+
 		this.mVertices = new ArrayList<Vertex>();
 	}
 
-	
-	public ArrayList<GameObject> getGameObjectToListenList(){
-		return mGameObjectToListenList;
+	public ArrayList<GameObject> getGameObjectToListenList() {
+		return this.mGameObjectToListenList;
 	}
-	
-	
-	
+
+	public Animation getAnimation() {
+		return this.mAnimation;
+	}
+
+	public void setAnimation(Animation anim) {
+		this.mAnimation = anim;
+	}
+
 	public void initBuffers(int nbIndex) {
 		int nbVertex = mVertices.size();
 
@@ -170,12 +175,10 @@ public class GameObject {
 		mIndices.position(0);
 	}
 
-	
-	public Scene getScene(){
+	public Scene getScene() {
 		return this.mScene;
 	}
-	
-	
+
 	// getter vertices
 	public FloatBuffer getFbVertices() {
 
@@ -227,7 +230,7 @@ public class GameObject {
 	public void setCoord(float x, float y) {
 		this.X = x;
 		this.Y = y;
-	
+
 	}
 
 	public float getCoordX() {
@@ -240,17 +243,10 @@ public class GameObject {
 
 	}
 
-	
-	public void onUpdate(OpenGLActivity openGLActivity) {
-		// TODO Auto-generated method stub
-
-	}
-
 	public void draw() {
 
 	}
 
-	
 	public ArrayList<Vertex> applyModelView(float[] modelView) {
 
 		// on récupère les vertices de l'objet
@@ -281,9 +277,8 @@ public class GameObject {
 
 	}
 
-	
-	//fabrique la nouvelle ModelView en fonction des modifications
-	//apportées.
+	// fabrique la nouvelle ModelView en fonction des modifications
+	// apportées.
 	public void updateModelView() {
 		float[] wrkModelView = new float[16];
 		float[] wrkRotationMatrix = new float[16];
@@ -294,8 +289,35 @@ public class GameObject {
 
 		Matrix.setRotateEulerM(wrkRotationMatrix, 0, 0, 0, this.angleRAD);
 
-		Matrix.multiplyMM(this.mModelView, 0, wrkModelView, 0, wrkRotationMatrix, 0);
+		Matrix.multiplyMM(this.mModelView, 0, wrkModelView, 0,
+				wrkRotationMatrix, 0);
 
 	}
 
+	public void onUpdate(OpenGLActivity openGLActivity) {
+		// TODO Auto-generated method stub
+
+		applyCustomizations();
+		applyCollisions();
+		applyAnimation();
+		updateListerners();
+	}
+
+	// Taches à faire
+	public void applyCustomizations() {
+
+	}
+
+	// Taches à faire
+	public void applyCollisions() {
+
+	}
+
+	public void applyAnimation() {
+
+	}
+
+	public void updateListerners() {
+
+	}
 }

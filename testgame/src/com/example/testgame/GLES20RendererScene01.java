@@ -1,5 +1,6 @@
 package com.example.testgame;
 
+import com.example.testgame.gamecomponents.AnimationRightLeftOnX;
 import com.example.testgame.gamecomponents.OpenGLActivity;
 import com.example.testgame.gamecomponents.Rectangle2D;
 import com.example.testgame.gamecomponents.Scene;
@@ -52,11 +53,19 @@ public class GLES20RendererScene01 extends Scene {
 		mStarship.angleRAD = 0.0f;
 		mStarship.setTagName("starship1");
 		mStarship.enableColission();
+		
+		
+		
 		this.getBitmapProvider().assignTexture(
 				this.mActivity.getString(R.string.boulerouge), mStarship);
 
+		
 		this.addToScene(mStarship);
 
+		
+		
+		
+		
 		//***********************
 		Starship mStarship2 = new Starship();
 		mStarship2.setHeight(5);

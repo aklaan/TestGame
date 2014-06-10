@@ -15,7 +15,7 @@ import android.opengl.GLES20;
 import android.util.Log;
 
 /**
- * le shader provider va référencer les program Shader a utiliser 
+ * le shader provider va référencer les program Shader a utiliser
  * 
  * @author NC10
  * 
@@ -43,15 +43,11 @@ public class ProgramShaderProvider {
 	 */
 	public ProgramShaderProvider(Activity activity) {
 		this.mActivity = activity;
-		this.mCurrentActiveShader=null;
-		
+		this.mCurrentActiveShader = null;
+
 		catalogShader = new HashMap<String, Integer>();
 		shaderList = new ArrayList<ProgramShader>();
 
-	
-		
-		
-	
 	}
 
 	/***
@@ -59,7 +55,7 @@ public class ProgramShaderProvider {
  */
 
 	public void add(ProgramShader shader) {
-shader.getClass().getName();
+		shader.getClass().getName();
 		int newindex = catalogShader.size() + 1;
 		catalogShader.put(shader.mName, newindex);
 		shaderList.add(shader);
@@ -68,27 +64,26 @@ shader.getClass().getName();
 	public ProgramShader getShaderByName(String shaderName) {
 		ProgramShader result = null;
 		if (catalogShader.get(shaderName) == null) {
-			Log.e(this.getClass().getName(), "Shader " + shaderName +" unknow on Catalog");
+			Log.e(this.getClass().getName(), "Shader " + shaderName
+					+ " unknow on Catalog");
 		} else {
 			result = shaderList.get(catalogShader.get(shaderName) - 1);
 		}
 		return result;
 	}
 
-	
-	
-	
 	public void use(ProgramShader shader) {
 
 		// use program
-		if (this.mCurrentActiveShader != shader || this.mCurrentActiveShader ==null) {
-			
-			if (this.mCurrentActiveShader !=null){
+		if (this.mCurrentActiveShader != shader
+				|| this.mCurrentActiveShader == null) {
+
+			if (this.mCurrentActiveShader != null) {
 				this.mCurrentActiveShader.disableShaderVar();
 			}
 			GLES20.glUseProgram(shader.mGLSLProgram_location);
 			this.mCurrentActiveShader = shader;
-			
+
 		}
 
 		/**
