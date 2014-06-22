@@ -4,7 +4,7 @@ package com.example.testgame.gameobjects;
 
 import android.util.Log;
 
-import com.example.testgame.Enums;
+import com.example.testgame.DrawingMode;
 import com.example.testgame.gamecomponents.GameObject;
 import com.example.testgame.gamecomponents.OpenGLActivity;
 import com.example.testgame.gamecomponents.Rectangle2D;
@@ -14,7 +14,7 @@ public class PetitRobot extends Rectangle2D {
     private int sens = 1;
 	public PetitRobot() {
 
-		super(Enums.drawMode.FILL);
+		super(DrawingMode.FILL);
 		this.setTagName("robot");
 		this.isStatic=false;		
 	}

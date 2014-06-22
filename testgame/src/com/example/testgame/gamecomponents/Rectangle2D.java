@@ -3,10 +3,8 @@ package com.example.testgame.gamecomponents;
 import android.opengl.GLES20;
 import android.opengl.Matrix;
 
-import com.example.testgame.Enums;
-import com.example.testgame.GLES20RendererScene01;
+import com.example.testgame.DrawingMode;
 import com.example.testgame.gameobjects.ProgramShader_grille;
-import com.example.testgame.gameobjects.ProgramShader_simple;
 
 public class Rectangle2D extends GameObject {
 
@@ -14,7 +12,7 @@ public class Rectangle2D extends GameObject {
 	private float width = 1;
 	private float height = 1;
 
-	public Rectangle2D(Enums.drawMode mode) {
+	public Rectangle2D(DrawingMode drawingMode) {
 		super();
 
 		this.mVertices.add(new Vertex(-1f, 1f, 0f, 0f, 0f));
@@ -22,7 +20,7 @@ public class Rectangle2D extends GameObject {
 		this.mVertices.add(new Vertex(1f, -1f, 0f, 1f, 1f));
 		this.mVertices.add(new Vertex(1f, 1f, 0, 1f, 0f));
 
-		switch (mode) {
+		switch (drawingMode) {
 		// on dessine que les lignes de contour
 		case EMPTY:
 
@@ -69,8 +67,8 @@ public class Rectangle2D extends GameObject {
 		 */
 
 	}
-
-	public void onUpdate(OpenGLActivity openGLActivity) {
+@Override
+	public void onUpdate(OpenGLActivity activity) {
 		// TODO Auto-generated method stub
 
 	}

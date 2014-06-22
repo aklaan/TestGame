@@ -1,6 +1,10 @@
 package com.example.testgame;
 
-import com.example.testgame.gamecomponents.AnimationRightLeftOnX;
+import javax.microedition.khronos.opengles.GL10;
+
+import android.os.SystemClock;
+
+import com.example.testgame.gamecomponents.GameObject;
 import com.example.testgame.gamecomponents.OpenGLActivity;
 import com.example.testgame.gamecomponents.Rectangle2D;
 import com.example.testgame.gamecomponents.Scene;
@@ -15,7 +19,6 @@ import com.example.testgame.gameobjects.Starship;
  */
 public class GLES20RendererScene01 extends Scene {
 
-
 	public GLES20RendererScene01(OpenGLActivity activity) {
 		super(activity);
 		// TODO Auto-generated constructor stub
@@ -23,7 +26,7 @@ public class GLES20RendererScene01 extends Scene {
 
 	@Override
 	public void loadGameObjects() {
-		Rectangle2D ligne1 = new Rectangle2D(Enums.drawMode.FILL);
+		Rectangle2D ligne1 = new Rectangle2D(DrawingMode.FILL);
 		ligne1.setCoord(0, 0);
 		ligne1.setHeight(500);
 		ligne1.setWidth(2);
@@ -33,8 +36,8 @@ public class GLES20RendererScene01 extends Scene {
 
 		this.addToScene(ligne1);
 
-		//**********
-		Rectangle2D ligne2 = new Rectangle2D(Enums.drawMode.FILL);
+		// **********
+		Rectangle2D ligne2 = new Rectangle2D(DrawingMode.FILL);
 		ligne2.setCoord(0, 0);
 		ligne2.setHeight(2);
 		ligne2.setWidth(1000);
@@ -44,7 +47,7 @@ public class GLES20RendererScene01 extends Scene {
 
 		this.addToScene(ligne2);
 
-		//******************
+		// ******************
 		Starship mStarship = new Starship();
 
 		mStarship.setHeight(50);
@@ -53,20 +56,13 @@ public class GLES20RendererScene01 extends Scene {
 		mStarship.angleRAD = 0.0f;
 		mStarship.setTagName("starship1");
 		mStarship.enableColission();
-		
-		
-		
+
 		this.getBitmapProvider().assignTexture(
 				this.mActivity.getString(R.string.boulerouge), mStarship);
 
-		
 		this.addToScene(mStarship);
 
-		
-		
-		
-		
-		//***********************
+		// ***********************
 		Starship mStarship2 = new Starship();
 		mStarship2.setHeight(5);
 		mStarship2.setWidth(5);
@@ -78,7 +74,7 @@ public class GLES20RendererScene01 extends Scene {
 		mStarship2.angleRAD = 0.0f;
 		this.addToScene(mStarship2);
 
-		//*********************************
+		// *********************************
 		PetitRobot mPetitRobot = new PetitRobot();
 		mPetitRobot.setCoord(50, 50);
 		mPetitRobot.setHeight(30);
@@ -89,42 +85,62 @@ public class GLES20RendererScene01 extends Scene {
 
 		this.addToScene(mPetitRobot);
 
-		
 		mStarship.getGameObjectToListenList().add(mStarship2);
-		
-		//mStarship.cible = mPetitRobot;
+
+		// mStarship.cible = mPetitRobot;
 
 		mStarship2.cible = mStarship;
 
 	}
+
 	@Override
 	public void initProgramShader() {
 		ProgramShader_grille shader_grille = new ProgramShader_grille();
 		shader_grille.make();
 		this.getProgramShaderProvider().add(shader_grille);
 
-		
 		this.getProgramShaderProvider().add(new ProgramShader_simple());
 
 		ProgramShader_forLines shader_forLines = new ProgramShader_forLines();
 		shader_forLines.make();
 		this.getProgramShaderProvider().add(shader_forLines);
-		
+
 	}
+
 	@Override
 	public void loadTextures() {
 
-		this.getBitmapProvider().add(this.mActivity
-				.getString(R.string.textureStarship));
-		this.getBitmapProvider().add(this.mActivity
-				.getString(R.string.textureRobot));
-		this.getBitmapProvider().add(this.mActivity
-				.getString(R.string.textureRed));
-		this.getBitmapProvider().add(this.mActivity
-				.getString(R.string.boulerouge));
+		this.getBitmapProvider().add(
+				this.mActivity.getString(R.string.textureStarship));
+		this.getBitmapProvider().add(
+				this.mActivity.getString(R.string.textureRobot));
+		this.getBitmapProvider().add(
+				this.mActivity.getString(R.string.textureRed));
+		this.getBitmapProvider().add(
+				this.mActivity.getString(R.string.boulerouge));
 
 	}
 
-	
+	@Override
+	public void onDrawFrame(GL10 gl) {
+		super.onDrawFrame(gl);
 
+		// action suplémentaire
+		if (this.getActivity().getSurfaceView().touched) {
+
+			float elapsedTime = SystemClock.elapsedRealtime()
+					- this.getActivity().getSurfaceView().getLastTouchTime();
+			// on attend une 1/4 de seconde avant de valider un autre touch
+			if (elapsedTime > 00) {
+
+				GameObject starship = getGameObjectByTag("starship1");
+				if (starship != null) {
+					starship.angleRAD += 1.5f;
+				}
+
+			}
+
+		}
+
+	}
 }

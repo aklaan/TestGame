@@ -27,6 +27,12 @@ public class OpenGLActivity extends Activity {
 	private float mYScreenLimit;
 	private float mZoomFactor;
 
+	
+	
+	public MySurfaceView getSurfaceView(){
+		return this.mGLSurfaceView;
+	}
+	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);

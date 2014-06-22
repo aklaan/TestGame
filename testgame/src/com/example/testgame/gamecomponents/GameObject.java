@@ -6,19 +6,16 @@ import java.nio.FloatBuffer;
 import java.nio.ShortBuffer;
 import java.util.ArrayList;
 
-import com.example.testgame.GLES20RendererScene01;
-import com.example.testgame.R;
-
 import android.content.Context;
 import android.opengl.GLES20;
 import android.opengl.Matrix;
 import android.util.Log;
 
-public class GameObject {
-
+public class GameObject implements Drawable{
 	private String mTagName = "";
 	public Texture mTexture;
-	public Boolean hasTexture;
+	public int newTextureId;
+	public Boolean textureEnabled;
 	public Boolean isVisible;
 	public Scene mScene;
 
@@ -85,7 +82,7 @@ public class GameObject {
 	// constructeur
 	public GameObject() {
 
-		hasTexture = false;
+		textureEnabled = false;
 		mTagName = "";
 		isVisible = true;
 		Matrix.setIdentityM(this.mRotationMatrix, 0);
@@ -98,6 +95,8 @@ public class GameObject {
 		this.mVertices = new ArrayList<Vertex>();
 	}
 
+	
+	
 	public ArrayList<GameObject> getGameObjectToListenList() {
 		return this.mGameObjectToListenList;
 	}
@@ -294,30 +293,158 @@ public class GameObject {
 
 	}
 
-	public void onUpdate(OpenGLActivity openGLActivity) {
-		// TODO Auto-generated method stub
+	/**
+	 * Fonction de mise à jour générale
+	 * 
+	 * @param openGLActivity
+	 */
 
-		applyCustomizations();
-		applyCollisions();
-		applyAnimation();
+	public void mainUpdate(OpenGLActivity openGLActivity) {
+
+		// traiter les opérations diverses à effectuer lors de
+		// la mise à jour
+		this.onUpdate(openGLActivity);
+
+		// traiter les actions a faire en cas de colissions
+		this.applyCollisions();
+
+		// traiter la lecture de l'animation si elle existe
+		this.applyAnimation();
+
+		// A la fin des mises à jour on connais les nouvelles coordonées
+		// on peut calculer la nouvelle matrice modelView
+		this.updateModelView();
+
+		// -----------------------------------------
+		// Mettre a jour la boite de colision si elle existe
+		// ------------------------------------------
+		if (this.canCollide) {
+			this.mCollisionBox.update();
+		}
+
+		// -----------------------------------------------------
+		// Traiter les évènements écoutés sur les autres objets
+		// -----------------------------------------------------
 		updateListerners();
+
+		// -----------------------------------------------------
+		// Gestion des modifications de la texture
+		// ------------------------------------------------------
+		if (this.mTexture.textureNameID != newTextureId) {
+			this.getScene()
+					.getBitmapProvider()
+					.assignTexture(
+							this.getScene().mActivity.getString(newTextureId),
+							this);
+
+			this.mTexture.textureNameID = newTextureId;
+		}
+
+	
+	
+		if (textureEnabled) {
+		this.getScene().getBitmapProvider().putTextureToGLUnit(
+				this.mTexture, 0);
+	}
+		
+	
 	}
 
-	// Taches à faire
-	public void applyCustomizations() {
+	/**
+	 * Fonction génériques des tâches à faire lors de la mise à jour
+	 * 
+	 * @param activity
+	 */
 
+	public void onUpdate(OpenGLActivity activity) {
 	}
 
-	// Taches à faire
+	/***************************************************
+	 * Traiter des colisions avec les autres objets
+	 ***************************************************/
 	public void applyCollisions() {
 
+		if (!this.mCollideWithList.isEmpty()) {
+			for (GameObject go : this.mCollideWithList) {
+
+				onCollideWith(go);// newTextureId = R.string.textureRobot;
+			}
+		}
+
 	}
 
+	/***********************************************
+	 * Traiter l'animation si elle existe
+	 **********************************************/
 	public void applyAnimation() {
+		// -----------------------------------------
+		// traiter l'animation
+		// --------------------------------------------------------
+		if (this.getAnimation() != null) {
 
+			if (this.getAnimation().status == Animation.AnimationStatus.PLAYING) {
+				this.getAnimation().play();
+				// traiter les actions suplémentaires lors de la lecture
+				onAnimationPlay();
+			}
+			if (this.getAnimation().status == Animation.AnimationStatus.STOPPED) {
+				this.setAnimation(null);
+				// traiter les actions suplémentaires a la fin de la lecture
+				onAnimationStop();
+			}
+
+		}
 	}
 
+	/********************************************************
+	 * On écoute les objets note : on dépend de l'ordre dans lequel sont traité
+	 * les objets
+	 * 
+	 *******************************************************/
 	public void updateListerners() {
 
+		if (!this.getGameObjectToListenList().isEmpty()) {
+			for (GameObject go : this.getGameObjectToListenList()) {
+
+				onListenGameObject(go);
+
+			}
+		}
+
 	}
+
+	/**************************************************************************
+	 * Actions a effectuer en cas de colission avec un autre Objet
+	 * 
+	 * @param gameObject
+	 *************************************************************************/
+	public void onCollideWith(GameObject gameObject) {
+
+	}
+
+	/**************************************************************************
+	 * Actions effectuer lorsque l'on écoute les objets
+	 * 
+	 * @param go
+	 *************************************************************************/
+	public void onListenGameObject(GameObject go) {
+
+	}
+
+	/**************************************************************************
+	 * Actions effectuer lorsque l'animation joue
+	 * 
+	 *************************************************************************/
+	public void onAnimationPlay() {
+
+	}
+
+	/**************************************************************************
+	 * Actions effectuer lorsque l'animation s'arrête
+	 * 
+	 *************************************************************************/
+	public void onAnimationStop() {
+
+	}
+
 }

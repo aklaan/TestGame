@@ -1,7 +1,5 @@
 package com.example.testgame.gamecomponents;
 
-import android.os.SystemClock;
-
 public class AnimationTurnArround extends Animation {
 
 	GameObject mCible;
@@ -9,12 +7,12 @@ public class AnimationTurnArround extends Animation {
 	float distance;
 	float angle;
 
-	public AnimationTurnArround(GameObject parent, GameObject cible) {
+	public AnimationTurnArround(GameObject parent, GameObject cible, float distance) {
 		super(parent);
 		this.mCible = cible;
-		this.angle = 5.0f;
-		this.speed = 10.0f;
-		this.distance = 50.0f;
+		this.angle = 0.0f;
+		this.speed = 5.0f;
+		this.distance = distance;
 	}
 
 	@Override

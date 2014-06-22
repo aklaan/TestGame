@@ -2,7 +2,7 @@ package com.example.testgame.gamecomponents;
 
 import java.util.ArrayList;
 
-import com.example.testgame.Enums;
+import com.example.testgame.DrawingMode;
 import com.example.testgame.GLES20RendererScene01;
 import com.example.testgame.gameobjects.ProgramShader_forLines;
 import com.example.testgame.gameobjects.ProgramShader_simple;
@@ -18,10 +18,10 @@ public class CollisionBox extends Rectangle2D {
 	public GameObject parent;
 
 	public CollisionBox(GameObject go) {
-		super(Enums.drawMode.EMPTY);
+		super(DrawingMode.EMPTY);
 		this.isVisible = true;
 		this.drawMode = GLES20.GL_LINES;
-		this.hasTexture = false;
+		
 		this.offsetX = -0.10f;
 		this.offsetY = -0.10f;
 		this.parent = go;
