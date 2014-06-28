@@ -1,8 +1,5 @@
 package com.example.testgame.gamecomponents;
 
-import java.util.ArrayList;
-
-import com.example.testgame.GLES20RendererScene01;
 import com.example.testgame.MySurfaceView;
 
 import android.app.Activity;

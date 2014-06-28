@@ -2,7 +2,7 @@ package com.example.testgame.gamecomponents;
 
 import android.os.SystemClock;
 
-public abstract class Animation implements Animated {
+public abstract class Animation  {
 
 		float startTime;
 	float endTime;

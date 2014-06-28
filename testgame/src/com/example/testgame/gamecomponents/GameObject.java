@@ -11,8 +11,8 @@ import android.opengl.GLES20;
 import android.opengl.Matrix;
 import android.util.Log;
 
-public class GameObject implements Drawable{
-	private String mTagName = "";
+public class GameObject implements Drawable {
+	private int mTagName = 0;
 	public Texture mTexture;
 	public int newTextureId;
 	public Boolean textureEnabled;
@@ -36,7 +36,7 @@ public class GameObject implements Drawable{
 
 	public CollisionBox mCollisionBox;
 	// tableau des objets avec lesquel le gameobject rentre en collision
-	public ArrayList<CollisionBox> mCollideWithList;
+	public ArrayList<GameObject> mCollideWithList;
 
 	public ArrayList<GameObject> mGameObjectToListenList;
 	public Animation mAnimation;
@@ -83,20 +83,18 @@ public class GameObject implements Drawable{
 	public GameObject() {
 
 		textureEnabled = false;
-		mTagName = "";
+		mTagName = 0;
 		isVisible = true;
 		Matrix.setIdentityM(this.mRotationMatrix, 0);
 
 		Matrix.setIdentityM(this.mTransformUpdateView, 0);
 
-		this.mCollideWithList = new ArrayList<CollisionBox>();
+		this.mCollideWithList = new ArrayList<GameObject>();
 		this.mGameObjectToListenList = new ArrayList<GameObject>();
 
 		this.mVertices = new ArrayList<Vertex>();
 	}
 
-	
-	
 	public ArrayList<GameObject> getGameObjectToListenList() {
 		return this.mGameObjectToListenList;
 	}
@@ -203,16 +201,16 @@ public class GameObject implements Drawable{
 
 	}
 
-	public void onUpdate(Context context) {
+	public void onUpdate() {
 
 	}
 
-	public String getTagName() {
+	public int getTagName() {
 		return mTagName;
 	}
 
-	public void setTagName(String tagName) {
-		mTagName = tagName;
+	public void setTagName(int tagid) {
+		mTagName = tagid;
 	}
 
 	/**
@@ -223,7 +221,7 @@ public class GameObject implements Drawable{
 	 * 
 	 * public float getHeight() { return height; }
 	 * 
-	 * public void setHeight(float height) { this.height = height;
+	 * public void setHight(float height) { this.height = height;
 	 * updateModelMatrix(); }
 	 */
 	public void setCoord(float x, float y) {
@@ -303,7 +301,7 @@ public class GameObject implements Drawable{
 
 		// traiter les opérations diverses à effectuer lors de
 		// la mise à jour
-		this.onUpdate(openGLActivity);
+		this.onUpdate();
 
 		// traiter les actions a faire en cas de colissions
 		this.applyCollisions();
@@ -330,34 +328,21 @@ public class GameObject implements Drawable{
 		// -----------------------------------------------------
 		// Gestion des modifications de la texture
 		// ------------------------------------------------------
-		if (this.mTexture.textureNameID != newTextureId) {
-			this.getScene()
-					.getBitmapProvider()
-					.assignTexture(
-							this.getScene().mActivity.getString(newTextureId),
-							this);
+		int a = 0;
+/**		if (this.textureEnabled && this.mTexture.textureNameID != newTextureId) {
+			this.getScene().getBitmapProvider().linkTexture(newTextureId, this);
 
 			this.mTexture.textureNameID = newTextureId;
 		}
-
-	
-	
+*/
 		if (textureEnabled) {
-		this.getScene().getBitmapProvider().putTextureToGLUnit(
-				this.mTexture, 0);
-	}
-		
-	
+			this.getScene().getBitmapProvider()
+					.putTextureToGLUnit(this.mTexture, 0);
+		}
+
 	}
 
-	/**
-	 * Fonction génériques des tâches à faire lors de la mise à jour
-	 * 
-	 * @param activity
-	 */
 
-	public void onUpdate(OpenGLActivity activity) {
-	}
 
 	/***************************************************
 	 * Traiter des colisions avec les autres objets
@@ -444,6 +429,12 @@ public class GameObject implements Drawable{
 	 * 
 	 *************************************************************************/
 	public void onAnimationStop() {
+
+	}
+
+	public boolean isCollideWith(GameObject gameobject) {
+
+		return this.mCollideWithList.contains(gameobject);
 
 	}
 

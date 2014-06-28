@@ -3,10 +3,10 @@ package com.example.testgame.gamecomponents;
 import android.opengl.GLES20;
 import android.opengl.Matrix;
 
-import com.example.testgame.DrawingMode;
-import com.example.testgame.gameobjects.ProgramShader_grille;
+import com.example.testgame.scene01.gameobjects.ProgramShader_grille;
+import com.example.testgame.scene01.gameobjects.ProgramShader_simple;
 
-public class Rectangle2D extends GameObject {
+public class Rectangle2D extends Shape {
 
 	static final int NB_RECTANGLE_VERTEX = 4;
 	private float width = 1;
@@ -55,25 +55,15 @@ public class Rectangle2D extends GameObject {
 			break;
 		}
 
-		// par défaut un rectangle a la forme d'un carré
-		// on ajoute les 4 vertex qui compose le carré
-		// les 3 premiers chiffre sont les coordonées X,Y,Z
-		// les 2 derniers U et W
-
-		/**
-		 * this.putVertex(0, new Vertex(-1f, 1f, 0f, 0f, 0f)); this.putVertex(1,
-		 * new Vertex(-1f, -1f, 0f, 0f, 1f)); this.putVertex(2, new Vertex(1f,
-		 * -1f, 0f, 1f, 1f)); this.putVertex(3, new Vertex(1f, 1f, 0, 1f, 0f));
-		 */
 
 	}
 @Override
-	public void onUpdate(OpenGLActivity activity) {
+	public void onUpdate() {
 		// TODO Auto-generated method stub
 
 	}
 
-	public void setHeight(float h) {
+	public void setHight(float h) {
 		this.height = h;
 		updateVertices();
 		if (this.canCollide) {
@@ -120,8 +110,8 @@ public class Rectangle2D extends GameObject {
 	@Override
 	public void draw() {
 
-		ProgramShader_grille sh = (ProgramShader_grille) this.getScene().getProgramShaderProvider()
-				.getShaderByName("grille");
+		ProgramShader_simple sh = (ProgramShader_simple) this.getScene().getProgramShaderProvider()
+				.getShaderByName("simple");
 		this.getScene().getProgramShaderProvider().use(sh);
 
 		// on se positionne au debut du Buffer des indices

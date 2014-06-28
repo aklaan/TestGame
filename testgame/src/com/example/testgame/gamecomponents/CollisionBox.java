@@ -1,15 +1,7 @@
 package com.example.testgame.gamecomponents;
 
-import java.util.ArrayList;
-
-import com.example.testgame.DrawingMode;
-import com.example.testgame.GLES20RendererScene01;
-import com.example.testgame.gameobjects.ProgramShader_forLines;
-import com.example.testgame.gameobjects.ProgramShader_simple;
-
+import com.example.testgame.scene01.gameobjects.ProgramShader_forLines;
 import android.opengl.GLES20;
-import android.opengl.Matrix;
-import android.util.Log;
 
 public class CollisionBox extends Rectangle2D {
 
@@ -28,7 +20,7 @@ public class CollisionBox extends Rectangle2D {
 
 	}
 
-	public String getTagName(){
+	public int getTagName(){
 	return this.parent.getTagName();
 		
 	}

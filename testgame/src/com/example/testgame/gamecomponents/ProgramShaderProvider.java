@@ -6,8 +6,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 import com.example.testgame.R;
-import com.example.testgame.gameobjects.ProgramShader_grille;
-import com.example.testgame.gameobjects.ProgramShader_simple;
+import com.example.testgame.scene01.gameobjects.ProgramShader_grille;
+import com.example.testgame.scene01.gameobjects.ProgramShader_simple;
 
 import android.app.Activity;
 import android.content.Context;

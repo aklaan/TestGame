@@ -5,6 +5,16 @@
     <string name="action_settings">Settings</string>
     <string name="hello_world">Hello world!</string>
 
+    
+        <string name="petit_robot">robot</string>
+    
+    <string name="ligne1">ligne1</string>
+    <string name="ligne2">ligne2</string>
+    <string name="starship1">starship1</string>
+    <string name="starship2">starship2</string>
+    
+    <string name="USER_FINGER">USER_FINGER</string>
+    
     <string name="boulerouge">boule.png</string>
     <string name="textureStarship">spaceship.png</string>
     <string name="textureRobot">texture.png</string>

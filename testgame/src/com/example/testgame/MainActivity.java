@@ -1,6 +1,7 @@
 package com.example.testgame;
 
 import com.example.testgame.gamecomponents.OpenGLActivity;
+
 import android.os.Bundle;
 
 public class MainActivity extends OpenGLActivity {

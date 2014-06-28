@@ -28,7 +28,8 @@ public class CollisionControler {
 						if (checkCollision(go.mCollisionBox,
 								gameObject.mCollisionBox)) {
 
-							gameObject.mCollideWithList.add(go.mCollisionBox);
+							//gameObject.mCollideWithList.add(go.mCollisionBox);
+							gameObject.mCollideWithList.add(go);
 						}
 
 					}
@@ -49,5 +50,7 @@ public class CollisionControler {
 		 * // trop en ) // haut return false; else return true;
 		 */
 	}
+
+
 
 }

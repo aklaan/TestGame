@@ -34,22 +34,21 @@ public class BitmapProvider {
 	 * 
 	 * @param bitmapName
 	 */
-	public void add(String bitmapName) {
-		
+	public void add(int ressourceID) {
+
 		Bitmap bitmap = null;
 		try {
 			bitmap = BitmapFactory.decodeStream(mActivity.getAssets().open(
-					
-					mActivity.getString(R.string.imagesfolder) +"/" +
-					
-					bitmapName));
+			mActivity.getString(R.string.imagesfolder) + "/" +
+			this.mActivity.getString(ressourceID)));
+
 		} catch (IOException e) {
 			Log.e(this.getClass().getName(), "bitmap not found");
 			return;
 		}
 
 		int newindex = catalog.size() + 1;
-		catalog.put(bitmapName, String.valueOf(newindex));
+		catalog.put(String.valueOf(ressourceID), String.valueOf(newindex));
 		bitmapArrayList.add(bitmap);
 	}
 
@@ -63,65 +62,110 @@ public class BitmapProvider {
 		if (catalog.get(bitmapName) == null) {
 			Log.e(this.getClass().getName(), "bitmap unknow on Catalog");
 		} else {
-			result = bitmapArrayList.get(Integer.parseInt(catalog.get(bitmapName))-1);
+			result = bitmapArrayList.get(Integer.parseInt(catalog
+					.get(bitmapName)) - 1);
 		}
 		return result;
 	}
 
-	
 	// load a texture
-		public void assignTexture(String bitmapName, GameObject gameobject) {
-			
-			Texture texture = new Texture();
-			
-			Bitmap bitmap = getBitmapByName(bitmapName);
-	
-			texture.width = bitmap.getWidth();
-			texture.height = bitmap.getHeight();
-			
-			
-			// on défini un buffer contenant tous les points de l'image
-			// il en a (longeur x hauteur)
-			// pour chaque point on a 4 bytes . 3 pour la couleur RVB et 1 pour
-			// l'alpha
-			ByteBuffer wrkTextureBuffer;
-			wrkTextureBuffer = ByteBuffer.allocateDirect(bitmap.getHeight()
-					* bitmap.getWidth() * 4);
+	public void linkTexture(int texturered, GameObject gameobject) {
 
-			// on indique que les bytes dans le buffer doivent
-			// être enregistré selon le sens de lecture natif de l'architecture CPU
-			// (de gaucha a droite ou vice et versa)
-			wrkTextureBuffer.order(ByteOrder.nativeOrder());
+		Texture texture = new Texture();
 
-			byte buffer[] = new byte[4];
-			// pour chaque pixel composant l'image, on mémorise sa couleur et
-			// l'alpha
-			// dans le buffer
-			for (int i = 0; i < bitmap.getHeight(); i++) {
-				for (int j = 0; j < bitmap.getWidth(); j++) {
-					int color = bitmap.getPixel(j, i);
-					buffer[0] = (byte) Color.red(color);
-					buffer[1] = (byte) Color.green(color);
-					buffer[2] = (byte) Color.blue(color);
-					buffer[3] = (byte) Color.alpha(color);
-					wrkTextureBuffer.put(buffer);
-				}
+		Bitmap bitmap = getBitmapByName(String.valueOf(texturered));
+
+		texture.width = bitmap.getWidth();
+		texture.height = bitmap.getHeight();
+
+		// on défini un buffer contenant tous les points de l'image
+		// il en a (longeur x hauteur)
+		// pour chaque point on a 4 bytes . 3 pour la couleur RVB et 1 pour
+		// l'alpha
+		ByteBuffer wrkTextureBuffer;
+		wrkTextureBuffer = ByteBuffer.allocateDirect(bitmap.getHeight()
+				* bitmap.getWidth() * 4);
+
+		// on indique que les bytes dans le buffer doivent
+		// être enregistré selon le sens de lecture natif de l'architecture CPU
+		// (de gaucha a droite ou vice et versa)
+		wrkTextureBuffer.order(ByteOrder.nativeOrder());
+
+		byte buffer[] = new byte[4];
+		// pour chaque pixel composant l'image, on mémorise sa couleur et
+		// l'alpha
+		// dans le buffer
+		for (int i = 0; i < bitmap.getHeight(); i++) {
+			for (int j = 0; j < bitmap.getWidth(); j++) {
+				int color = bitmap.getPixel(j, i);
+				buffer[0] = (byte) Color.red(color);
+				buffer[1] = (byte) Color.green(color);
+				buffer[2] = (byte) Color.blue(color);
+				buffer[3] = (byte) Color.alpha(color);
+				wrkTextureBuffer.put(buffer);
 			}
-			// on se place a la position 0 du buffer - près à être lu plus tard
-			
-			wrkTextureBuffer.position(0);
-			texture.texture = wrkTextureBuffer;
-			gameobject.setTexture(texture);
-			gameobject.textureEnabled=true;
 		}
-	
-		// charger la texture mémorisé dans le buffer dans le moteur de rendu comme
-		// étant la texture 0,1,2,...
-		public void putTextureToGLUnit(Texture texture,int unit) {
-			GLES20.glTexImage2D(GL10.GL_TEXTURE_2D, unit, GL10.GL_RGBA,
-					texture.width, texture.height, 0, GL10.GL_RGBA,
-					GL10.GL_UNSIGNED_BYTE, texture.texture);
+		// on se place a la position 0 du buffer - près à être lu plus tard
 
-		}
+		wrkTextureBuffer.position(0);
+		texture.texture = wrkTextureBuffer;
+		gameobject.setTexture(texture);
+		gameobject.textureEnabled = true;
+	}
+
 	
+	
+	public Texture getTexture(int texturered) {
+
+		Texture texture = new Texture();
+
+		Bitmap bitmap = getBitmapByName(String.valueOf(texturered));
+
+		texture.width = bitmap.getWidth();
+		texture.height = bitmap.getHeight();
+
+		// on défini un buffer contenant tous les points de l'image
+		// il en a (longeur x hauteur)
+		// pour chaque point on a 4 bytes . 3 pour la couleur RVB et 1 pour
+		// l'alpha
+		ByteBuffer wrkTextureBuffer;
+		wrkTextureBuffer = ByteBuffer.allocateDirect(bitmap.getHeight()
+				* bitmap.getWidth() * 4);
+
+		// on indique que les bytes dans le buffer doivent
+		// être enregistré selon le sens de lecture natif de l'architecture CPU
+		// (de gaucha a droite ou vice et versa)
+		wrkTextureBuffer.order(ByteOrder.nativeOrder());
+
+		byte buffer[] = new byte[4];
+		// pour chaque pixel composant l'image, on mémorise sa couleur et
+		// l'alpha
+		// dans le buffer
+		for (int i = 0; i < bitmap.getHeight(); i++) {
+			for (int j = 0; j < bitmap.getWidth(); j++) {
+				int color = bitmap.getPixel(j, i);
+				buffer[0] = (byte) Color.red(color);
+				buffer[1] = (byte) Color.green(color);
+				buffer[2] = (byte) Color.blue(color);
+				buffer[3] = (byte) Color.alpha(color);
+				wrkTextureBuffer.put(buffer);
+			}
+		}
+		// on se place a la position 0 du buffer - près à être lu plus tard
+
+		wrkTextureBuffer.position(0);
+		texture.texture = wrkTextureBuffer;
+		return texture;
+	
+	}
+	
+	// charger la texture mémorisé dans le buffer dans le moteur de rendu comme
+	// étant la texture 0,1,2,...
+	public void putTextureToGLUnit(Texture texture, int unit) {
+		GLES20.glTexImage2D(GL10.GL_TEXTURE_2D, unit, GL10.GL_RGBA,
+				texture.width, texture.height, 0, GL10.GL_RGBA,
+				GL10.GL_UNSIGNED_BYTE, texture.texture);
+
+	}
+
 }

@@ -32,7 +32,11 @@ public class Scene implements GLSurfaceView.Renderer {
 		// le bitmap provider peu servir pour plusieurs scene
 		// on le remonte donc au plus haut.
 		this.mBitmapProvider = new BitmapProvider(this.getActivity());
-
+		this.mGameObjectList = new ArrayList<GameObject>();
+		this.mProgramShaderProvider = new ProgramShaderProvider(mActivity);
+		
+		UserFinger userFinger = new UserFinger();
+		this.addToScene(userFinger);
 	}
 
 	public OpenGLActivity getActivity() {
@@ -59,12 +63,12 @@ public class Scene implements GLSurfaceView.Renderer {
 
 		// on ne peux pas créer de programe Shader en dehors du contexte
 		// opengl. donc le provider est à recréer à chaque load de la scène
-		this.mProgramShaderProvider = new ProgramShaderProvider(mActivity);
+		
 		initProgramShader();
 
 		// on initialise la liste des objets qui serront contenus dans
 		// la scène.
-		mGameObjectList = new ArrayList<GameObject>();
+		
 		loadGameObjects();
 
 		// on active le texturing 2D
@@ -115,10 +119,10 @@ public class Scene implements GLSurfaceView.Renderer {
 				-10.f, 10.f);
 
 		// le (0,0) est en bas à gauche.
-		/**
-		 * Matrix.orthoM(mProjectionView, 0, 0 ,mActivity.getXScreenLimit() ,
-		 * 0,mActivity.getYScreenLimit() , -10.f, 10.f);
-		 */
+		
+		  Matrix.orthoM(mProjectionView, 0, 0 ,mActivity.getXScreenLimit() ,
+		  0,mActivity.getYScreenLimit() , -10.f, 10.f);
+		 
 
 		/**
 		 * Matrix.orthoM(mProjectionView , 0 ,-0 , (width /
@@ -188,14 +192,16 @@ public class Scene implements GLSurfaceView.Renderer {
 
 	}
 
-	public GameObject getGameObjectByTag(String tagname) {
+	public GameObject getGameObjectByTag(int tagId) {
+		GameObject result = null;
 		for (GameObject gameObject : this.mGameObjectList) {
-			if (gameObject.getTagName() == tagname) {
-				return gameObject;
+		//Log.i("info : ", gameObject.getTagName());
+			if (gameObject.getTagName() == tagId) {
+				result = gameObject;
 			}
 
 		}
-		return null;
+		return result;
 	}
 
 }
