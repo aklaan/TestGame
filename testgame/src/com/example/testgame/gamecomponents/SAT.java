@@ -1,10 +1,6 @@
 package com.example.testgame.gamecomponents;
 
 import java.util.ArrayList;
-import java.util.Vector;
-
-import android.opengl.Matrix;
-import android.util.Log;
 
 public class SAT {
 	// ArrayList<Vector2D> mTempVertices = new ArrayList<Vector2D>();

@@ -1,13 +1,7 @@
 package com.example.testgame.gamecomponents;
 
-import java.io.IOException;
-import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
-
-import com.example.testgame.R;
-import com.example.testgame.scene01.gameobjects.ProgramShader_grille;
-import com.example.testgame.scene01.gameobjects.ProgramShader_simple;
 
 import android.app.Activity;
 import android.content.Context;

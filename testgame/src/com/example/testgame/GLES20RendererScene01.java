@@ -30,7 +30,7 @@ public class GLES20RendererScene01 extends Scene {
 	@Override
 	public void loadGameObjects() {
 
-		Button buttonStart = new Button(300,300,80,40,this.getBitmapProvider().getTexture(R.string.textureRed),this.getBitmapProvider().getTexture(R.string.boulerouge));
+		Button buttonStart = new Button(300,600,80,80,this.getBitmapProvider().getTexture(R.string.startUp),this.getBitmapProvider().getTexture(R.string.startDown));
 				
 		this.addToScene(buttonStart);
 		
@@ -98,6 +98,9 @@ public class GLES20RendererScene01 extends Scene {
 
 	@Override
 	public void initProgramShader() {
+		this.getProgramShaderProvider().catalogShader.clear();
+		this.getProgramShaderProvider().shaderList.clear();
+		
 		ProgramShader_grille shader_grille = new ProgramShader_grille();
 		shader_grille.make();
 		this.getProgramShaderProvider().add(shader_grille);
@@ -127,6 +130,8 @@ public class GLES20RendererScene01 extends Scene {
 		this.getBitmapProvider().add(R.string.textureRobot);
 		this.getBitmapProvider().add(R.string.textureRed);
 		this.getBitmapProvider().add(R.string.boulerouge);
+		this.getBitmapProvider().add(R.string.startUp);
+		this.getBitmapProvider().add(R.string.startDown);
 	}
 
 	@Override

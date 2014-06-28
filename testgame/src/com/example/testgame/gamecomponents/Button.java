@@ -16,11 +16,11 @@ public class Button extends Rectangle2D {
 		this.setCoord(x, y);
 		this.setHight(hight);
 		this.setWidth(witdth);
-		this.setTexture(textureUp);
+		//this.setTexture(textureUp);
 		this.textureUp = textureUp;
 		this.textureDown = textureDown;
 		this.enableColission();
-		
+		this.isStatic = false;
 		this.textureEnabled=true;
 	}
 
