@@ -43,7 +43,7 @@ public class GLES20RendererScene01 extends Scene {
 		model.setheight(50);
 		model.setWidth(50);
 		this.addToScene(model);		
-//this.addToScene(ArrayGameObject.make(this.getWidth(),this.getHeight(),5,5,model,50));
+this.addToScene(ArrayGameObject.make(this.getWidth(),this.getHeight(),5,5,model,50));
 		
 this.getBitmapProvider().linkTexture(R.string.textureBlue, model);
 

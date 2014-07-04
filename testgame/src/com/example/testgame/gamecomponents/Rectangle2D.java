@@ -148,9 +148,9 @@ public class Rectangle2D extends Shape {
 		// je repart donc de zéro 
 	//	this.mModelView = renderer.mModelView.clone();
 
-		Matrix.setIdentityM(this.mModelView, 0);
+	//	Matrix.setIdentityM(this.mModelView, 0);
 
-		Matrix.translateM(this.mModelView, 0, X, Y, 0);
+		//Matrix.translateM(this.mModelView, 0, X, Y, 0);
 
 		Matrix.multiplyMM(mMvp, 0, this.getScene().getProjectionView(), 0,
 				this.mModelView, 0);
