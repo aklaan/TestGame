@@ -6,12 +6,11 @@ import java.nio.FloatBuffer;
 import java.nio.ShortBuffer;
 import java.util.ArrayList;
 
-import android.content.Context;
 import android.opengl.GLES20;
 import android.opengl.Matrix;
 import android.util.Log;
 
-public class GameObject implements Drawable {
+public class GameObject implements Drawable,Cloneable {
 	private int mTagName = 0;
 	public Texture mTexture;
 	public int newTextureId;
@@ -221,7 +220,7 @@ public class GameObject implements Drawable {
 	 * 
 	 * public float getHeight() { return height; }
 	 * 
-	 * public void setHight(float height) { this.height = height;
+	 * public void setheight(float height) { this.height = height;
 	 * updateModelMatrix(); }
 	 */
 	public void setCoord(float x, float y) {
@@ -328,7 +327,7 @@ public class GameObject implements Drawable {
 		// -----------------------------------------------------
 		// Gestion des modifications de la texture
 		// ------------------------------------------------------
-		int a = 0;
+		
 /**		if (this.textureEnabled && this.mTexture.textureNameID != newTextureId) {
 			this.getScene().getBitmapProvider().linkTexture(newTextureId, this);
 
@@ -373,7 +372,7 @@ public class GameObject implements Drawable {
 				onAnimationPlay();
 			}
 			if (this.getAnimation().status == Animation.AnimationStatus.STOPPED) {
-				this.setAnimation(null);
+				//this.setAnimation(null);
 				// traiter les actions suplémentaires a la fin de la lecture
 				onAnimationStop();
 			}
@@ -437,5 +436,28 @@ public class GameObject implements Drawable {
 		return this.mCollideWithList.contains(gameobject);
 
 	}
+public GameObject clone() throws CloneNotSupportedException{
+	GameObject gameobject = (GameObject)super.clone();
+	
+	gameobject.mCollideWithList = new ArrayList<GameObject>();
+	gameobject.mGameObjectToListenList = new ArrayList<GameObject>();
 
+	//on réinitialise le lien de parenté avec l'animation
+	if (gameobject.getAnimation() != null){
+		Animation anim = (Animation) gameobject.getAnimation().clone();
+				
+		anim.parent = gameobject;
+		
+		gameobject.setAnimation(anim);
+	}
+	
+	//si l'objet source peu entrer en collision on 
+	//redéfini un nouvelle boite de colision pour la cible
+	//sinon elle va avoir la même que la source
+		if (gameobject.canCollide){
+			gameobject.enableColission();
+			
+		}
+	return gameobject;
+}
 }

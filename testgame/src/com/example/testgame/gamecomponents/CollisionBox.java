@@ -11,7 +11,7 @@ public class CollisionBox extends Rectangle2D {
 
 	public CollisionBox(GameObject go) {
 		super(DrawingMode.EMPTY);
-		this.isVisible = true;
+		this.isVisible = false;
 		this.drawMode = GLES20.GL_LINES;
 		
 		this.offsetX = -0.10f;

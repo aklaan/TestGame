@@ -8,9 +8,10 @@ public class UserFinger extends Rectangle2D {
 
 	public UserFinger() {
 		super(DrawingMode.EMPTY);
-		this.setHight(10);
-		this.setWidth(10);
+		this.setheight(20);
+		this.setWidth(20);
 		this.enableColission();
+		this.mCollisionBox.isVisible=true;
 		this.setTagName(R.string.USER_FINGER);
 		this.isStatic=false;
 	}
@@ -22,7 +23,7 @@ public class UserFinger extends Rectangle2D {
 			// on met à jour les coordonées
 			this.setCoord(
 					this.getScene().getActivity().mGLSurfaceView.touchX,
-					this.getScene().getActivity().getYScreenLimit()
+					this.getScene().getHeight()
 							- this.getScene().getActivity().mGLSurfaceView.touchY);
 			// on active les colissions
 			this.canCollide = true;

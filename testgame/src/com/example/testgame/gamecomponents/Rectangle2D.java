@@ -63,7 +63,7 @@ public class Rectangle2D extends Shape {
 
 	}
 
-	public void setHight(float h) {
+	public void setheight(float h) {
 		this.height = h;
 		updateVertices();
 		if (this.canCollide) {
@@ -89,8 +89,9 @@ public class Rectangle2D extends Shape {
 
 	private void updateVertices() {
 
-		float w = (float) width /1;
-		float h = (float) height / 1;
+		//comme le 0,0 est au milieu on divise par 2 
+		float w = (float) width /2;
+		float h = (float) height / 2;
 
 		
 		this.mVertices.get(0).x = -w;

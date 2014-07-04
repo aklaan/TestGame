@@ -2,7 +2,7 @@ package com.example.testgame.gamecomponents;
 
 import android.os.SystemClock;
 
-public abstract class Animation  {
+public abstract class Animation implements Cloneable {
 
 		float startTime;
 	float endTime;
@@ -39,4 +39,9 @@ public abstract class Animation  {
 		
 	}
 
+	
+	public Animation clone() throws CloneNotSupportedException{
+		return (Animation)super.clone();
+	
+	}
 }

@@ -20,10 +20,7 @@ public class OpenGLActivity extends Activity {
 
 
 	
-	private float mXScreenLimit;
-	private float mYScreenLimit;
-	private float mZoomFactor;
-
+	
 	
 	
 	public MySurfaceView getSurfaceView(){
@@ -34,7 +31,7 @@ public class OpenGLActivity extends Activity {
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 
-		mZoomFactor = DEFAULT_ZOOM_FACTOR;
+	
 
 		if (!isOGLES20Compatible()) {
 			// C++ Reflex sorry
@@ -97,32 +94,7 @@ public class OpenGLActivity extends Activity {
 
 
 
-	public float getXScreenLimit() {
-		return mXScreenLimit;
-	}
-
-	public void setXScreenLimit(float mXScreenLimit) {
-		this.mXScreenLimit = mXScreenLimit;
-	}
-
-	public float getYScreenLimit() {
-		return mYScreenLimit;
-	}
-
-	public void setYScreenLimit(float mYScreenLimit) {
-		this.mYScreenLimit = mYScreenLimit;
-	}
-
-	public float getZoomFactor() {
-		return mZoomFactor;
-	}
-
-	public void setZoomFactor(float newFactor) {
-
-		if (newFactor != 0) {
-			this.mZoomFactor = newFactor;
-		}
-
-	}
+	
+	
 
 }

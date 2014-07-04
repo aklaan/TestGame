@@ -15,12 +15,17 @@
     
     <string name="USER_FINGER">USER_FINGER</string>
     
-        <string name="startUp">startUp.png</string>
-            <string name="startDown">startDown.png</string>
+    <string name="startUp">startUp.png</string>
+    <string name="startDown">startDown.png</string>
     <string name="boulerouge">boule.png</string>
     <string name="textureStarship">spaceship.png</string>
     <string name="textureRobot">texture.png</string>
     <string name="textureRed">red.png</string>
+    
+    
+    <string name="textureWhite">blanc.png</string>
+    <string name="textureBlue">blue.png</string>
+    
     
     <string name="imagesfolder">images</string>
     

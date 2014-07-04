@@ -5,16 +5,21 @@ import java.util.ArrayList;
 import javax.microedition.khronos.egl.EGLConfig;
 import javax.microedition.khronos.opengles.GL10;
 
+import android.app.Application;
 import android.opengl.GLES20;
 import android.opengl.GLSurfaceView;
 import android.opengl.Matrix;
 import android.os.SystemClock;
+import android.util.DisplayMetrics;
 import android.util.Log;
 
 public class Scene implements GLSurfaceView.Renderer {
 
 	public final static String TAG_ERROR = "CRITICAL ERROR";
+private float height;
+private float width;
 
+	
 	private static int glbufferTextureID;
 	public OpenGLActivity mActivity;
 	
@@ -28,6 +33,8 @@ public class Scene implements GLSurfaceView.Renderer {
 	// public ShaderProvider mShaderProvider;
 
 	public Scene(OpenGLActivity activity) {
+		
+	
 		mActivity = activity;
 		// le bitmap provider peu servir pour plusieurs scene
 		// on le remonte donc au plus haut.
@@ -74,6 +81,12 @@ public class Scene implements GLSurfaceView.Renderer {
 		// on active le texturing 2D
 		GLES20.glEnable(GLES20.GL_TEXTURE_2D);
 
+		//Activattion de la gestion de l'Alpha
+		
+		GLES20.glBlendFunc(GLES20.GL_SRC_ALPHA, GLES20.GL_ONE_MINUS_SRC_ALPHA);
+		GLES20.glEnable(GLES20.GL_BLEND);
+
+		
 		// create texture handle
 		int[] textures = new int[1];
 
@@ -109,19 +122,12 @@ public class Scene implements GLSurfaceView.Renderer {
 		Log.i("", String.valueOf(width) + "/" + String.valueOf(height));
 
 		GLES20.glViewport(0, 0, width, height);
-		mActivity.setXScreenLimit(width);
-		mActivity.setYScreenLimit(height);
-		Matrix.orthoM(mProjectionView, 0,
-				-(mActivity.getXScreenLimit() / mActivity.getZoomFactor()),
-				(mActivity.getXScreenLimit() / mActivity.getZoomFactor()),
-				-(mActivity.getYScreenLimit() / mActivity.getZoomFactor()),
-				(mActivity.getYScreenLimit() / mActivity.getZoomFactor()),
-				-10.f, 10.f);
-
+		
+	
 		// le (0,0) est en bas à gauche.
 		
-		  Matrix.orthoM(mProjectionView, 0, 0 ,mActivity.getXScreenLimit() ,
-		  0,mActivity.getYScreenLimit() , -10.f, 10.f);
+		  Matrix.orthoM(mProjectionView, 0, 0 ,width ,
+		  0,height, -10.f, 10.f);
 		 
 
 		/**
@@ -137,7 +143,7 @@ public class Scene implements GLSurfaceView.Renderer {
 
 		// on commence par effacer l'écran en le remplissant de la
 		// couleur souhaitée et on vide le buffer.
-		GLES20.glClearColor(0.f, 0.f, 0.f, 1.0f);
+		GLES20.glClearColor(0.5f, 0.5f, 0.5f, 1.0f);
 		GLES20.glClear(GLES20.GL_COLOR_BUFFER_BIT);
 
 		// on check les colissions entre tous les éléments de la scène
@@ -192,6 +198,15 @@ public class Scene implements GLSurfaceView.Renderer {
 
 	}
 
+	
+	public void addToScene(ArrayList<GameObject> GameObjectList) {
+		for (GameObject go :GameObjectList ){
+			go.mScene = this;
+		}
+		this.mGameObjectList.addAll(GameObjectList);
+	}
+	
+	
 	public GameObject getGameObjectByTag(int tagId) {
 		GameObject result = null;
 		for (GameObject gameObject : this.mGameObjectList) {
@@ -203,5 +218,19 @@ public class Scene implements GLSurfaceView.Renderer {
 		}
 		return result;
 	}
+
+	public int getHeight() {
+		DisplayMetrics metrics =this.getActivity().getResources().getDisplayMetrics(); 
+		return metrics.heightPixels;
+	}
+
+	
+
+	public int getWidth() {
+		DisplayMetrics metrics = this.getActivity().getResources().getDisplayMetrics();
+				return metrics.widthPixels;
+	}
+
+	
 
 }

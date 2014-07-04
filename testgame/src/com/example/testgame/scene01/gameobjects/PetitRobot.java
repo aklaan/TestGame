@@ -21,7 +21,7 @@ public class PetitRobot extends Rectangle2D {
 
 	@Override
 	public void onUpdate(){
-		float limit_y = this.getScene().getActivity().getYScreenLimit()/2;
+		float limit_y = this.getScene().getHeight();
 		//Log.i("debug",String.valueOf(activity.mGLSurfaceView.getHeight()));
 		//Log.i("debug",String.valueOf(i));
 		
@@ -37,8 +37,8 @@ public class PetitRobot extends Rectangle2D {
 
 	
 		if (!this.mCollideWithList.isEmpty()){
-			this.setHight(this.getHeight()+5.f);
-			if (this.getHeight() > 700){this.setHight(0);}
+			this.setheight(this.getHeight()+5.f);
+			if (this.getHeight() > 700){this.setheight(0);}
 		}
 		//test des colisions
 				for (GameObject go : this.mCollideWithList) {

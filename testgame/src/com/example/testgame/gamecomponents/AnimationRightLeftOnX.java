@@ -14,7 +14,7 @@ public class AnimationRightLeftOnX extends Animation {
 	@Override
 	public void start() {
 		super.start();
-		offsetX = 1.9f;
+		offsetX = 3.0f;
 	}
 
 	@Override
@@ -22,12 +22,12 @@ public class AnimationRightLeftOnX extends Animation {
 		// se déplacer vers la droite pendant 3 seconde
 		float elapsedTime = SystemClock.elapsedRealtime() - startTime;
 
-		if (elapsedTime < 1000) {
+		if (elapsedTime < 2000) {
 			// offsetX += 0.5f;
 			this.parent.X += offsetX;
 		} else {
 
-			if (elapsedTime >= 1000 && elapsedTime <= 2000) {
+			if (elapsedTime >= 2000 && elapsedTime <= 4000) {
 				// offsetX -= 0.5f;
 				this.parent.X -= offsetX;
 			} else {

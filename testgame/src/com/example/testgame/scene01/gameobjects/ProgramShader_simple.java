@@ -1,18 +1,7 @@
 package com.example.testgame.scene01.gameobjects;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.nio.FloatBuffer;
-import java.util.ArrayList;
-import java.util.HashMap;
-
-import com.example.testgame.R;
 import com.example.testgame.gamecomponents.ProgramShader;
-import com.example.testgame.gamecomponents.Vertex;
-
-import android.app.Activity;
 import android.opengl.GLES20;
-import android.util.Log;
 
 public class ProgramShader_simple extends ProgramShader {
 	
@@ -70,7 +59,8 @@ public class ProgramShader_simple extends ProgramShader {
 				+ " pos = aPosition;"
 				+ " vec4 position = uMvp * vec4(aPosition.xyz, 1.);"
 			//	+ " vec4 position = vec4(aPosition.xyz, 1.);"
-				+ " vColor = aColor;" + " vTexCoord = aTexCoord;"
+				+ " vColor = aColor;" 
+			    + " vTexCoord = aTexCoord;"
 				// gl_PointSize = 10.;
 				// cette commande doit toujours être la dernière du vertex shader.
 				+ "	gl_Position =  position;" + "}";
