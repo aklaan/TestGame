@@ -1,6 +1,6 @@
 package com.example.testgame.gamecomponents;
 
-public class Vertex {
+public class Vertex implements Cloneable{
 
 	//Coordonnée dans l'espace tridimentionel
 	public float x;
@@ -46,4 +46,7 @@ public void setUV(float a, float b) {
 		
 }
 
+public Vertex clone() throws CloneNotSupportedException{
+return (Vertex) super.clone();
+}
 }

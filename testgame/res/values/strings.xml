@@ -21,7 +21,8 @@
     <string name="textureStarship">spaceship.png</string>
     <string name="textureRobot">texture.png</string>
     <string name="textureRed">red.png</string>
-    
+    <string name="textureTest">test.png</string>
+    <string name="textureTestAnim">testAnim.png</string>
     
     <string name="textureWhite">blanc.png</string>
     <string name="textureBlue">blue.png</string>

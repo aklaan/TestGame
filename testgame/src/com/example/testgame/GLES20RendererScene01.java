@@ -36,14 +36,14 @@ public class GLES20RendererScene01 extends Scene {
 
 		
 		Rectangle2D model =new Rectangle2D(DrawingMode.FILL);
-		this.getBitmapProvider().linkTexture(R.string.textureRed, model);
+		this.getBitmapProvider().linkTexture(R.string.textureTestAnim, model);
 		model.setAnimation(new AnimationRotate(model));
 		model.getAnimation().start();
 
 		model.setheight(50);
 		model.setWidth(50);
-		this.addToScene(model);		
-this.addToScene(ArrayGameObject.make(this.getWidth(),this.getHeight(),5,5,model,50));
+//		this.addToScene(model);		
+this.addToScene(ArrayGameObject.make(this.getWidth(),this.getHeight(),10,10,model,5));
 		
 this.getBitmapProvider().linkTexture(R.string.textureBlue, model);
 
@@ -191,6 +191,8 @@ this.getBitmapProvider().linkTexture(R.string.textureBlue, model);
 		this.getBitmapProvider().add(R.string.startDown);
 		this.getBitmapProvider().add(R.string.textureWhite);
 		this.getBitmapProvider().add(R.string.textureBlue);
+		this.getBitmapProvider().add(R.string.textureTest);
+		this.getBitmapProvider().add(R.string.textureTestAnim);
 	}
 
 	@Override

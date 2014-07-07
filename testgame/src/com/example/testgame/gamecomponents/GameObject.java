@@ -66,7 +66,7 @@ public class GameObject implements Drawable,Cloneable {
 	// ! Vertices
 	public FloatBuffer mFbVertices; // définition d'un tableau de flotants
 
-	public ArrayList<Vertex> mVertices; // définition d'un tableau de flotants
+	public ArrayList<Vertex> mVertices; // définition d'un tableau de vertex
 
 	// ! indices
 	private ShortBuffer mIndices;
@@ -442,6 +442,16 @@ public GameObject clone() throws CloneNotSupportedException{
 	gameobject.mCollideWithList = new ArrayList<GameObject>();
 	gameobject.mGameObjectToListenList = new ArrayList<GameObject>();
 
+	gameobject.mVertices = new ArrayList<Vertex>();
+	
+	for (Vertex v : this.mVertices){
+		Vertex vv = v.clone();
+		
+		gameobject.mVertices.add(vv);
+		
+	}
+	
+	
 	//on réinitialise le lien de parenté avec l'animation
 	if (gameobject.getAnimation() != null){
 		Animation anim = (Animation) gameobject.getAnimation().clone();

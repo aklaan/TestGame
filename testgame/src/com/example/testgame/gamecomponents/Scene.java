@@ -170,7 +170,7 @@ private float width;
 
 			SystemClock.sleep((long) ((1000 / 60) - drawTimeElaps));
 		}
-
+		//SystemClock.sleep(2000);
 	}
 
 	/**
