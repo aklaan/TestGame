@@ -16,13 +16,9 @@ import android.util.Log;
 public class Scene implements GLSurfaceView.Renderer {
 
 	public final static String TAG_ERROR = "CRITICAL ERROR";
-private float height;
-private float width;
-
-	
 	private static int glbufferTextureID;
 	public OpenGLActivity mActivity;
-	
+
 	public ProgramShaderProvider mProgramShaderProvider;
 	public BitmapProvider mBitmapProvider;
 	private ArrayList<GameObject> mGameObjectList;
@@ -33,14 +29,15 @@ private float width;
 	// public ShaderProvider mShaderProvider;
 
 	public Scene(OpenGLActivity activity) {
-		
-	
+
 		mActivity = activity;
 		// le bitmap provider peu servir pour plusieurs scene
 		// on le remonte donc au plus haut.
 		this.mBitmapProvider = new BitmapProvider(this.getActivity());
 		this.mGameObjectList = new ArrayList<GameObject>();
 		this.mProgramShaderProvider = new ProgramShaderProvider(mActivity);
+
+		this.preLoading();
 		
 		UserFinger userFinger = new UserFinger();
 		this.addToScene(userFinger);
@@ -62,31 +59,31 @@ private float width;
 		return this.mProjectionView;
 	}
 
+	private void preLoading() {
+		// on charge les textures necessaires à la scène
+		loadTextures();
+		// on initialise la liste des objets qui serront contenus dans
+		// la scène.
+
+		loadGameObjects();
+	}
+
 	// @Override
 	public void onSurfaceCreated(GL10 gl2, EGLConfig eglConfig) {
 
-		// on charge les textures necessaires à la scène
-		loadTextures();
-
 		// on ne peux pas créer de programe Shader en dehors du contexte
 		// opengl. donc le provider est à recréer à chaque load de la scène
-		
-		initProgramShader();
 
-		// on initialise la liste des objets qui serront contenus dans
-		// la scène.
-		
-		loadGameObjects();
+		initProgramShader();
 
 		// on active le texturing 2D
 		GLES20.glEnable(GLES20.GL_TEXTURE_2D);
 
-		//Activattion de la gestion de l'Alpha
-		
+		// Activattion de la gestion de l'Alpha
+
 		GLES20.glBlendFunc(GLES20.GL_SRC_ALPHA, GLES20.GL_ONE_MINUS_SRC_ALPHA);
 		GLES20.glEnable(GLES20.GL_BLEND);
 
-		
 		// create texture handle
 		int[] textures = new int[1];
 
@@ -122,14 +119,15 @@ private float width;
 		Log.i("", String.valueOf(width) + "/" + String.valueOf(height));
 
 		GLES20.glViewport(0, 0, width, height);
-		
-	
-		// le (0,0) est en bas à gauche.
-		
-		  Matrix.orthoM(mProjectionView, 0, 0 ,width ,
-		  0,height, -10.f, 10.f);
-		 
 
+		// le (0,0) est en bas à gauche.
+
+//		Matrix.orthoM(mProjectionView, 0, 0, width, 0, height, -10.f, 10.f);
+
+
+
+		Matrix.frustumM(mProjectionView, 0, 0, width, 0, height, 0, 50);
+		
 		/**
 		 * Matrix.orthoM(mProjectionView , 0 ,-0 , (width /
 		 * mActivity.getZoomFactor()) ,-0 , (height /
@@ -155,7 +153,6 @@ private float width;
 
 			gameObject.mainUpdate(mActivity);
 
-			
 			if (gameObject.isVisible) {
 				gameObject.draw();
 			}
@@ -170,7 +167,7 @@ private float width;
 
 			SystemClock.sleep((long) ((1000 / 60) - drawTimeElaps));
 		}
-		//SystemClock.sleep(2000);
+		// SystemClock.sleep(2000);
 	}
 
 	/**
@@ -198,19 +195,17 @@ private float width;
 
 	}
 
-	
 	public void addToScene(ArrayList<GameObject> GameObjectList) {
-		for (GameObject go :GameObjectList ){
+		for (GameObject go : GameObjectList) {
 			go.mScene = this;
 		}
 		this.mGameObjectList.addAll(GameObjectList);
 	}
-	
-	
+
 	public GameObject getGameObjectByTag(int tagId) {
 		GameObject result = null;
 		for (GameObject gameObject : this.mGameObjectList) {
-		//Log.i("info : ", gameObject.getTagName());
+			// Log.i("info : ", gameObject.getTagName());
 			if (gameObject.getTagName() == tagId) {
 				result = gameObject;
 			}
@@ -220,17 +215,15 @@ private float width;
 	}
 
 	public int getHeight() {
-		DisplayMetrics metrics =this.getActivity().getResources().getDisplayMetrics(); 
+		DisplayMetrics metrics = this.getActivity().getResources()
+				.getDisplayMetrics();
 		return metrics.heightPixels;
 	}
 
-	
-
 	public int getWidth() {
-		DisplayMetrics metrics = this.getActivity().getResources().getDisplayMetrics();
-				return metrics.widthPixels;
+		DisplayMetrics metrics = this.getActivity().getResources()
+				.getDisplayMetrics();
+		return metrics.widthPixels;
 	}
-
-	
 
 }

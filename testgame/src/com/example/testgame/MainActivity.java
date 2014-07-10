@@ -12,8 +12,6 @@ public class MainActivity extends OpenGLActivity {
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		
-		//this.requestWindowFeature(Window.FEATURE_NO_TITLE);
-		//this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
 		
 		// on définit une liste des composants de jeu
 		mGLSurfaceView.setRenderer(new GLES20RendererScene01(this));
@@ -21,6 +19,9 @@ public class MainActivity extends OpenGLActivity {
 		
 	}
 
-
+	protected void onSaveInstanceState(Bundle savedInstanceState) {
+		super.onSaveInstanceState(savedInstanceState);
+	}
+	
 
 }
