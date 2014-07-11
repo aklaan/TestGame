@@ -14,12 +14,12 @@ public abstract class Button extends Rectangle2D implements Clikable {
 	public Button(float x, float y, float witdth, float height,
 			Texture textureUp, Texture textureDown) {
 		super(DrawingMode.FILL);
-		// TODO Auto-generated constructor stub
+	
 		this.status = ButtonStatus.UP;
 		this.setCoord(x, y);
 		this.setheight(height);
 		this.setWidth(witdth);
-		// this.setTexture(textureUp);
+		
 		this.textureUp = textureUp;
 		this.textureDown = textureDown;
 		this.enableColission();

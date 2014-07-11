@@ -17,7 +17,7 @@ public class MySurfaceView extends GLSurfaceView {
 
 	public MySurfaceView(Context context) {
 		super(context);
-				
+		
 		// TODO Auto-generated constructor stub
 	}
 
@@ -43,7 +43,7 @@ public class MySurfaceView extends GLSurfaceView {
 			this.setLastTouchTime(SystemClock.elapsedRealtime());
 			break;	
 			}
-
+			
 		return true;
 
 	}

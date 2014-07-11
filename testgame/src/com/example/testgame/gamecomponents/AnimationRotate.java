@@ -16,7 +16,7 @@ public class AnimationRotate extends Animation {
 
 	@Override
 	public void play() {
-    this.parent.angleRAD += 5.5f;
+    this.parent.angleRADZ += 5.5f;
     
 	}
 

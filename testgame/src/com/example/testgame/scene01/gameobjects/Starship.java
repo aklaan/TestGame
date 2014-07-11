@@ -28,7 +28,7 @@ public class Starship extends Rectangle2D {
 
 		// on incrémente l'angle de rotation a chaque images
 		// ici je souhaite que l'objet tourne sur lui même constament
-		angleRAD = angleRAD + 0.05F;
+		angleRADZ = angleRADZ + 0.5F;
 
 		
 /**		
@@ -113,8 +113,8 @@ public class Starship extends Rectangle2D {
 	// ----------------------------------------------
 	// Dessiner
 	// -----------------------------------------------
-	@Override
-	public void draw() {
+	//@Override
+	public void xxxxxxxxxxxdraw() {
 
 		ProgramShader_simple sh = (ProgramShader_simple) this.getScene()
 				.getProgramShaderProvider().getShaderByName("simple");
@@ -137,6 +137,9 @@ public class Starship extends Rectangle2D {
 
 		float[] mMvp = new float[16];
 
+	
+		
+	
 		// Calcul de la Matrice Vue/Projection
 		// on récupère la matrice de projection valable à l'ensemble de la scène
 		// (vue de caméra)
@@ -167,6 +170,11 @@ public class Starship extends Rectangle2D {
 		// ici on alimente une variable globale OPENGL
 		// OPENGL va conserver sa valeur dans son propre référentiel
 
+	
+		
+		
+		
+	//	mMvp = this.getScene().mMVPMatrix;
 		GLES20.glUniformMatrix4fv(sh.uniform_mvp_location, 1, false, mMvp, 0);
 
 		/**

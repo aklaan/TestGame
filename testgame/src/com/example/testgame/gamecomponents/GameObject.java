@@ -6,6 +6,8 @@ import java.nio.FloatBuffer;
 import java.nio.ShortBuffer;
 import java.util.ArrayList;
 
+import com.example.testgame.scene01.gameobjects.ProgramShader_simple;
+
 import android.opengl.GLES20;
 import android.opengl.Matrix;
 import android.util.Log;
@@ -17,6 +19,7 @@ public class GameObject implements Drawable,Cloneable {
 	public Boolean textureEnabled;
 	public Boolean isVisible;
 	public Scene mScene;
+	public String viewMode = "ORTHO";
 
 	// top permettant de savoir si l'objet est statique ou qu'il
 	// a la possibilité d'être en mouvement. ceci va servir
@@ -48,7 +51,10 @@ public class GameObject implements Drawable,Cloneable {
 
 	public int drawMode = GLES20.GL_TRIANGLES;
 
-	public float angleRAD = 0.0f;
+	public float angleRADX = 0.0f;
+	public float angleRADY = 0.0f;
+	public float angleRADZ = 0.0f;
+	
 	// on indique qu'il faut 4 byte pour repésenter un float
 	// 00000000 00000000 00000000 00000000
 
@@ -239,8 +245,70 @@ public class GameObject implements Drawable,Cloneable {
 
 	}
 
+	//dessiner l'objet
 	public void draw() {
+		ProgramShader_simple sh = (ProgramShader_simple) this.getScene()
+				.getProgramShaderProvider().getShaderByName("simple");
+		this.getScene().getProgramShaderProvider().use(sh);
 
+		// on se positionne au debut du Buffer des indices
+		// qui indiquent dans quel ordre les vertex doivent être dessinés
+		this.getIndices().rewind();
+
+		// on charge les coordonnées des vertices
+		sh.setVerticesCoord(this.getFbVertices());
+		this.getFbVertices().rewind();
+
+		// on charge les coordonées de texture
+
+		sh.setTextureCoord(this.getTextCoord());
+
+		// if (sh.attrib_color_location != -1) {
+		// this.getVertices().position(0);
+		// GLES20.glVertexAttribPointer(sh.attrib_color_location, 4,
+		// GLES20.GL_FLOAT, false, Vertex.Vertex_TEXT_SIZE_BYTES, color);
+
+		sh.enableShaderVar();
+
+		float[] mMvp = new float[16];
+
+		if (this.viewMode=="ORTHO"){
+			Matrix.multiplyMM(mMvp, 0, this.getScene().mProjectionORTH, 0,this.mModelView, 0);
+	
+		}else 
+		Matrix.multiplyMM(mMvp, 0, this.getScene().getProjectionView(), 0,this.mModelView, 0);
+
+		// On alimente la donnée UNIFORM mAdressOf_Mvp du programme OpenGL
+		// avec
+		// une matrice de 4 flotant.
+		GLES20.glUniformMatrix4fv(sh.uniform_mvp_location, 1, false, mMvp, 0);
+
+		// on se positionne au debut du Buffer des indices
+		// qui indiquent dans quel ordre les vertex doivent être dessinés
+		this.getIndices().rewind();
+
+		GLES20.glDrawElements(drawMode, this.getIndices().capacity(),
+				GLES20.GL_UNSIGNED_SHORT, this.getIndices());
+
+		// renderer.mProgramme1.disableVertexAttribArray();
+		// équivalent du POP
+		// renderer.mModelView = this.mBackupModelView;
+		// renderer.mProgramme1.disableVertexAttribArray();
+
+		if (this.canCollide) {
+			this.mCollisionBox.update();
+			if (mCollisionBox.isVisible) {
+				this.mCollisionBox.draw();
+			}
+		}
+
+		
+		
+		
+		
+		
+		
+		
 	}
 
 	public ArrayList<Vertex> applyModelView(float[] modelView) {
@@ -279,15 +347,23 @@ public class GameObject implements Drawable,Cloneable {
 		float[] wrkModelView = new float[16];
 		float[] wrkRotationMatrix = new float[16];
 
-		Matrix.setIdentityM(wrkModelView, 0);
+	if (this.viewMode == "ORTHO"){
+		wrkModelView = this.getScene().mVMatrixORTH.clone();
+		
+	} else 
+		wrkModelView = this.getScene().mVMatrix.clone();
+	
 
 		Matrix.translateM(wrkModelView, 0, this.X, this.Y, 0);
 
-		Matrix.setRotateEulerM(wrkRotationMatrix, 0, 0, 0, this.angleRAD);
+		Matrix.setRotateEulerM(wrkRotationMatrix, 0, this.angleRADX, this.angleRADY, this.angleRADZ);
 
 		Matrix.multiplyMM(this.mModelView, 0, wrkModelView, 0,
 				wrkRotationMatrix, 0);
 
+	
+	
+	
 	}
 
 	/**

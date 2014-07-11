@@ -16,10 +16,12 @@ public class ButtonStart extends Button {
 	}
 
 	public void onClick() {
-		GameObject starship = this.getScene().getGameObjectByTag(
+	/**	GameObject starship = this.getScene().getGameObjectByTag(
 				R.string.starship1);
 
 		starship.getAnimation().start();
+		
+		*/
 		// MediaPlayer mPlayer = null;
 		// mPlayer = MediaPlayer.create(this.getScene().getActivity(), R.raw.aaa);
 		// mPlayer.start();

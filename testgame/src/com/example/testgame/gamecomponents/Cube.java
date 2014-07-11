@@ -8,29 +8,37 @@ import android.util.Log;
 import com.example.testgame.scene01.gameobjects.ProgramShader_grille;
 import com.example.testgame.scene01.gameobjects.ProgramShader_simple;
 
-public class Rectangle2D extends Shape {
+public class Cube extends Shape {
 
-	static final int NB_RECTANGLE_VERTEX = 4;
+	static final int NB_RECTANGLE_VERTEX = 8;
 	private float width = 1;
 	private float height = 1;
 	private boolean firstFrame = true;
 	float startTime;
 
-	public Rectangle2D(DrawingMode drawingMode) {
+	public Cube(DrawingMode drawingMode) {
 		super();
 
 		// on ajoute les vertex (x,y,zu,v)
-		this.mVertices.add(new Vertex(-1f, 1f, 0f, 0f, 0f));
-		this.mVertices.add(new Vertex(-1f, -1f, 0f, 0f, 1f));
-		this.mVertices.add(new Vertex(1f, -1f, 0f, 1f, 1f));
-		this.mVertices.add(new Vertex(1f, 1f, 0, 1f, 0f));
+		this.mVertices.add(new Vertex(-1f, 1f, -1f, 0f, 0f));
+		this.mVertices.add(new Vertex(-1f, -1f, -1f, 0f, 1f));
+		this.mVertices.add(new Vertex(1f, -1f, -1f, 1f, 1f));
+		this.mVertices.add(new Vertex(1f, 1f, -1, 1f, 0f));
 
+		this.mVertices.add(new Vertex(-1f, 1f, 1f, 0f, 0f));
+		this.mVertices.add(new Vertex(-1f, -1f, 1f, 0f, 1f));
+		this.mVertices.add(new Vertex(1f, -1f, 1f, 1f, 1f));
+		this.mVertices.add(new Vertex(1f, 1f, 1, 1f, 0f));
+
+		
+		
+		
 		startTime = SystemClock.elapsedRealtime();
 		switch (drawingMode) {
 		// on dessine que les lignes de contour
 		case EMPTY:
-
-			this.initBuffers(8);
+			this.drawMode = GLES20.GL_LINES;
+			this.initBuffers(16);
 			this.putIndice(0, 0);
 			this.putIndice(1, 1);
 
@@ -43,6 +51,22 @@ public class Rectangle2D extends Shape {
 			this.putIndice(6, 3);
 			this.putIndice(7, 0);
 
+			
+			
+			this.putIndice(8, 4);
+			this.putIndice(9, 5);
+
+			this.putIndice(10, 5);
+			this.putIndice(11, 6);
+
+			this.putIndice(12, 6);
+			this.putIndice(13, 7);
+
+			this.putIndice(14, 7);
+			this.putIndice(15, 4);
+
+			
+			
 			break;
 		// on dessine des triangles plein
 		case FILL:
@@ -66,43 +90,9 @@ public class Rectangle2D extends Shape {
 	@Override
 	public void onUpdate() {
 		// TODO Auto-generated method stub
-
-		/**
-		 * 
-		 * (0)*-----------*(3) | | | | | | | | (1)*-----------*(2)
-		 */
-
-		float decalage = 0.2f;
-		float elapsedTime = SystemClock.elapsedRealtime() - startTime;
-
-		if (elapsedTime >1000){
-			startTime = SystemClock.elapsedRealtime();
-		
-		if (firstFrame) {
-			this.mVertices.get(0).u = 0;
-			this.mVertices.get(1).u = 0;
-			this.mVertices.get(2).u = decalage;
-			this.mVertices.get(3).u = decalage;
-           firstFrame = false;
-		} else {
-		
-		
-		
-		this.mVertices.get(0).u += decalage;
-		this.mVertices.get(1).u += decalage;
-		this.mVertices.get(2).u += decalage;
-		this.mVertices.get(3).u += decalage;
-		}
-		//Si au prochain dcale on dépasse, on revient
-		// sur la first frame
-		if (this.mVertices.get(3).u + decalage > 1){
-			
-			this.firstFrame = true;
-			
+this.angleRADY += 0.5f;
+this.angleRADX+= 0.5f;
 			}
-			
-		}
-	}
 
 	public void setheight(float h) {
 		this.height = h;
@@ -146,6 +136,21 @@ public class Rectangle2D extends Shape {
 		this.mVertices.get(3).x = w;
 		this.mVertices.get(3).y = h;
 
+
+		this.mVertices.get(4).x = -w;
+		this.mVertices.get(4).y = h;
+
+		this.mVertices.get(5).x = -w;
+		this.mVertices.get(5).y = -h;
+
+		this.mVertices.get(6).x = w;
+		this.mVertices.get(6).y = -h;
+
+		this.mVertices.get(7).x = w;
+		this.mVertices.get(7).y = h;
+
+	
+	
 	}
 
 

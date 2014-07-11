@@ -23,9 +23,18 @@ public class Scene implements GLSurfaceView.Renderer {
 	public BitmapProvider mBitmapProvider;
 	private ArrayList<GameObject> mGameObjectList;
 
+	public final float[] mVMatrix = new float[16];
+
+	public final float[] mVMatrixORTH = new float[16];
+
+	
 	// Matrice de projection de la vue
 	public float[] mProjectionView = new float[16];
 
+	//matrice de projection orthogonale
+	public float[] mProjectionORTH = new float[16];
+
+	
 	// public ShaderProvider mShaderProvider;
 
 	public Scene(OpenGLActivity activity) {
@@ -38,7 +47,7 @@ public class Scene implements GLSurfaceView.Renderer {
 		this.mProgramShaderProvider = new ProgramShaderProvider(mActivity);
 
 		this.preLoading();
-		
+
 		UserFinger userFinger = new UserFinger();
 		this.addToScene(userFinger);
 	}
@@ -116,23 +125,32 @@ public class Scene implements GLSurfaceView.Renderer {
 		// taille de la vue (par exemple quand on incline le téléphone et
 		// que l'on passe de la vue portait à la vue paysage
 
-		Log.i("", String.valueOf(width) + "/" + String.valueOf(height));
+		// le coin en bas à gauche est 0,0
+		// la taille de la surface est la même que l'écran
 
 		GLES20.glViewport(0, 0, width, height);
 
+		float ratio = (float) width / height;
+		//* pour un affichage Perspective *********************
+		// le premier plan de clipping NEAR est défini par
+		// 2 points : le point du bas à gauche et le point du haut à droite
+		// le point du bas à gauche est à -ratio, -1
+		// le point du haut à gauche est à ratio, 1
+		// le plan de clipping NEAR est à 1 et le second plan est à 17.
+		Matrix.frustumM(mProjectionView, 0, -ratio, ratio, -1, 1, 1, 1000);
+
+		// Set the camera position (View matrix)
+		// le centre de la caméra est en 0,0,-3 (oeuil)
+		// la caméra regarde le centre de l'écran 0,0,0
+		// le vecteur UP indique l'orientation de la caméra (on peu tourner la
+		// caméra)
+		Matrix.setLookAtM(mVMatrix, 0, -0, 0, -500, 0f, 0f, 0f, 0f, 1.0f, 0.0f);
+
+		//* pour un affichage Orthogonal *********************
 		// le (0,0) est en bas à gauche.
+		Matrix.orthoM(mProjectionORTH, 0, -0, width, 0, height, -10.f, 10.f);
+		Matrix.setIdentityM(mVMatrixORTH, 0);
 
-//		Matrix.orthoM(mProjectionView, 0, 0, width, 0, height, -10.f, 10.f);
-
-
-
-		Matrix.frustumM(mProjectionView, 0, 0, width, 0, height, 0, 50);
-		
-		/**
-		 * Matrix.orthoM(mProjectionView , 0 ,-0 , (width /
-		 * mActivity.getZoomFactor()) ,-0 , (height /
-		 * mActivity.getZoomFactor()), -10.f, 10.f);
-		 */
 	}
 
 	// @Override
@@ -141,8 +159,11 @@ public class Scene implements GLSurfaceView.Renderer {
 
 		// on commence par effacer l'écran en le remplissant de la
 		// couleur souhaitée et on vide le buffer.
-		GLES20.glClearColor(0.5f, 0.5f, 0.5f, 1.0f);
+		GLES20.glClearColor(0.5f, 0.5f, 0.1f, 1.0f);
 		GLES20.glClear(GLES20.GL_COLOR_BUFFER_BIT);
+
+		// Calculate the projection and view transformation
+		// Matrix.multiplyMM(mMVPMatrix, 0, mProjMatrix, 0, mVMatrix, 0);
 
 		// on check les colissions entre tous les éléments de la scène
 		CollisionControler.checkAllCollisions(mGameObjectList);
