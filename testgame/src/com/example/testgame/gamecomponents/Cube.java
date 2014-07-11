@@ -13,6 +13,7 @@ public class Cube extends Shape {
 	static final int NB_RECTANGLE_VERTEX = 8;
 	private float width = 1;
 	private float height = 1;
+	private float depth = 1;
 	private boolean firstFrame = true;
 	float startTime;
 
@@ -38,7 +39,7 @@ public class Cube extends Shape {
 		// on dessine que les lignes de contour
 		case EMPTY:
 			this.drawMode = GLES20.GL_LINES;
-			this.initBuffers(16);
+			this.initBuffers(24);
 			this.putIndice(0, 0);
 			this.putIndice(1, 1);
 
@@ -51,7 +52,7 @@ public class Cube extends Shape {
 			this.putIndice(6, 3);
 			this.putIndice(7, 0);
 
-			
+			//face arrière
 			
 			this.putIndice(8, 4);
 			this.putIndice(9, 5);
@@ -65,7 +66,21 @@ public class Cube extends Shape {
 			this.putIndice(14, 7);
 			this.putIndice(15, 4);
 
+
+            //cotées
 			
+			this.putIndice(16, 0);
+			this.putIndice(17, 4);
+
+			this.putIndice(18, 1);
+			this.putIndice(19, 5);
+
+			this.putIndice(20, 2);
+			this.putIndice(21, 6);
+
+			this.putIndice(22, 3);
+			this.putIndice(23, 7);
+
 			
 			break;
 		// on dessine des triangles plein
@@ -90,7 +105,7 @@ public class Cube extends Shape {
 	@Override
 	public void onUpdate() {
 		// TODO Auto-generated method stub
-this.angleRADY += 0.5f;
+//this.angleRADY += 0.5f;
 this.angleRADX+= 0.5f;
 			}
 
@@ -118,36 +133,59 @@ this.angleRADX+= 0.5f;
 		}
 	}
 
+	
+	public float getDepth() {
+		return this.depth;
+	}
+
+	public void setDepth(float d) {
+		this.depth = d;
+		updateVertices();
+		if (this.canCollide) {
+			this.mCollisionBox.update();
+		}
+	}
+
+	
+	
 	private void updateVertices() {
 
 		// comme le 0,0 est au milieu on divise par 2
 		float w = (float) width / 2;
 		float h = (float) height / 2;
-
+		float d = (float) depth / 2;
+		
 		this.mVertices.get(0).x = -w;
 		this.mVertices.get(0).y = h;
-
+		this.mVertices.get(0).z = -d;
+		
 		this.mVertices.get(1).x = -w;
 		this.mVertices.get(1).y = -h;
-
+		this.mVertices.get(1).z = -d;
+		
 		this.mVertices.get(2).x = w;
 		this.mVertices.get(2).y = -h;
-
+		this.mVertices.get(2).z = -d;
+		
 		this.mVertices.get(3).x = w;
 		this.mVertices.get(3).y = h;
-
+		this.mVertices.get(3).z = -d;
 
 		this.mVertices.get(4).x = -w;
 		this.mVertices.get(4).y = h;
+		this.mVertices.get(4).z = d;
 
 		this.mVertices.get(5).x = -w;
 		this.mVertices.get(5).y = -h;
-
+		this.mVertices.get(5).z = d;
+		
 		this.mVertices.get(6).x = w;
 		this.mVertices.get(6).y = -h;
-
+		this.mVertices.get(6).z = d;
+		
 		this.mVertices.get(7).x = w;
 		this.mVertices.get(7).y = h;
+		this.mVertices.get(7).z = d;
 
 	
 	

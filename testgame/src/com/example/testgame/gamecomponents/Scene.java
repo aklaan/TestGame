@@ -144,7 +144,7 @@ public class Scene implements GLSurfaceView.Renderer {
 		// la caméra regarde le centre de l'écran 0,0,0
 		// le vecteur UP indique l'orientation de la caméra (on peu tourner la
 		// caméra)
-		Matrix.setLookAtM(mVMatrix, 0, -0, 0, -500, 0f, 0f, 0f, 0f, 1.0f, 0.0f);
+		Matrix.setLookAtM(mVMatrix, 0, -0, 0, -200, 0f, 0f, 0f, 0f, 1.0f, 0.0f);
 
 		//* pour un affichage Orthogonal *********************
 		// le (0,0) est en bas à gauche.

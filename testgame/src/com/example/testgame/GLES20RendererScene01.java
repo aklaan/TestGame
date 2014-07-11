@@ -56,6 +56,7 @@ public class GLES20RendererScene01 extends Scene {
 		Cube cube = new Cube(DrawingMode.EMPTY);
 		cube.setheight(50);
 		cube.setWidth(50);
+		cube.setDepth(50);
 		cube.setCoord(50, 50);
 		cube.viewMode="PERS";
 		this.addToScene(cube);
