@@ -28,7 +28,7 @@ public class Starship extends Rectangle2D {
 
 		// on incrémente l'angle de rotation a chaque images
 		// ici je souhaite que l'objet tourne sur lui même constament
-		angleRADZ = angleRADZ + 0.5F;
+		//angleRADZ = angleRADZ + 0.5F;
 
 		
 /**		

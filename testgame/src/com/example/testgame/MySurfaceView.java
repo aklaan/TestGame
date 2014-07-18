@@ -42,6 +42,8 @@ public class MySurfaceView extends GLSurfaceView {
 			touched = true;
 			this.setLastTouchTime(SystemClock.elapsedRealtime());
 			break;	
+			
+		
 			}
 			
 		return true;

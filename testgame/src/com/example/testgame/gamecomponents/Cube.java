@@ -106,7 +106,7 @@ public class Cube extends Shape {
 	public void onUpdate() {
 		// TODO Auto-generated method stub
 //this.angleRADY += 0.5f;
-this.angleRADX+= 0.5f;
+//this.angleRADX+= 0.5f;
 			}
 
 	public void setheight(float h) {

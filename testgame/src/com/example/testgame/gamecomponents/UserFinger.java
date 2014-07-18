@@ -14,8 +14,8 @@ public class UserFinger extends Rectangle2D {
 
 	public UserFinger() {
 		super(DrawingMode.EMPTY);
-		this.setheight(1);
-		this.setWidth(1);
+		this.setheight(10);
+		this.setWidth(10);
 		this.enableColission();
 		this.mCollisionBox.isVisible = true;
 		this.setTagName(R.string.USER_FINGER);
@@ -32,6 +32,9 @@ public class UserFinger extends Rectangle2D {
 					this.getScene().getHeight()
 							- this.getScene().getActivity().mGLSurfaceView.touchY);
 
+
+			
+			
 			// on active les colissions
 			this.canCollide = true;
 			getWorldCoord();
@@ -41,6 +44,7 @@ public class UserFinger extends Rectangle2D {
 
 			Log.i("UserFinger World",
 					String.valueOf(this.worldX) + "/" + String.valueOf(this.worldY));
+			Log.i("--","----------------------------------------------------------------");
 		} else {
 			// sinon les collisions sont désactivées
 			this.canCollide = false;
@@ -54,7 +58,8 @@ public class UserFinger extends Rectangle2D {
 		float[] reverseMatrix = new float[16];
 		float[] mMVP = new float[16];
 		
-        Matrix.multiplyMM(mMVP, 0, this.getScene().getProjectionView(), 0, this.mModelView, 0);
+		
+        Matrix.multiplyMM(mMVP, 0, this.getScene().getProjectionView(), 0, this.getScene().mVMatrix, 0);
 
 		Matrix.invertM(reverseMatrix, 0, mMVP, 0);
 		

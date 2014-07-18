@@ -278,6 +278,12 @@ public class GameObject implements Drawable,Cloneable {
 		}else 
 		Matrix.multiplyMM(mMvp, 0, this.getScene().getProjectionView(), 0,this.mModelView, 0);
 
+		
+		ArrayList<Vertex> toto = new ArrayList<Vertex>();
+		toto = this.applyModelView(mMvp);
+		int a = 0;
+		
+		
 		// On alimente la donnée UNIFORM mAdressOf_Mvp du programme OpenGL
 		// avec
 		// une matrice de 4 flotant.
@@ -333,7 +339,7 @@ public class GameObject implements Drawable,Cloneable {
 			Matrix.multiplyMV(newVerticesCoord, 0, modelView, 0,
 					oldVerticesCoord, 0);
 			mModelViewVertices.add(new Vertex(newVerticesCoord[0],
-					newVerticesCoord[1], 0));
+					newVerticesCoord[1], newVerticesCoord[2]));
 
 		}
 

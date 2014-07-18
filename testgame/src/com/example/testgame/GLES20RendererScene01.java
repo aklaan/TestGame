@@ -57,7 +57,7 @@ public class GLES20RendererScene01 extends Scene {
 		cube.setheight(50);
 		cube.setWidth(50);
 		cube.setDepth(50);
-		cube.setCoord(50, 50);
+	//	cube.setCoord(0, 0);
 		cube.viewMode="PERS";
 		this.addToScene(cube);
 		// this.addToScene(buttonStart);
@@ -84,6 +84,30 @@ public class GLES20RendererScene01 extends Scene {
 		 * (R.string.textureRed)); this.addToScene(buttonStart3);
 		 */
 
+		Rectangle2D ligne = new Rectangle2D(DrawingMode.FILL);
+		ligne.setCoord(0, 0);
+		ligne.viewMode="pers";
+		ligne.setheight((float) this.getHeight());
+		ligne.setWidth(1);
+		ligne.setTagName(R.string.ligne1);
+		this.getBitmapProvider().linkTexture(R.string.textureRed, ligne);
+
+		 this.addToScene(ligne);
+
+
+			 ligne = new Rectangle2D(DrawingMode.FILL);
+			ligne.setCoord(0, 0);
+			ligne.viewMode="pers";
+			ligne.setheight(1);
+			ligne.setWidth((float) this.getWidth());
+			ligne.setTagName(R.string.ligne1);
+			this.getBitmapProvider().linkTexture(R.string.textureRed, ligne);
+
+			 this.addToScene(ligne);
+
+		 
+		 
+		
 		Rectangle2D ligne1 = new Rectangle2D(DrawingMode.FILL);
 		ligne1.setCoord(0, 0);
 		ligne1.setheight((float) this.getHeight());
@@ -94,7 +118,7 @@ public class GLES20RendererScene01 extends Scene {
 		 this.addToScene(ligne1);
 
 		Rectangle2D ligne100x = new Rectangle2D(DrawingMode.FILL);
-		ligne100x.setCoord(100, 0);
+		ligne100x.setCoord(100, this.getHeight()/2);
 		ligne100x.setheight((float) this.getHeight());
 		ligne100x.setWidth(1);
 		ligne100x.setTagName(R.string.ligne1);
@@ -103,7 +127,7 @@ public class GLES20RendererScene01 extends Scene {
 		 this.addToScene(ligne100x);
 
 		Rectangle2D ligne200x = new Rectangle2D(DrawingMode.FILL);
-		ligne200x.setCoord(200, 0);
+		ligne200x.setCoord(200, this.getHeight()/2);
 		ligne200x.setheight((float) this.getHeight());
 		ligne200x.setWidth(1);
 		ligne200x.setTagName(R.string.ligne1);
@@ -124,13 +148,13 @@ public class GLES20RendererScene01 extends Scene {
 		// ******************
 		Starship mStarship = new Starship();
 
-		mStarship.setheight(20);
-		mStarship.setWidth(20);
+		mStarship.setheight(100);
+		mStarship.setWidth(100);
 		mStarship.setCoord(0, 0);
 		
 		mStarship.setTagName(R.string.starship1);
 		mStarship.enableColission();
-		mStarship.viewMode = "PERSPECTIVE";
+		//mStarship.viewMode = "PERSPECTIVE";
 		this.getBitmapProvider().linkTexture(R.string.textureWhite, mStarship);
 		mStarship.setAnimation(new AnimationRightLeftOnX(mStarship));
 		this.addToScene(mStarship);

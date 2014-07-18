@@ -136,15 +136,21 @@ public class Scene implements GLSurfaceView.Renderer {
 		// 2 points : le point du bas à gauche et le point du haut à droite
 		// le point du bas à gauche est à -ratio, -1
 		// le point du haut à gauche est à ratio, 1
-		// le plan de clipping NEAR est à 1 et le second plan est à 17.
+		// le plan de clipping NEAR est à 1 et le second plan est à 1000.
+		
+		/**avec cette version le centre est au milieu de l'écran */
 		Matrix.frustumM(mProjectionView, 0, -ratio, ratio, -1, 1, 1, 1000);
 
+		/**avec cette version le centre est en bas à gauche de l'écran */
+		//Matrix.frustumM(mProjectionView, 0, 0, ratio, 0, 1, 1, 1000);
+		
 		// Set the camera position (View matrix)
-		// le centre de la caméra est en 0,0,-3 (oeuil)
+		// le centre de la caméra est en 0,0,-200 (oeuil)
 		// la caméra regarde le centre de l'écran 0,0,0
 		// le vecteur UP indique l'orientation de la caméra (on peu tourner la
 		// caméra)
-		Matrix.setLookAtM(mVMatrix, 0, -0, 0, -200, 0f, 0f, 0f, 0f, 1.0f, 0.0f);
+		//Matrix.setLookAtM(rm, rmOffset, eyeX, eyeY, eyeZ, centerX, centerY, centerZ, upX, upY, upZ)
+		Matrix.setLookAtM(mVMatrix, 0, 0, 0, -200, 0, 0f, 0f, 0f, 1.0f, 0.0f);
 
 		//* pour un affichage Orthogonal *********************
 		// le (0,0) est en bas à gauche.
@@ -159,7 +165,7 @@ public class Scene implements GLSurfaceView.Renderer {
 
 		// on commence par effacer l'écran en le remplissant de la
 		// couleur souhaitée et on vide le buffer.
-		GLES20.glClearColor(0.5f, 0.5f, 0.1f, 1.0f);
+		GLES20.glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
 		GLES20.glClear(GLES20.GL_COLOR_BUFFER_BIT);
 
 		// Calculate the projection and view transformation
