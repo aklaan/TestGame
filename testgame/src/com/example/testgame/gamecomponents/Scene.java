@@ -27,14 +27,12 @@ public class Scene implements GLSurfaceView.Renderer {
 
 	public final float[] mVMatrixORTH = new float[16];
 
-	
 	// Matrice de projection de la vue
 	public float[] mProjectionView = new float[16];
 
-	//matrice de projection orthogonale
+	// matrice de projection orthogonale
 	public float[] mProjectionORTH = new float[16];
 
-	
 	// public ShaderProvider mShaderProvider;
 
 	public Scene(OpenGLActivity activity) {
@@ -93,6 +91,19 @@ public class Scene implements GLSurfaceView.Renderer {
 		GLES20.glBlendFunc(GLES20.GL_SRC_ALPHA, GLES20.GL_ONE_MINUS_SRC_ALPHA);
 		GLES20.glEnable(GLES20.GL_BLEND);
 
+		// spécifer l'orientation de la détermination des face avant/arrière
+		// par dédaut c'est CCW (counterClockWiwe) l'inverse des aiguilles d'une
+		// montre
+		GLES20.glFrontFace(GL10.GL_CCW);
+
+		// on indique quelle face à oculter (par défaut c'est BACK)
+		GLES20.glCullFace(GL10.GL_BACK);
+
+		// Activation du Culling
+		GLES20.glEnable(GL10.GL_CULL_FACE);
+
+		//
+
 		// create texture handle
 		int[] textures = new int[1];
 
@@ -104,12 +115,20 @@ public class Scene implements GLSurfaceView.Renderer {
 		// on demande à opengl d'utiliser la première texture
 		GLES20.glBindTexture(GLES20.GL_TEXTURE_2D, glbufferTextureID);
 
-		// set parameters
+		// définition des paramètres de magnification et minification des
+		// texture
+		// on indique GL_NEAREST pour dire que l'on doit prendre le pixel qui se
+		// rapporche le plus
 		GLES20.glTexParameteri(GLES20.GL_TEXTURE_2D,
 				GLES20.GL_TEXTURE_MIN_FILTER, GLES20.GL_NEAREST);
 
 		GLES20.glTexParameteri(GLES20.GL_TEXTURE_2D,
 				GLES20.GL_TEXTURE_MAG_FILTER, GLES20.GL_NEAREST);
+
+		// paramétrage du dépassement des coordonées de texture
+		// GL_CLAMP_TO_EDGE = on étire la texture pour recouvrir la forme
+		// on peu aussi mettre un paramètre pour répéter la texture ou bien
+		// effectuer un mirroir
 
 		GLES20.glTexParameteri(GLES20.GL_TEXTURE_2D, GLES20.GL_TEXTURE_WRAP_S,
 				GLES20.GL_CLAMP_TO_EDGE);
@@ -120,7 +139,7 @@ public class Scene implements GLSurfaceView.Renderer {
 	}
 
 	// @Override
-	public void onSurfaceChanged(GL10 gl, int width, int height) {
+	public void onSurfaceChanged(GL10 gl, int width, int hight) {
 		// lorsqu'il y a une modification de la vue , on redéfinie la nouvelle
 		// taille de la vue (par exemple quand on incline le téléphone et
 		// que l'on passe de la vue portait à la vue paysage
@@ -128,33 +147,34 @@ public class Scene implements GLSurfaceView.Renderer {
 		// le coin en bas à gauche est 0,0
 		// la taille de la surface est la même que l'écran
 
-		GLES20.glViewport(0, 0, width, height);
+		GLES20.glViewport(0, 0, width, hight);
 
-		float ratio = (float) width / height;
-		//* pour un affichage Perspective *********************
+		float ratio = (float) width / hight;
+		// * pour un affichage Perspective *********************
 		// le premier plan de clipping NEAR est défini par
 		// 2 points : le point du bas à gauche et le point du haut à droite
 		// le point du bas à gauche est à -ratio, -1
 		// le point du haut à gauche est à ratio, 1
 		// le plan de clipping NEAR est à 1 et le second plan est à 1000.
-		
-		/**avec cette version le centre est au milieu de l'écran */
-		Matrix.frustumM(mProjectionView, 0, -ratio, ratio, -1, 1, 1, 1000);
 
-		/**avec cette version le centre est en bas à gauche de l'écran */
-		//Matrix.frustumM(mProjectionView, 0, 0, ratio, 0, 1, 1, 1000);
-		
+		/** avec cette version le centre est au milieu de l'écran */
+		Matrix.frustumM(mProjectionView, 0, -ratio, ratio, -1, 1, 1, 100);
+
+		/** avec cette version le centre est en bas à gauche de l'écran */
+		// Matrix.frustumM(mProjectionView, 0, 0, ratio, 0, 1, 1, 1000);
+
 		// Set the camera position (View matrix)
 		// le centre de la caméra est en 0,0,-200 (oeuil)
 		// la caméra regarde le centre de l'écran 0,0,0
 		// le vecteur UP indique l'orientation de la caméra (on peu tourner la
 		// caméra)
-		//Matrix.setLookAtM(rm, rmOffset, eyeX, eyeY, eyeZ, centerX, centerY, centerZ, upX, upY, upZ)
-		Matrix.setLookAtM(mVMatrix, 0, 0, 0, -200, 0, 0f, 0f, 0f, 1.0f, 0.0f);
+		// Matrix.setLookAtM(rm, rmOffset, eyeX, eyeY, eyeZ, centerX, centerY,
+		// centerZ, upX, upY, upZ)
+		Matrix.setLookAtM(mVMatrix, 0, 0, 0, 100, 0, 0f, 0f, 0f, 1.0f, 0.0f);
 
-		//* pour un affichage Orthogonal *********************
+		// * pour un affichage Orthogonal *********************
 		// le (0,0) est en bas à gauche.
-		Matrix.orthoM(mProjectionORTH, 0, -0, width, 0, height, -10.f, 10.f);
+		Matrix.orthoM(mProjectionORTH, 0, -0, width, 0, hight, -10.f, 10.f);
 		Matrix.setIdentityM(mVMatrixORTH, 0);
 
 	}

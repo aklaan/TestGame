@@ -47,14 +47,16 @@ public class GameObject implements Drawable,Cloneable {
 	public float[] mModelView = new float[16];
 	public float[] mTransformUpdateView = new float[16];
 
-	public static final int FLOAT_SIZE = 4;
-
+	
 	public int drawMode = GLES20.GL_TRIANGLES;
 
 	public float angleRADX = 0.0f;
 	public float angleRADY = 0.0f;
 	public float angleRADZ = 0.0f;
-	
+
+	//public static final int FLOAT_SIZE = 4;
+	public static final int FLOAT_SIZE = Float.SIZE / Byte.SIZE;
+
 	// on indique qu'il faut 4 byte pour repésenter un float
 	// 00000000 00000000 00000000 00000000
 
@@ -82,11 +84,12 @@ public class GameObject implements Drawable,Cloneable {
 
 	// private ByteBuffer mTexture;
 	public int mTextureWidth;
-	public int mTextureHeight;
+	public int mTexturehight;
 
 	// constructeur
 	public GameObject() {
 
+		int toto = Float.SIZE;
 		textureEnabled = false;
 		mTagName = 0;
 		isVisible = true;
@@ -114,6 +117,7 @@ public class GameObject implements Drawable,Cloneable {
 
 	public void initBuffers(int nbIndex) {
 		int nbVertex = mVertices.size();
+Byte toto = Byte.SIZE;
 
 		mFbVertices = ByteBuffer.allocateDirect(nbVertex * 3 * FLOAT_SIZE)
 				.order(ByteOrder.nativeOrder()).asFloatBuffer();
@@ -224,9 +228,9 @@ public class GameObject implements Drawable,Cloneable {
 	 * public void setWidth(float width) { // this.width = width; //
 	 * updateModelMatrix(); }
 	 * 
-	 * public float getHeight() { return height; }
+	 * public float getHeight() { return hight; }
 	 * 
-	 * public void setheight(float height) { this.height = height;
+	 * public void sethight(float hight) { this.hight = hight;
 	 * updateModelMatrix(); }
 	 */
 	public void setCoord(float x, float y) {

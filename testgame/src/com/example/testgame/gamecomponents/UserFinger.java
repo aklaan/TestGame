@@ -14,7 +14,7 @@ public class UserFinger extends Rectangle2D {
 
 	public UserFinger() {
 		super(DrawingMode.EMPTY);
-		this.setheight(10);
+		this.sethight(10);
 		this.setWidth(10);
 		this.enableColission();
 		this.mCollisionBox.isVisible = true;
@@ -64,15 +64,27 @@ public class UserFinger extends Rectangle2D {
 		Matrix.invertM(reverseMatrix, 0, mMVP, 0);
 		
 		// je suis obligé de passer par un vecteur 4 pour la multiplication
-
+		// calcul du point placé sur le premier plan de clipping
+		
+		// les coordonnée du pointeur doivent être normalisé
+		//attention les coordonée ANDROID sont inversées par rapport à OpenGL
+		// le 0,0 est en haut a gauche pour android tandis qu'il est en bas à droite pour GL
 		for (int i = 0; i < this.mVertices.size(); i++) {
-			oldVerticesCoord[0] = this.X; // x
-			oldVerticesCoord[1] = this.Y; // y
-			oldVerticesCoord[2] = 0; // z
-			oldVerticesCoord[3] = 1.f;
+			oldVerticesCoord[0] = this.X / this.getScene().getWidth() *2-1; // x
+			oldVerticesCoord[1] = (float) -(this.Y /this.getScene().getHeight()*2-1); // y
+			oldVerticesCoord[2] = 1;      // z
+			oldVerticesCoord[3] = 1.f;    //w
 
 			Matrix.multiplyMV(newVerticesCoord, 0, reverseMatrix, 0,
 					oldVerticesCoord, 0);
+			
+			//on divise par W pour revenir en coordonées World
+			//le W correspond à la mise en perspective effectué par la matrice de projection.
+			//comme on a utilisé la matrice inverse on a inversé aussi la perspective. du coup il faut la 
+			//remettre dans le bon sens.
+			newVerticesCoord[0] = newVerticesCoord[0]/newVerticesCoord[3];
+			newVerticesCoord[1] = newVerticesCoord[1]/newVerticesCoord[3];
+			newVerticesCoord[2] = newVerticesCoord[2]/newVerticesCoord[3];
 			
 			this.worldX = newVerticesCoord[0];
 			this.worldY = newVerticesCoord[1];

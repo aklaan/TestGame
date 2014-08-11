@@ -9,9 +9,9 @@ import com.example.testgame.gamecomponents.Texture;
 
 public class ButtonStart extends Button {
 
-	public ButtonStart(float x, float y, float witdth, float height,
+	public ButtonStart(float x, float y, float witdth, float hight,
 			Texture textureUp, Texture textureDown) {
-		super(x, y, witdth, height, textureUp, textureDown);
+		super(x, y, witdth, hight, textureUp, textureDown);
 		// TODO Auto-generated constructor stub
 	}
 

@@ -13,13 +13,13 @@ public class ArrayGameObject {
 	}
 
 	public static ArrayList<GameObject> make(float sceneWidth,
-			float sceneHeight, int dimX, int dimY, Rectangle2D gameObject,
+			float scenehight, int dimX, int dimY, Rectangle2D gameObject,
 			float margin) {
 
 		ArrayList<GameObject> result = new ArrayList<GameObject>();
 
 		float taillex = (sceneWidth - ((dimX + 1) * margin)) / dimX;
-		float tailley = (sceneHeight - ((dimY + 1) * margin)) / dimY;
+		float tailley = (scenehight - ((dimY + 1) * margin)) / dimY;
 
 		float x = 0;
 		float y = 0;
@@ -34,7 +34,7 @@ public class ArrayGameObject {
 					go = (Rectangle2D) gameObject.clone();
 
 					go.setCoord(x, y);
-					go.setheight(tailley);
+					go.sethight(tailley);
 					go.setWidth(taillex);
 					result.add(go);
 

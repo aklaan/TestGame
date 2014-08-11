@@ -76,7 +76,7 @@ public class BitmapProvider {
 		Bitmap bitmap = getBitmapByName(String.valueOf(texturered));
 
 		texture.width = bitmap.getWidth();
-		texture.height = bitmap.getHeight();
+		texture.hight = bitmap.getHeight();
 
 		// on défini un buffer contenant tous les points de l'image
 		// il en a (longeur x hauteur)
@@ -95,6 +95,8 @@ public class BitmapProvider {
 		// pour chaque pixel composant l'image, on mémorise sa couleur et
 		// l'alpha
 		// dans le buffer
+		
+		
 		for (int i = 0; i < bitmap.getHeight(); i++) {
 			for (int j = 0; j < bitmap.getWidth(); j++) {
 				int color = bitmap.getPixel(j, i);
@@ -122,7 +124,7 @@ public class BitmapProvider {
 		Bitmap bitmap = getBitmapByName(String.valueOf(texturered));
 
 		texture.width = bitmap.getWidth();
-		texture.height = bitmap.getHeight();
+		texture.hight = bitmap.getHeight();
 
 		// on défini un buffer contenant tous les points de l'image
 		// il en a (longeur x hauteur)
@@ -163,7 +165,7 @@ public class BitmapProvider {
 	// étant la texture 0,1,2,...
 	public void putTextureToGLUnit(Texture texture, int unit) {
 		GLES20.glTexImage2D(GL10.GL_TEXTURE_2D, unit, GL10.GL_RGBA,
-				texture.width, texture.height, 0, GL10.GL_RGBA,
+				texture.width, texture.hight, 0, GL10.GL_RGBA,
 				GL10.GL_UNSIGNED_BYTE, texture.texture);
 
 	}

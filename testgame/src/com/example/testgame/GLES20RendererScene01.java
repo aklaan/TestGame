@@ -2,6 +2,7 @@ package com.example.testgame;
 
 import javax.microedition.khronos.opengles.GL10;
 
+import android.opengl.GLES20;
 import android.os.SystemClock;
 
 import com.example.testgame.R;
@@ -40,7 +41,7 @@ public class GLES20RendererScene01 extends Scene {
 		model.setAnimation(new AnimationRotate(model));
 		model.getAnimation().start();
 
-		model.setheight(50);
+		model.sethight(50);
 		model.setWidth(50);
 		// this.addToScene(model);
 		//this.addToScene(ArrayGameObject.make(this.getWidth(), this.getHeight(),	4, 4, model, 1));
@@ -54,7 +55,7 @@ public class GLES20RendererScene01 extends Scene {
 		
 		
 		Cube cube = new Cube(DrawingMode.EMPTY);
-		cube.setheight(50);
+		cube.sethight(50);
 		cube.setWidth(50);
 		cube.setDepth(50);
 	//	cube.setCoord(0, 0);
@@ -87,7 +88,7 @@ public class GLES20RendererScene01 extends Scene {
 		Rectangle2D ligne = new Rectangle2D(DrawingMode.FILL);
 		ligne.setCoord(0, 0);
 		ligne.viewMode="pers";
-		ligne.setheight((float) this.getHeight());
+		ligne.sethight((float) this.getHeight());
 		ligne.setWidth(1);
 		ligne.setTagName(R.string.ligne1);
 		this.getBitmapProvider().linkTexture(R.string.textureRed, ligne);
@@ -98,7 +99,7 @@ public class GLES20RendererScene01 extends Scene {
 			 ligne = new Rectangle2D(DrawingMode.FILL);
 			ligne.setCoord(0, 0);
 			ligne.viewMode="pers";
-			ligne.setheight(1);
+			ligne.sethight(1);
 			ligne.setWidth((float) this.getWidth());
 			ligne.setTagName(R.string.ligne1);
 			this.getBitmapProvider().linkTexture(R.string.textureRed, ligne);
@@ -110,7 +111,7 @@ public class GLES20RendererScene01 extends Scene {
 		
 		Rectangle2D ligne1 = new Rectangle2D(DrawingMode.FILL);
 		ligne1.setCoord(0, 0);
-		ligne1.setheight((float) this.getHeight());
+		ligne1.sethight((float) this.getHeight());
 		ligne1.setWidth(2);
 		ligne1.setTagName(R.string.ligne1);
 		this.getBitmapProvider().linkTexture(R.string.textureRed, ligne1);
@@ -119,7 +120,7 @@ public class GLES20RendererScene01 extends Scene {
 
 		Rectangle2D ligne100x = new Rectangle2D(DrawingMode.FILL);
 		ligne100x.setCoord(100, this.getHeight()/2);
-		ligne100x.setheight((float) this.getHeight());
+		ligne100x.sethight((float) this.getHeight());
 		ligne100x.setWidth(1);
 		ligne100x.setTagName(R.string.ligne1);
 		this.getBitmapProvider().linkTexture(R.string.textureWhite, ligne100x);
@@ -128,7 +129,7 @@ public class GLES20RendererScene01 extends Scene {
 
 		Rectangle2D ligne200x = new Rectangle2D(DrawingMode.FILL);
 		ligne200x.setCoord(200, this.getHeight()/2);
-		ligne200x.setheight((float) this.getHeight());
+		ligne200x.sethight((float) this.getHeight());
 		ligne200x.setWidth(1);
 		ligne200x.setTagName(R.string.ligne1);
 		this.getBitmapProvider().linkTexture(R.string.textureWhite, ligne200x);
@@ -138,7 +139,7 @@ public class GLES20RendererScene01 extends Scene {
 		// **********
 		Rectangle2D ligne2 = new Rectangle2D(DrawingMode.FILL);
 		ligne2.setCoord(0, 0);
-		ligne2.setheight(20);
+		ligne2.sethight(20);
 		ligne2.setWidth(this.getWidth());
 		ligne2.setTagName(R.string.ligne2);
 		this.getBitmapProvider().linkTexture(R.string.textureRed, ligne2);
@@ -148,7 +149,7 @@ public class GLES20RendererScene01 extends Scene {
 		// ******************
 		Starship mStarship = new Starship();
 
-		mStarship.setheight(100);
+		mStarship.sethight(100);
 		mStarship.setWidth(100);
 		mStarship.setCoord(0, 0);
 		
@@ -161,7 +162,7 @@ public class GLES20RendererScene01 extends Scene {
 
 		// ***********************
 		Starship mStarship2 = new Starship();
-		mStarship2.setheight(5);
+		mStarship2.sethight(5);
 		mStarship2.setWidth(5);
 		mStarship2.enableColission();
 		this.getBitmapProvider().linkTexture(R.string.boulerouge, mStarship2);
@@ -173,7 +174,7 @@ public class GLES20RendererScene01 extends Scene {
 		// *********************************
 		PetitRobot mPetitRobot = new PetitRobot();
 		mPetitRobot.setCoord(50, 50);
-		mPetitRobot.setheight(30);
+		mPetitRobot.sethight(30);
 		mPetitRobot.setWidth(30);
 		mPetitRobot.enableColission();
 		this.getBitmapProvider()

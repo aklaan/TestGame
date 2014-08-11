@@ -37,8 +37,8 @@ public class PetitRobot extends Rectangle2D {
 
 	
 		if (!this.mCollideWithList.isEmpty()){
-			this.setheight(this.getHeight()+5.f);
-			if (this.getHeight() > 700){this.setheight(0);}
+			this.sethight(this.getHeight()+5.f);
+			if (this.getHeight() > 700){this.sethight(0);}
 		}
 		//test des colisions
 				for (GameObject go : this.mCollideWithList) {
