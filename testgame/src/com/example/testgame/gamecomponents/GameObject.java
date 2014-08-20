@@ -29,7 +29,8 @@ public class GameObject implements Drawable,Cloneable {
 	// coordonnées du centre de l'objet
 	public float X = 0;
 	public float Y = 0;
-
+	public float Z = 0;
+	
 	public boolean rotation = false;
 
 	public float rotationAxisX = 0.f;
@@ -239,6 +240,13 @@ Byte toto = Byte.SIZE;
 
 	}
 
+	
+	public void setCoord(float x, float y,float z) {
+		this.X = x;
+		this.Y = y;
+		this.Z = z;
+	}
+	
 	public float getCoordX() {
 		return X;
 
@@ -297,7 +305,7 @@ Byte toto = Byte.SIZE;
 		// qui indiquent dans quel ordre les vertex doivent être dessinés
 		this.getIndices().rewind();
 
-		GLES20.glDrawElements(drawMode, this.getIndices().capacity(),
+		GLES20.glDrawElements(this.drawMode, this.getIndices().capacity(),
 				GLES20.GL_UNSIGNED_SHORT, this.getIndices());
 
 		// renderer.mProgramme1.disableVertexAttribArray();
@@ -364,7 +372,7 @@ Byte toto = Byte.SIZE;
 		wrkModelView = this.getScene().mVMatrix.clone();
 	
 
-		Matrix.translateM(wrkModelView, 0, this.X, this.Y, 0);
+		Matrix.translateM(wrkModelView, 0, this.X, this.Y, this.Z);
 
 		Matrix.setRotateEulerM(wrkRotationMatrix, 0, this.angleRADX, this.angleRADY, this.angleRADZ);
 

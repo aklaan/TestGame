@@ -5,6 +5,9 @@ import java.util.ArrayList;
 import javax.microedition.khronos.egl.EGLConfig;
 import javax.microedition.khronos.opengles.GL10;
 
+import com.example.testgame.MySurfaceView.ScreenEvent;
+import com.example.testgame.R;
+
 import android.app.Application;
 import android.opengl.GLES20;
 import android.opengl.GLSurfaceView;
@@ -35,6 +38,7 @@ public class Scene implements GLSurfaceView.Renderer {
 
 	// public ShaderProvider mShaderProvider;
 
+	public Camera mCamera;
 	public Scene(OpenGLActivity activity) {
 
 		mActivity = activity;
@@ -43,9 +47,11 @@ public class Scene implements GLSurfaceView.Renderer {
 		this.mBitmapProvider = new BitmapProvider(this.getActivity());
 		this.mGameObjectList = new ArrayList<GameObject>();
 		this.mProgramShaderProvider = new ProgramShaderProvider(mActivity);
-
+		this.mCamera = new Camera();
+		mCamera.centerZ=100;
+		
 		this.preLoading();
-
+		
 		UserFinger userFinger = new UserFinger();
 		this.addToScene(userFinger);
 	}
@@ -158,7 +164,7 @@ public class Scene implements GLSurfaceView.Renderer {
 		// le plan de clipping NEAR est à 1 et le second plan est à 1000.
 
 		/** avec cette version le centre est au milieu de l'écran */
-		Matrix.frustumM(mProjectionView, 0, -ratio, ratio, -1, 1, 1, 100);
+		Matrix.frustumM(mProjectionView, 0, -ratio, ratio, -1, 1, 1, 1000);
 
 		/** avec cette version le centre est en bas à gauche de l'écran */
 		// Matrix.frustumM(mProjectionView, 0, 0, ratio, 0, 1, 1, 1000);
@@ -170,7 +176,12 @@ public class Scene implements GLSurfaceView.Renderer {
 		// caméra)
 		// Matrix.setLookAtM(rm, rmOffset, eyeX, eyeY, eyeZ, centerX, centerY,
 		// centerZ, upX, upY, upZ)
-		Matrix.setLookAtM(mVMatrix, 0, 0, 0, 100, 0, 0f, 0f, 0f, 1.0f, 0.0f);
+		
+		// attentios, si le z est négatif, la caméra se retrouve derrière l'axe
+		// et donc le X est inversé 
+		Matrix.setLookAtM(mVMatrix, 0, mCamera.centerX, mCamera.centerY, mCamera.centerZ,
+				mCamera.eyeX, mCamera.eyeY, mCamera.eyeZ,
+				mCamera.orientX, mCamera.orientY, mCamera.orientZ);
 
 		// * pour un affichage Orthogonal *********************
 		// le (0,0) est en bas à gauche.
@@ -188,6 +199,61 @@ public class Scene implements GLSurfaceView.Renderer {
 		GLES20.glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
 		GLES20.glClear(GLES20.GL_COLOR_BUFFER_BIT);
 
+		
+		float incX = 0;
+		float incY = 0;
+		
+		
+		switch (this.getActivity().getSurfaceView().event) {
+		
+		case SCROLL_H_RIGHT:
+			incX = +2f; 
+			break;
+		
+		case SCROLL_H_LEFT:
+			incX = -2f; 
+			break;
+		
+			
+		case SCROLL_V_UP:
+			incY = +2f; 
+			break;
+		
+		case SCROLL_V_DOWN:
+			incY = -2f; 
+			break;
+		
+		default:
+			break;
+		
+		}
+		
+		float limitX_RIGHT = +80;
+		float limitX_LEFT = -80;
+		
+		this.mCamera.centerX += incX;
+		this.mCamera.centerX = (this.mCamera.centerX > limitX_RIGHT)? limitX_RIGHT: this.mCamera.centerX;
+		this.mCamera.centerX = (this.mCamera.centerX < limitX_LEFT)? limitX_LEFT: this.mCamera.centerX;
+		this.mCamera.eyeX = this.mCamera.centerX;
+
+		float limitY_UP = +100;
+		float limitY_DOWN = -100;
+		
+		this.mCamera.centerY = (this.mCamera.centerY > limitY_UP)? limitY_UP: this.mCamera.centerY;
+		this.mCamera.centerY = (this.mCamera.centerY < limitY_DOWN)? limitY_DOWN: this.mCamera.centerY;
+		
+		
+		this.mCamera.centerY += incY;
+		this.mCamera.eyeY = this.mCamera.centerY;
+		
+		
+			Matrix.setLookAtM(mVMatrix, 0, mCamera.centerX, mCamera.centerY, mCamera.centerZ,
+					mCamera.eyeX, mCamera.eyeY, mCamera.eyeZ,
+					mCamera.orientX, mCamera.orientY, mCamera.orientZ);
+			
+		
+		
+		
 		// Calculate the projection and view transformation
 		// Matrix.multiplyMM(mMVPMatrix, 0, mProjMatrix, 0, mVMatrix, 0);
 

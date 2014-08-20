@@ -5,6 +5,7 @@ import android.opengl.Matrix;
 import android.os.SystemClock;
 import android.util.Log;
 
+import com.example.testgame.R;
 import com.example.testgame.scene01.gameobjects.ProgramShader_grille;
 import com.example.testgame.scene01.gameobjects.ProgramShader_simple;
 
@@ -107,7 +108,9 @@ public class Cube extends Shape {
 		// TODO Auto-generated method stub
 //this.angleRADY += 0.5f;
 //this.angleRADX+= 0.5f;
-			}
+
+	
+	}
 
 	public void sethight(float h) {
 		this.hight = h;

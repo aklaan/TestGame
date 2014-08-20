@@ -11,6 +11,8 @@ public class UserFinger extends Rectangle2D {
 
 	float worldX;
 	float worldY;
+	float histoX;
+	float histoY;
 
 	public UserFinger() {
 		super(DrawingMode.EMPTY);
@@ -32,19 +34,20 @@ public class UserFinger extends Rectangle2D {
 					this.getScene().getHeight()
 							- this.getScene().getActivity().mGLSurfaceView.touchY);
 
-
-			
+			this.histoX = this.getScene().getActivity().mGLSurfaceView.histoX;
+			this.histoY = this.getScene().getActivity().mGLSurfaceView.histoY;
 			
 			// on active les colissions
 			this.canCollide = true;
 			getWorldCoord();
 			
-			Log.i("UserFinger",
+	/**		Log.i("UserFinger",
 					String.valueOf(this.X) + "/" + String.valueOf(this.Y));
 
 			Log.i("UserFinger World",
 					String.valueOf(this.worldX) + "/" + String.valueOf(this.worldY));
 			Log.i("--","----------------------------------------------------------------");
+		*/
 		} else {
 			// sinon les collisions sont désactivées
 			this.canCollide = false;

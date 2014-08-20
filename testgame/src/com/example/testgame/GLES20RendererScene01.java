@@ -55,12 +55,26 @@ public class GLES20RendererScene01 extends Scene {
 		
 		
 		Cube cube = new Cube(DrawingMode.EMPTY);
-		cube.sethight(50);
-		cube.setWidth(50);
-		cube.setDepth(50);
-	//	cube.setCoord(0, 0);
+		cube.sethight(5);
+		cube.setWidth(200);
+		cube.setDepth(100);
+		cube.setCoord(0, 0,0);
 		cube.viewMode="PERS";
+		this.getBitmapProvider().linkTexture(R.string.textureWhite, cube);
 		this.addToScene(cube);
+		
+		cube = new Cube(DrawingMode.EMPTY);
+		cube.sethight(20);
+		cube.setWidth(20);
+		cube.setDepth(20);
+		cube.setCoord(0, 10,0);
+		cube.viewMode="PERS";
+		this.getBitmapProvider().linkTexture(R.string.textureWhite, cube);
+		this.addToScene(cube);
+		
+		
+		
+		
 		// this.addToScene(buttonStart);
 		// this.addToScene(ArrayGameObject.make(this.getWidth(),this.getHeight(),5,5,buttonStart,50));
 
@@ -162,25 +176,28 @@ public class GLES20RendererScene01 extends Scene {
 
 		// ***********************
 		Starship mStarship2 = new Starship();
-		mStarship2.sethight(5);
-		mStarship2.setWidth(5);
+		mStarship2.sethight(10);
+		mStarship2.setWidth(10);
+		mStarship.setCoord(0, 20);
+		mStarship2.viewMode="pers";
 		mStarship2.enableColission();
 		this.getBitmapProvider().linkTexture(R.string.boulerouge, mStarship2);
 		mStarship2.setTagName(R.string.starship2);
 		mStarship2.cible = mStarship;
 		
-		// this.addToScene(mStarship2);
+		 this.addToScene(mStarship2);
 
 		// *********************************
 		PetitRobot mPetitRobot = new PetitRobot();
-		mPetitRobot.setCoord(50, 50);
-		mPetitRobot.sethight(30);
-		mPetitRobot.setWidth(30);
+		mPetitRobot.setCoord(0, 0);
+		
+		mPetitRobot.sethight(10);
+		mPetitRobot.setWidth(10);
 		mPetitRobot.enableColission();
 		this.getBitmapProvider()
 				.linkTexture(R.string.textureRobot, mPetitRobot);
 
-		// this.addToScene(mPetitRobot);
+//		 this.addToScene(mPetitRobot);
 
 		mStarship.getGameObjectToListenList().add(mStarship2);
 
