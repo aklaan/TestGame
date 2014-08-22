@@ -65,6 +65,10 @@ public class Rectangle2D extends Shape {
 
 	@Override
 	public void onUpdate() {
+		
+	}
+	
+	public void onUpdate2() {
 		// TODO Auto-generated method stub
 
 		/**

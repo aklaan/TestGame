@@ -36,6 +36,28 @@ public class GLES20RendererScene01 extends Scene {
 	@Override
 	public void loadGameObjects() {
 
+		
+		Rectangle2D background = new Rectangle2D(DrawingMode.FILL);
+		background.setCoord((float) this.getWidth()/2, (float) this.getHeight()/2);
+		background.sethight((float) this.getHeight());
+		background.setWidth((float) this.getWidth());;
+		background.setTagName(R.string.background);
+		this.getBitmapProvider().linkTexture(R.string.textureisoland, background);
+
+		 this.addToScene(background);
+		
+		
+		 Rectangle2D spyro = new Rectangle2D(DrawingMode.FILL);
+		 spyro.setCoord((float) this.getWidth()/2, (float) this.getHeight()/2);
+		 spyro.X += 100;
+		 spyro.sethight(100);
+		 spyro.setWidth(100);
+			spyro.setTagName(R.string.spyro);
+			this.getBitmapProvider().linkTexture(R.string.texturespyro, spyro);
+
+			 this.addToScene(spyro);
+			
+		
 		Rectangle2D model = new Rectangle2D(DrawingMode.FILL);
 		this.getBitmapProvider().linkTexture(R.string.textureTestAnim, model);
 		model.setAnimation(new AnimationRotate(model));
@@ -185,7 +207,7 @@ public class GLES20RendererScene01 extends Scene {
 		mStarship2.setTagName(R.string.starship2);
 		mStarship2.cible = mStarship;
 		
-		 this.addToScene(mStarship2);
+		// this.addToScene(mStarship2);
 
 		// *********************************
 		PetitRobot mPetitRobot = new PetitRobot();
@@ -248,6 +270,8 @@ public class GLES20RendererScene01 extends Scene {
 		this.getBitmapProvider().add(R.string.textureBlue);
 		this.getBitmapProvider().add(R.string.textureTest);
 		this.getBitmapProvider().add(R.string.textureTestAnim);
+		this.getBitmapProvider().add(R.string.textureisoland);
+		this.getBitmapProvider().add(R.string.texturespyro);
 	}
 
 	@Override
