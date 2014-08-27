@@ -8,7 +8,7 @@ import java.util.ArrayList;
 
 import com.rdupuis.gamefactory.animations.Animation;
 import com.rdupuis.gamefactory.interfaces.Drawable;
-import com.rdupuis.gamefactory.scene01.components.ProgramShader_simple;
+import com.rdupuis.gamefactory.shaders.ProgramShader_simple;
 
 import android.opengl.GLES20;
 import android.opengl.Matrix;

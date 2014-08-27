@@ -2,7 +2,7 @@ package com.rdupuis.gamefactory.components;
 
 import com.rdupuis.gamefactory.components.shapes.Rectangle2D;
 import com.rdupuis.gamefactory.enums.DrawingMode;
-import com.rdupuis.gamefactory.scene01.components.ProgramShader_forLines;
+import com.rdupuis.gamefactory.shaders.ProgramShader_forLines;
 
 import android.opengl.GLES20;
 

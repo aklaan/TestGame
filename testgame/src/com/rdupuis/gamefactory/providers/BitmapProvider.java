@@ -49,21 +49,17 @@ public class BitmapProvider {
 	 * 
 	 * @param bitmapName
 	 */
-	public void add( int ressourceID) {
+	public void add(String folder, int ressourceID) {
 
 		Bitmap bitmap = null;
-
 			
-			//bitmap = BitmapFactory.decodeStream(mActivity.getAssets().open(
-			//mActivity.getString(R.string.imagesfolder) + "/" +
-			//this.mActivity.getString(ressourceID)));
-
-			Resources res = this.getActivity().getResources();
-			bitmap = BitmapFactory.decodeResource(res, ressourceID);
-			
-			
-			//bitmap = BitmapFactory.decodeStream(this.getActivity().getAssets().open(
-			//this.getActivity().getString(resId) + "/" +	this.getActivity().getString(ressourceID));
+			try {
+				bitmap = BitmapFactory.decodeStream(this.getActivity().getAssets().open(
+				folder + "/" +	this.getActivity().getString(ressourceID)));
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 
 			
 	

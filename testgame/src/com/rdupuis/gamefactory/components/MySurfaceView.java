@@ -1,4 +1,4 @@
-package com.rdupuis.gamefactory;
+package com.rdupuis.gamefactory.components;
 
 import android.content.Context;
 import android.opengl.GLSurfaceView;

@@ -2,9 +2,6 @@ package com.rdupuis.gamefactory.shaders;
 
 import java.io.IOException;
 import java.nio.FloatBuffer;
-import java.util.ArrayList;
-import java.util.HashMap;
-
 import com.rdupuis.gamefactory.components.Vertex;
 
 import android.opengl.GLES20;

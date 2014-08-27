@@ -74,7 +74,7 @@ public class UserFinger extends Rectangle2D {
 
 		float[] reverseProjectionView = new float[16];
 		float[] reverseVMatrix = new float[16];
-		float[] mMVP = new float[16];
+		
 
 		Matrix.invertM(reverseProjectionView, 0, this.getScene()
 				.getProjectionView(), 0);

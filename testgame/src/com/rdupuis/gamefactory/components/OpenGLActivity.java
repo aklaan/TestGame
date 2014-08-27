@@ -1,6 +1,5 @@
 package com.rdupuis.gamefactory.components;
 
-import com.rdupuis.gamefactory.MySurfaceView;
 
 import android.app.Activity;
 import android.app.ActivityManager;

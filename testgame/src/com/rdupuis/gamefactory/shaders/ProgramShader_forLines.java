@@ -1,6 +1,5 @@
-package com.rdupuis.gamefactory.scene01.components;
+package com.rdupuis.gamefactory.shaders;
 
-import com.rdupuis.gamefactory.shaders.ProgramShader;
 
 import android.opengl.GLES20;
 

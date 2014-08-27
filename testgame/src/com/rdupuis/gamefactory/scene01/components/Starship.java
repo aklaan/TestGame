@@ -5,9 +5,9 @@ import android.opengl.Matrix;
 
 import com.rdupuis.gamefactory.R;
 import com.rdupuis.gamefactory.components.GameObject;
-import com.rdupuis.gamefactory.components.OpenGLActivity;
 import com.rdupuis.gamefactory.components.shapes.Rectangle2D;
 import com.rdupuis.gamefactory.enums.DrawingMode;
+import com.rdupuis.gamefactory.shaders.ProgramShader_simple;
 
 public class Starship extends Rectangle2D {
 

@@ -1,15 +1,9 @@
 package com.rdupuis.gamefactory.components.shapes;
 
-import android.opengl.GLES20;
-import android.opengl.Matrix;
 import android.os.SystemClock;
-import android.util.Log;
-
 import com.rdupuis.gamefactory.components.Shape;
 import com.rdupuis.gamefactory.components.Vertex;
 import com.rdupuis.gamefactory.enums.DrawingMode;
-import com.rdupuis.gamefactory.scene01.components.ProgramShader_grille;
-import com.rdupuis.gamefactory.scene01.components.ProgramShader_simple;
 
 public class Rectangle2D extends Shape {
 
