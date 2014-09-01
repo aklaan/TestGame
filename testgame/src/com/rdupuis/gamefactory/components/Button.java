@@ -27,7 +27,7 @@ public abstract class Button extends Rectangle2D implements Clikable {
 	
 		this.status = ButtonStatus.UP;
 		this.setCoord(x, y);
-		this.sethight(hight);
+		this.setHeight(hight);
 		this.setWidth(witdth);
 		
 		this.textureUp = textureUp;
@@ -42,7 +42,7 @@ public abstract class Button extends Rectangle2D implements Clikable {
 		if (SystemClock.elapsedRealtime() - this.lastClick > DELAY_BTWN_CLICK) {
 
 			if (this.isCollideWith(this.getScene().getGameObjectByTag(
-					R.string.USER_FINGER))) {
+					UserFinger.USER_FINGER_TAG))) {
 				this.setTexture(this.textureDown);
 				this.status = ButtonStatus.DOWN;
 				lastClick = SystemClock.elapsedRealtime();

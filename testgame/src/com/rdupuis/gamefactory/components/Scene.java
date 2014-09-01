@@ -257,8 +257,6 @@ public class Scene implements GLSurfaceView.Renderer {
 		// Calculate the projection and view transformation
 		// Matrix.multiplyMM(mMVPMatrix, 0, mProjMatrix, 0, mVMatrix, 0);
 
-		// on check les colissions entre tous les éléments de la scène
-		CollisionControler.checkAllCollisions(mGameObjectList);
 
 		// Pour chaques GameObject de la scène, on appelle
 		// la mise à jour et on le dessine s'il est visible.
@@ -271,6 +269,12 @@ public class Scene implements GLSurfaceView.Renderer {
 			}
 		}
 
+		// on check les colissions entre tous les éléments de la scène
+		//si on place le chek avant de dessiner, sur la première frame tous les éléments sont en 0,0
+		// du coup tout le monde est en colision.
+		CollisionControler.checkAllCollisions(mGameObjectList);
+
+		
 		float drawTimeElaps = SystemClock.currentThreadTimeMillis()
 				- startDrawingTime;
 
@@ -315,7 +319,7 @@ public class Scene implements GLSurfaceView.Renderer {
 		this.mGameObjectList.addAll(GameObjectList);
 	}
 
-	public GameObject getGameObjectByTag(int tagId) {
+	public GameObject getGameObjectByTag(String tagId) {
 		GameObject result = null;
 		for (GameObject gameObject : this.mGameObjectList) {
 			// Log.i("info : ", gameObject.getTagName());
@@ -327,6 +331,22 @@ public class Scene implements GLSurfaceView.Renderer {
 		return result;
 	}
 
+	
+	public UserFinger getUserFinger() {
+		GameObject result = null;
+		for (GameObject gameObject : this.mGameObjectList) {
+			
+			if (gameObject.getTagName() == UserFinger.USER_FINGER_TAG) {
+				result = gameObject;
+			}
+
+		}
+		return (UserFinger) result;
+	}
+
+	
+	
+	
 	public int getHeight() {
 		DisplayMetrics metrics = this.getActivity().getResources()
 				.getDisplayMetrics();

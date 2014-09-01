@@ -207,12 +207,12 @@ public class Starship extends Rectangle2D {
 
 	@Override
 	public void onListenGameObject(GameObject go) {
-		if (go.getTagName() == R.string.starship2) {
+		if (go.getTagName() == String.valueOf(R.string.starship2)) {
 
 			if (!go.mCollideWithList.isEmpty()) {
 				for (GameObject collider : go.mCollideWithList) {
 
-					if (collider.getTagName() == R.string.petit_robot) {
+					if (collider.getTagName() == String.valueOf(R.string.petit_robot)) {
 						newTextureId = R.string.textureRobot;
 					}
 

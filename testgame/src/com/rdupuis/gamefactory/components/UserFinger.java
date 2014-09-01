@@ -12,14 +12,20 @@ public class UserFinger extends Rectangle2D {
 	float histoX;
 	float histoY;
 
+	public final static String USER_FINGER_TAG = "USER_FINGER_TAG";
+	
 	public UserFinger() {
 		super(DrawingMode.EMPTY);
-		this.sethight(10);
-		this.setWidth(10);
+		this.setHeight(100);
+		this.setWidth(100);
 		this.enableColission();
 		this.mCollisionBox.isVisible = true;
-		this.setTagName(R.string.USER_FINGER);
+		this.setTagName(USER_FINGER_TAG);
 		this.isStatic = false;
+		// on fait exprès de définir le premier point loin de l'écran
+		//pour éviter les colision au premier cycle 
+		this.X = 10000;
+		
 	}
 
 	public void onUpdate() {

@@ -23,7 +23,7 @@ public class CollisionBox extends Rectangle2D {
 
 	}
 
-	public int getTagName(){
+	public String getTagName(){
 	return this.parent.getTagName();
 		
 	}

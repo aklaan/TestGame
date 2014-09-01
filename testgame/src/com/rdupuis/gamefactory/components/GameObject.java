@@ -15,7 +15,8 @@ import android.opengl.Matrix;
 import android.util.Log;
 
 public class GameObject implements Drawable, Cloneable {
-	private int mTagName = 0;
+	
+	private String mTagName;
 	public Texture mTexture;
 	public int newTextureId;
 	public Boolean textureEnabled;
@@ -28,6 +29,7 @@ public class GameObject implements Drawable, Cloneable {
 	// pour le calcul des collisions
 	public Boolean isStatic = true;
 	public Boolean canCollide = false;
+	
 	// coordonnées du centre de l'objet
 	public float X = 0;
 	public float Y = 0;
@@ -92,7 +94,7 @@ public class GameObject implements Drawable, Cloneable {
 	public GameObject() {
 
 		textureEnabled = false;
-		mTagName = 0;
+		mTagName = "";
 		isVisible = true;
 		Matrix.setIdentityM(this.mRotationMatrix, 0);
 
@@ -102,6 +104,10 @@ public class GameObject implements Drawable, Cloneable {
 		this.mGameObjectToListenList = new ArrayList<GameObject>();
 
 		this.mVertices = new ArrayList<Vertex>();
+	
+	
+	
+	
 	}
 
 	public ArrayList<GameObject> getGameObjectToListenList() {
@@ -214,14 +220,17 @@ public class GameObject implements Drawable, Cloneable {
 
 	}
 
-	public int getTagName() {
+	public String getTagName() {
 		return mTagName;
 	}
 
 	public void setTagName(int tagid) {
-		mTagName = tagid;
+		mTagName = String.valueOf(tagid);
 	}
 
+	public void setTagName(String tagid) {
+		mTagName = tagid;
+	}
 	/**
 	 * public float getWidth() { return width; }
 	 * 
@@ -230,7 +239,7 @@ public class GameObject implements Drawable, Cloneable {
 	 * 
 	 * public float getHeight() { return hight; }
 	 * 
-	 * public void sethight(float hight) { this.hight = hight;
+	 * public void setHeight(float hight) { this.hight = hight;
 	 * updateModelMatrix(); }
 	 */
 	public void setCoord(float x, float y) {

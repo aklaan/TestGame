@@ -22,7 +22,7 @@
     <string name="boulerouge">boule.png</string>
     <string name="textureStarship">spaceship.png</string>
     <string name="textureRobot">texture.png</string>
-    <string name="textureRed">red.png</string>
+    <string name="texturerId">red.png</string>
     <string name="textureTest">test.png</string>
     <string name="textureTestAnim">testAnim.png</string>
     <string name="textureisoland">isoland.jpeg</string>

@@ -34,7 +34,7 @@ public class ArrayGameObject {
 					go = (Rectangle2D) gameObject.clone();
 
 					go.setCoord(x, y);
-					go.sethight(tailley);
+					go.setHeight(tailley);
 					go.setWidth(taillex);
 					result.add(go);
 

@@ -105,7 +105,7 @@ public class Rectangle2D extends Shape {
 		}
 	}
 
-	public void sethight(float h) {
+	public void setHeight(float h) {
 		this.hight = h;
 		updateVertices();
 		if (this.canCollide) {

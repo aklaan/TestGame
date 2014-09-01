@@ -86,11 +86,11 @@ public class BitmapProvider {
 	}
 
 	// load a texture
-	public void linkTexture(int texturered, GameObject gameobject) {
+	public void linkTexture(int texturerId, GameObject gameobject) {
 
 		Texture texture = new Texture();
 
-		Bitmap bitmap = getBitmapByName(String.valueOf(texturered));
+		Bitmap bitmap = getBitmapByName(String.valueOf(texturerId));
 
 		texture.width = bitmap.getWidth();
 		texture.hight = bitmap.getHeight();
@@ -134,11 +134,11 @@ public class BitmapProvider {
 
 	
 	
-	public Texture getTexture(int texturered) {
+	public Texture getTexture(int texturerId) {
 
 		Texture texture = new Texture();
 
-		Bitmap bitmap = getBitmapByName(String.valueOf(texturered));
+		Bitmap bitmap = getBitmapByName(String.valueOf(texturerId));
 
 		texture.width = bitmap.getWidth();
 		texture.hight = bitmap.getHeight();
