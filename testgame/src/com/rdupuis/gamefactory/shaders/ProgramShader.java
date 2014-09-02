@@ -38,6 +38,11 @@ public class ProgramShader {
 	public String uniform_texture_buffer_name;
 	public int uniform_texture_location;
 
+	public String uniform_alpha_name;
+	public int uniform_alpha_location;
+
+	
+	
 	public ProgramShader() {
 		mGLSLProgram_location = 0;
 		VertexShader_location = 0;
@@ -47,6 +52,7 @@ public class ProgramShader {
 		this.attrib_texture_coord_location = -1;
 		this.uniform_mvp_location = -1;
 		this.uniform_texture_location = -1;
+		this.uniform_alpha_location = -1;
 		this.initCode();
 		this.make();
 	}
@@ -107,6 +113,7 @@ public class ProgramShader {
 
 		GLES20.glAttachShader(this.mGLSLProgram_location,
 				this.VertexShader_location);
+		
 		GLES20.glAttachShader(this.mGLSLProgram_location,
 				this.FragmentShader_location);
 		link();

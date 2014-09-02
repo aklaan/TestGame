@@ -23,6 +23,7 @@ public class GameObject implements Drawable, Cloneable {
 	public Boolean isVisible;
 	public Scene mScene;
 	public String viewMode = "ORTHO";
+	private float alpha ;
 
 	// top permettant de savoir si l'objet est statique ou qu'il
 	// a la possibilité d'être en mouvement. ceci va servir
@@ -93,6 +94,8 @@ public class GameObject implements Drawable, Cloneable {
 	// constructeur
 	public GameObject() {
 
+		//par défaut l'Alpha est à 100% 
+		this.setAlpha(1);
 		textureEnabled = false;
 		mTagName = "";
 		isVisible = true;
@@ -268,6 +271,7 @@ public class GameObject implements Drawable, Cloneable {
 	public void draw() {
 		ProgramShader_simple sh = (ProgramShader_simple) this.getScene()
 				.getProgramShaderProvider().getShaderByName("simple");
+		
 		this.getScene().getProgramShaderProvider().use(sh);
 
 		// on se positionne au debut du Buffer des indices
@@ -304,6 +308,8 @@ public class GameObject implements Drawable, Cloneable {
 		// une matrice de 4 flotant.
 		GLES20.glUniformMatrix4fv(sh.uniform_mvp_location, 1, false, mMvp, 0);
 
+		
+		GLES20.glUniform1f(sh.uniform_alpha_location, this.getAlpha());
 		// on se positionne au debut du Buffer des indices
 		// qui indiquent dans quel ordre les vertex doivent être dessinés
 		this.getIndices().rewind();
@@ -555,5 +561,15 @@ public class GameObject implements Drawable, Cloneable {
 
 		}
 		return gameobject;
+	}
+
+	public float getAlpha() {
+		return alpha;
+	}
+
+	public void setAlpha(float alpha) {
+		// on s'assure que l'alpha est toujours compris enre 0 et 1;
+		this.alpha = (alpha <0)? 0: alpha;
+		this.alpha = (alpha >1)? 1: alpha;
 	}
 }

@@ -10,9 +10,11 @@ public class ProgramShader_simple extends ProgramShader {
 	public final String VSH_ATTRIB_COLOR = "aColor";
 	public final String VSH_ATTRIB_TEXTURE_COORD = "aTexCoord";
 
+	
 	// déclaration des uniforms spécifiques au shader
 	public final String VSH_UNIFORM_MVP = "uMvp";
 	public final String FSH_UNIFORM_TEXTURE = "tex0";
+	public final String FSH_UNIFORM_ALPHA = "aAlpha";
 
 	public ProgramShader_simple() {
 		super();
@@ -35,10 +37,11 @@ public class ProgramShader_simple extends ProgramShader {
 				// ici) ou pour chaque variable.
 				+ " precision highp float; \n" + " #endif \n"
 				+ " uniform sampler2D " + this.FSH_UNIFORM_TEXTURE + ";"
+				+ " uniform float "	+ this.FSH_UNIFORM_ALPHA + ";"
 				+ " varying vec2 vTexCoord; " + " varying vec4 vColor;"
 				+ " varying vec3 pos;" + " void main() {"
 				// + "    gl_FragColor =  vColor;"
-				+ "gl_FragColor = texture2D(tex0, vTexCoord);"
+				+ "gl_FragColor = texture2D(tex0, vTexCoord) * " + this.FSH_UNIFORM_ALPHA+ "; "
 				// +
 				// "    gl_FragColor =  vec4(sin(pos.x), sin(pos.y), 0.0, 1.0);"
 				+ " " + "}";
@@ -62,16 +65,20 @@ public class ProgramShader_simple extends ProgramShader {
 		// ou bien déclarer une bonne fois pour toute en debut de programme
 		// ex: precision highp float;
 
-		"uniform mat4 " + this.VSH_UNIFORM_MVP + ";" + "attribute vec3 "
-				+ this.VSH_ATTRIB_VERTEX_COORD + ";" + "attribute vec2 "
-				+ this.VSH_ATTRIB_TEXTURE_COORD + ";" + "attribute vec4 "
-				+ this.VSH_ATTRIB_COLOR + ";" + "varying vec4 vColor;"
-				+ "varying vec2 vTexCoord;"
-				+ "varying vec3 pos;"
+	      "uniform mat4 " + this.VSH_UNIFORM_MVP + ";" 
+		+ "uniform float "	+ this.FSH_UNIFORM_ALPHA + ";" 
+	    + "attribute vec3 "	+ this.VSH_ATTRIB_VERTEX_COORD + ";" 
+		+ "attribute vec2 " + this.VSH_ATTRIB_TEXTURE_COORD + ";" 
+	    + "attribute vec4 "	+ this.VSH_ATTRIB_COLOR + ";" 
+		+ "varying vec4 vColor;"
+		+ "varying vec2 vTexCoord;"
+		+ "varying vec3 pos;"
+		
 				+ "void main() {"
 				// on calcule la position du point via la matrice de projection
-				+ " pos = aPosition;"
-				+ " vec4 position = uMvp * vec4(aPosition.xyz, 1.);"
+				+ " pos = " + this.VSH_ATTRIB_VERTEX_COORD + ";"
+		
+				+ " vec4 position = uMvp * vec4(" + this.VSH_ATTRIB_VERTEX_COORD + ".xyz, 1.);"
 				// + " vec4 position = vec4(aPosition.xyz, 1.);"
 				+ " vColor = aColor;" + " vTexCoord = aTexCoord;"
 				+ "gl_PointSize = 10.;"
@@ -98,8 +105,12 @@ public class ProgramShader_simple extends ProgramShader {
 
 		this.uniform_mvp_location = GLES20.glGetUniformLocation(
 				this.mGLSLProgram_location, this.VSH_UNIFORM_MVP);
+		
 		this.uniform_texture_location = GLES20.glGetUniformLocation(
 				this.mGLSLProgram_location, this.FSH_UNIFORM_TEXTURE);
+		
+		this.uniform_alpha_location = GLES20.glGetUniformLocation(
+				this.mGLSLProgram_location, this.FSH_UNIFORM_ALPHA);
 	}
 
 	// *******************************************************************
@@ -107,7 +118,7 @@ public class ProgramShader_simple extends ProgramShader {
 	// sinon c'est ecran noir !
 	public void enableShaderVar() {
 		GLES20.glEnableVertexAttribArray(this.attrib_vertex_coord_location);
-		// GLES20.glEnableVertexAttribArray(this.attrib_color_location);
+		//GLES20.glEnableVertexAttribArray(this.attrib_color_location);
 		GLES20.glEnableVertexAttribArray(this.attrib_texture_coord_location);
 
 		// /les uniforms ne sont pas attrib !!
