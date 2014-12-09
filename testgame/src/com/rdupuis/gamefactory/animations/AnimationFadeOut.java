@@ -2,9 +2,6 @@ package com.rdupuis.gamefactory.animations;
 
 import com.rdupuis.gamefactory.components.GameObject;
 
-import android.os.SystemClock;
-import android.util.Log;
-
 public class AnimationFadeOut extends Animation {
 
 	private float speed;

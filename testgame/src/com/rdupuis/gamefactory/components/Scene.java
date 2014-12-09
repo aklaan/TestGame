@@ -6,6 +6,7 @@ import javax.microedition.khronos.egl.EGLConfig;
 import javax.microedition.khronos.opengles.GL10;
 
 
+import com.rdupuis.gamefactory.components.MySurfaceView.ScreenEvent;
 import com.rdupuis.gamefactory.providers.BitmapProvider;
 import com.rdupuis.gamefactory.providers.ProgramShaderProvider;
 import com.rdupuis.gamefactory.utils.CollisionControler;
@@ -204,7 +205,7 @@ public class Scene implements GLSurfaceView.Renderer {
 		float incY = 0;
 		
 		
-		switch (this.getActivity().getSurfaceView().event) {
+		switch (this.getActivity().getSurfaceView().getScreenEvent()) {
 		
 		case SCROLL_H_RIGHT:
 			incX = +2f; 
@@ -285,6 +286,9 @@ public class Scene implements GLSurfaceView.Renderer {
 			SystemClock.sleep((long) ((1000 / 60) - drawTimeElaps));
 		}
 		// SystemClock.sleep(2000);
+	
+	
+	
 	}
 
 	/**
@@ -312,6 +316,16 @@ public class Scene implements GLSurfaceView.Renderer {
 
 	}
 
+	
+	public void removeFromScene(GameObject gameobject) {
+		gameobject.mScene = null;
+		this.mGameObjectList.remove(gameobject);
+
+	}
+
+	
+	
+	
 	public void addToScene(ArrayList<GameObject> GameObjectList) {
 		for (GameObject go : GameObjectList) {
 			go.mScene = this;

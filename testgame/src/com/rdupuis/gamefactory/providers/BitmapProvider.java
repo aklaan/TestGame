@@ -13,7 +13,6 @@ import com.rdupuis.gamefactory.components.Texture;
 
 
 import android.app.Activity;
-import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;

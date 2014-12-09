@@ -21,14 +21,14 @@ public class MySurfaceView extends GLSurfaceView {
 	public float lastTouch = 0.f;
 
 	public static enum ScreenEvent {
-		SCROLL_H_RIGHT, SCROLL_H_LEFT, SCROLL_V_UP, SCROLL_V_DOWN, NONE
+		SCROLL_H_RIGHT, SCROLL_H_LEFT, SCROLL_V_UP, SCROLL_V_DOWN, SHORT_PRESS, LONG_PRESS, UNKNOWN
 	};
 
-	public ScreenEvent event;
+	private ScreenEvent event;
 
 	public MySurfaceView(Context context) {
 		super(context);
-		this.event = ScreenEvent.NONE;
+		this.event = ScreenEvent.UNKNOWN;
 		// TODO Auto-generated constructor stub
 	}
 
@@ -47,11 +47,17 @@ public class MySurfaceView extends GLSurfaceView {
 			touched = false;
 			this.histoX = this.touchX;
 			this.histoY = this.touchY;
-			this.event = ScreenEvent.NONE;
+			this.event = ScreenEvent.UNKNOWN;
+			
 			break;
 
 		case MotionEvent.ACTION_DOWN:
 			touched = true;
+			
+			//on vient de toucher l'écran en fonction du temps resté sur l'écran
+			// par défaut on considère que l'on est dans le cas d'un SHORT_PRESS
+			
+			this.event = ScreenEvent.SHORT_PRESS;
 			this.setLastTouchTime(SystemClock.elapsedRealtime());
 
 			this.startX = e.getX();
@@ -67,12 +73,27 @@ public class MySurfaceView extends GLSurfaceView {
 			this.touchX = e.getX();
 			this.touchY = e.getY();
 
-			if (this.event == ScreenEvent.NONE) {
+			float distanceX = this.startX - this.touchX;
+			float distanceY = this.startY - this.touchY;
 
-				float distanceX = this.startX - this.touchX;
+		
+			
+			float duree = SystemClock.elapsedRealtime()
+					- this.getLastTouchTime();
+
+			
+			// si cela fait plus de 500 ms que l'on a appuyé sur l'écran
+			// on considère que l'on est dans le cas d'un LONG_PRESS
+			if (duree > 50) {
+				this.event = ScreenEvent.LONG_PRESS;
+			}
+			
+
+			if (this.event == ScreenEvent.UNKNOWN) {
 
 				if (distanceX < 0 && distanceX < -200) {
 					this.event = ScreenEvent.SCROLL_H_LEFT;
+
 				} else {
 
 					if (distanceX > 0 && distanceX > 200) {
@@ -80,10 +101,9 @@ public class MySurfaceView extends GLSurfaceView {
 					}
 				}
 
-				float distanceY = this.startY - this.touchY;
-
 				if (distanceY < 0 && distanceY < -200) {
 					this.event = ScreenEvent.SCROLL_V_UP;
+
 				} else {
 
 					if (distanceY > 0 && distanceY > 200) {
@@ -103,4 +123,11 @@ public class MySurfaceView extends GLSurfaceView {
 		return true;
 
 	}
+
+
+public ScreenEvent getScreenEvent(){
+	return this.event;
+}
+
+
 }

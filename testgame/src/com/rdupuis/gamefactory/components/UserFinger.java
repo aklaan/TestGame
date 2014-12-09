@@ -1,7 +1,6 @@
 package com.rdupuis.gamefactory.components;
 
 import android.opengl.Matrix;
-import com.rdupuis.gamefactory.R;
 import com.rdupuis.gamefactory.components.shapes.Rectangle2D;
 import com.rdupuis.gamefactory.enums.DrawingMode;
 
