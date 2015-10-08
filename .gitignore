@@ -2,12 +2,14 @@
 *.apk
 *.ap_
 
+
 # files for the dex VM
 *.dex
 
 # Java class files
 *.class
 
+*.classpath
 # generated files
 bin/
 gen/
@@ -15,6 +17,8 @@ gen/
 # Ignore gradle files
 .gradle/
 build/
+.idea/
+.gitignore/
 
 # Local configuration file (sdk path, etc)
 local.properties
@@ -24,3 +28,5 @@ proguard/
 *.jar
 testgame/libs/android-support-v4.jar
 *.jar
+*.iml
+app/lint.xml
